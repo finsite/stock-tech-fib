@@ -1,0 +1,17 @@
+name: Check Outdated Dependencies
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Runs every Monday
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install Pip Tools
+        run: pip install pip-review
+      - name: Check Outdated Packages
+        run: pip-review --auto

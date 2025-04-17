@@ -1,0 +1,17 @@
+name: Cleanup GitHub Cache
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Every Sunday
+  workflow_dispatch:
+
+jobs:
+  cleanup-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Old Cache Entries
+        run: |
+          echo "Deleting old caches..."
+          gh cache list --repo ${{ github.repository }} | awk '{print $1}' | xargs -I {} gh cache delete {} || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

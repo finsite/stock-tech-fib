@@ -1,0 +1,12 @@
+name: Validate YAML & JSON
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate YAML
+        uses: ibiqlik/action-yamllint@v3
+      - name: Validate JSON
+        run: jq . **/*.json > /dev/null

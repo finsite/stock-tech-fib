@@ -1,0 +1,22 @@
+name: Cleanup Stale Branches
+
+on:
+  schedule:
+    - cron: "0 0 1 * *" # 1st of every month
+  workflow_dispatch:
+
+jobs:
+  cleanup-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Merged Stale Branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for branch in $(gh api repos/${{ github.repository }}/branches \
+            -q '.[] | select(.protected | not) | .name'); do
+            if [[ $(git branch -r --contains origin/$branch | wc -l) -eq 0 ]]; then
+              echo "Deleting stale branch: $branch"
+              gh api --method DELETE repos/${{ github.repository }}/git/refs/heads/$branch
+            fi
+          done

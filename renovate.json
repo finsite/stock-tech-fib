@@ -1,0 +1,32 @@
+{
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "labels": ["dependencies"],
+  "timezone": "UTC",
+  "schedule": ["before 5am on Monday"],
+
+  "packageRules": [
+    {
+      "description": "Group all Python updates",
+      "matchManagers": ["pip_requirements", "poetry"],
+      "groupName": "Python dependencies"
+    },
+    {
+      "description": "Group Docker base images and APT packages",
+      "matchDatasources": ["docker", "dockerfile", "apt"],
+      "groupName": "Dockerfile dependencies",
+      "pinVersions": true
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "labels": ["github-actions"]
+    },
+    {
+      "description": "Automerge patch-level updates",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    }
+  ]
+}

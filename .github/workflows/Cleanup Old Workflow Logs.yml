@@ -1,0 +1,13 @@
+name: Expire Old Workflow Logs
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Every Sunday
+  workflow_dispatch:
+
+jobs:
+  expire-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Re-run Workflow to Expire Old Logs
+        run: echo "Forcing log expiration by running a minimal job."

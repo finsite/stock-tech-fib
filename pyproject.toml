@@ -1,0 +1,71 @@
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.ruff_cache
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["tests"]
+
+[tool.ruff.lint]
+extend-select = ["D"]
+ignore = ["D203", "D211", "D213", "D401", "D205"]
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+strict = true
+pretty = true
+show_error_codes = true
+warn_unused_ignores = true
+warn_return_any = true
+explicit_package_bases = true  
+exclude = ["^tests/"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--strict-markers --tb=short -q"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+    
+[tool.docformatter]
+wrap-summaries = 88
+wrap-descriptions = 88
+pre-summary-newline = true
+make-summary-multi-line = false
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = ["D100", "D104"]
+match = ".*\\.py"
+match-dir = "[^\\.].*"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "v$version"

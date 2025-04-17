@@ -1,0 +1,15 @@
+name: Performance Benchmarking
+on: [pull_request]
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install pytest-benchmark
+        run: pip install pytest pytest-benchmark
+      - name: Run Benchmarks
+        run: pytest --benchmark-only

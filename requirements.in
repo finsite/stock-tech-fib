@@ -1,0 +1,5 @@
+# Example dependencies (remove or modify as needed)
+pandas
+numpy
+scipy
+matplotlib

@@ -1,0 +1,33 @@
+# Add 'root' label to any root file changes
+root:
+  - changed-files:
+      - any-glob-to-any-file: "*"
+# Add 'AnyChange' label to any changes within the entire repository
+
+AnyChange:
+  - changed-files:
+      - any-glob-to-any-file: "**"
+# Add 'Documentation' label to any relevant changes
+
+Documentation:
+  - changed-files:
+      - any-glob-to-any-file: "docs/**" # Matches any changes within 'docs' folder or subfolders
+      - any-glob-to-any-file: "docs/*" # Matches any file changes within 'docs' folder
+      - any-glob-to-any-file: "guides/*" # Matches any file changes within 'guides' folder
+      - any-glob-to-any-file: ["docs/*", "guides/*"] # Matches changes in 'docs' or 'guides' folders
+      - any-glob-to-any-file: "**/*.md" # Matches any change to .md files in the repository
+# Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
+
+source:
+  - all:
+      - changed-files:
+          - any-glob-to-any-file: "app/**/*"
+          - all-globs-to-all-files: "!app/docs/*"
+# Add 'feature' label to any PR where the head branch name starts with `feature` or has a `feature` section in the name
+
+feature:
+  - head-branch: ["^feature", "feature"]
+# Add 'release' label to any PR that is opened against the `main` branch
+
+release:
+  - base-branch: "main"

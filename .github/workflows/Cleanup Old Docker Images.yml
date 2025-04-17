@@ -1,0 +1,20 @@
+name: Cleanup Old Docker Images
+
+on:
+  schedule:
+    - cron: "0 0 1,15 * *" # 1st and 15th of every month
+  workflow_dispatch:
+
+jobs:
+  cleanup-docker-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Old Docker Images
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for image_id in $(gh api "orgs/${{ github.repository_owner }}/packages/container/YOUR_IMAGE_NAME/versions" \
+            -q '.[] | select(.metadata.container.tags | contains(["latest"]) | not) | .id'); do
+            echo "Deleting image ID: $image_id"
+            gh api --method DELETE "orgs/${{ github.repository_owner }}/packages/container/YOUR_IMAGE_NAME/versions/$image_id"
+          done

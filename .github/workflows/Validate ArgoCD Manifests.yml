@@ -1,0 +1,28 @@
+name: Validate ArgoCD Manifests
+
+# on: [push, pull_request]
+
+on:
+  workflow_dispatch:
+
+jobs:
+  argocd-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate YAML Syntax
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          args: "k8s/application"
+
+      - name: Install kubeval
+        run: |
+          curl -sLO https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          tar -xf kubeval-linux-amd64.tar.gz
+          sudo mv kubeval /usr/local/bin/
+
+      - name: Validate Kubernetes Manifests with Kubeval
+        run: kubeval k8s/application/*.yaml --ignore-missing-schemas

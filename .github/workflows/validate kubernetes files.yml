@@ -1,0 +1,19 @@
+name: Validate Kubernetes YAML
+# on: [push, pull_request]
+
+on:
+  workflow_dispatch:
+
+jobs:
+  kube-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kubeval
+        run: |
+          curl -LO https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          tar xf kubeval-linux-amd64.tar.gz
+          chmod +x kubeval
+          mv kubeval /usr/local/bin/
+      - name: Run kubeval
+        run: kubeval **/*.yaml

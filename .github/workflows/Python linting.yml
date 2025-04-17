@@ -1,0 +1,43 @@
+name: Python Linting
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install linters
+        run: pip install ruff pylint
+
+      - name: Run Ruff
+        run: |
+          echo "### Ruff Linting" >> $GITHUB_STEP_SUMMARY
+          ruff src/ | tee ruff_output.txt
+          if [ -s ruff_output.txt ]; then
+            echo "❌ Ruff found issues" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ Ruff passed with no issues" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Run Pylint
+        env:
+          PYTHONPATH: ./src
+        run: |
+          echo "### Pylint Linting" >> $GITHUB_STEP_SUMMARY
+          pylint src/ | tee pylint_output.txt
+          if grep -q "rated at" pylint_output.txt; then
+            echo "✅ Pylint completed" >> $GITHUB_STEP_SUMMARY
+          fi
+          if grep -q "Your code has been rated at 10.00/10" pylint_output.txt; then
+            echo "🏅 Perfect score from Pylint!" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,0 +1,13 @@
+# Core dependencies
+pandas>=1.5.0,<2.0
+numpy>=1.23.0,<2.0
+scipy>=1.9.0,<2.0
+matplotlib>=3.6.0,<4.0
+
+# Messaging and Cloud
+pika>=1.3.0  # For RabbitMQ integration
+boto3>=1.28.0  # If using AWS SQS
+
+# Logging & Environment Management
+loguru>=0.7.0  # Enhanced logging
+python-dotenv>=1.0.0  # Environment variable management
