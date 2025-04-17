@@ -1,9 +1,11 @@
 import os
 import sys
 
+
 def create_directory(path):
     """Create a directory if it does not exist."""
     os.makedirs(path, exist_ok=True)
+
 
 def generate_helm_chart(app_name, repo_path):
     """Generate a Helm chart for the application."""
@@ -62,6 +64,7 @@ spec:
     with open(os.path.join(helm_path, "templates", "deployment.yaml"), "w") as f:
         f.write(deployment_yaml)
 
+
 def generate_kubernetes_manifests(app_name, repo_path):
     """Generate Kubernetes deployment YAMLs."""
     k8s_path = os.path.join(repo_path, "k8s", app_name)
@@ -110,6 +113,7 @@ spec:
     with open(os.path.join(k8s_path, "service.yaml"), "w") as f:
         f.write(service_yaml)
 
+
 def generate_argocd_manifests(app_name, repo_path):
     """Generate ArgoCD application manifests."""
     argocd_path = os.path.join(repo_path, "argocd", app_name)
@@ -140,6 +144,7 @@ spec:
 
     with open(os.path.join(argocd_path, "application.yaml"), "w") as f:
         f.write(application_yaml)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
