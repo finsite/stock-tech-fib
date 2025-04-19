@@ -1,21 +1,21 @@
 # ======================
 # Core testing tools
 # ======================
-pytest==7.4.4                # Unit and integration testing
-pytest-cov==4.1.0            # Coverage reporting
-pytest-benchmark==4.0.0      # Performance benchmarking
+pytest==8.3.5                # Unit and integration testing
+pytest-cov==6.1.1            # Coverage reporting
+pytest-benchmark==5.1.0      # Performance benchmarking
 pytest-html==4.1.1           # Optional: HTML test reports
 pytest-mock==3.14.0          # Mocking/stubbing dependencies in tests
 
 # ======================
 # Linting and code quality
 # ======================
-flake8==6.1.0                # Traditional linter
+flake8==7.2.0                # Traditional linter
 flake8-docstrings==1.7.0     # Enforce docstring conventions (PEP257)
 pylint==3.3.6                # Deeper code analysis
 mypy==1.15.0                  # Static type checking
-black==24.10.0                # Code formatter
-isort==5.13.2                # Import sorter
+black==25.1.0                # Code formatter
+isort==6.0.1                # Import sorter
 
 # Modern replacement for flake8 + black + isort
 ruff==0.11.6                  # Fast all-in-one linter/formatter (CI-friendly)
@@ -34,18 +34,18 @@ safety==3.3.1               # Checks dependencies for known vulnerabilities
 # ======================
 # Documentation tools
 # ======================
-sphinx==7.4.7                           # Python documentation generator
+sphinx==8.2.3                           # Python documentation generator
 sphinx-rtd-theme==3.0.2                 # ReadTheDocs theme
 furo>=2023.9.10                         # Alternative modern responsive theme
-sphinx-autodoc-typehints==1.25.3        # Display type hints in docstrings
+sphinx-autodoc-typehints==3.1.0        # Display type hints in docstrings
 doc8==1.1.2                             # Validates .rst and Sphinx doc files (optional)
 
 # ======================
 # Build & Packaging
 # ======================
 build==1.2.2.post1           # Build Python packages (PEP 517)
-twine==4.0.2                 # Publish to PyPI
-bump-my-version==0.33.0      # Automated version bumping
+twine==6.1.0                 # Publish to PyPI
+bump-my-version==1.1.2      # Automated version bumping
 
 # ======================
 # Git & Dev tooling
