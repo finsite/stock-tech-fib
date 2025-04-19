@@ -4,7 +4,6 @@
   "labels": ["dependencies"],
   "timezone": "UTC",
   "schedule": ["before 5am on Monday"],
-
   "packageRules": [
     {
       "description": "Group all Python updates",
@@ -15,7 +14,7 @@
       "description": "Group Docker base images and APT packages",
       "matchDatasources": ["docker", "dockerfile", "apt"],
       "groupName": "Dockerfile dependencies",
-      "pinVersions": true
+      "rangeStrategy": "pin"
     },
     {
       "description": "Group GitHub Actions updates",
