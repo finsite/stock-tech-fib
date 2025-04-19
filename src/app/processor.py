@@ -8,6 +8,7 @@ from typing import Literal
 import pandas as pd
 
 from app.logger import setup_logger
+from app.output_handler import send_to_output
 
 logger = setup_logger(__name__)
 

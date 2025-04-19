@@ -1,121 +1,95 @@
-"""Module to publish messages to a message queue (RabbitMQ or SQS).
+"""
+Module to publish processed analysis data to RabbitMQ or AWS SQS.
 """
 
 import json
 import os
-import time
-from typing import Literal
-
-import boto3
 import pika
+import boto3
 from botocore.exceptions import BotoCoreError, NoCredentialsError
 
 from app.logger import setup_logger
 
+# Initialize logger
 logger = setup_logger(__name__)
 
+# Get queue type from environment
+QUEUE_TYPE = os.getenv("QUEUE_TYPE", "rabbitmq").lower()
 
-class QueueSender:
-    """Sends messages to RabbitMQ or SQS based on configuration."""
+# RabbitMQ config
+RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
+RABBITMQ_EXCHANGE = os.getenv("RABBITMQ_EXCHANGE", "stock_analysis")
+RABBITMQ_ROUTING_KEY = os.getenv("RABBITMQ_ROUTING_KEY", "fib")
+RABBITMQ_VHOST = os.getenv("RABBITMQ_VHOST", "/")
+RABBITMQ_USER = os.getenv("RABBITMQ_USER", "guest")
+RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD", "guest")
 
-    def __init__(
-        self,
-        queue_type: Literal["rabbitmq", "sqs"] = os.getenv("QUEUE_TYPE", "rabbitmq").lower(),
-        rabbitmq_host: str = os.getenv("RABBITMQ_HOST", "localhost"),
-        rabbitmq_exchange: str = os.getenv("RABBITMQ_EXCHANGE", "stock_analysis"),
-        rabbitmq_routing_key: str = os.getenv("RABBITMQ_ROUTING_KEY", "default"),
-        rabbitmq_vhost: str = os.getenv("RABBITMQ_VHOST", "/"),
-        sqs_queue_url: str = os.getenv("SQS_QUEUE_URL", ""),
-    ):
-        self.queue_type = queue_type
-        self.rabbitmq_host = rabbitmq_host
-        self.rabbitmq_exchange = rabbitmq_exchange
-        self.rabbitmq_routing_key = rabbitmq_routing_key
-        self.rabbitmq_vhost = rabbitmq_vhost
-        self.sqs_queue_url = sqs_queue_url
-        self.sqs_client = None
-        self.connection = None
-        self.channel = None
+# SQS config
+SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL", "")
+SQS_REGION = os.getenv("SQS_REGION", "us-east-1")
 
-        if self.queue_type == "sqs":
-            try:
-                self.sqs_client = boto3.client(
-                    "sqs", region_name=os.getenv("AWS_REGION", "us-east-1")
-                )
-                logger.info("Initialized SQS client")
-            except (BotoCoreError, NoCredentialsError) as e:
-                logger.error("Failed to initialize SQS client: %s", e)
-                raise
-        elif self.queue_type == "rabbitmq":
-            self._connect_to_rabbitmq()
+# Initialize SQS client if needed
+sqs_client = None
+if QUEUE_TYPE == "sqs":
+    try:
+        sqs_client = boto3.client("sqs", region_name=SQS_REGION)
+        logger.info(f"SQS client initialized for region {SQS_REGION}")
+    except (BotoCoreError, NoCredentialsError) as e:
+        logger.error("Failed to initialize SQS client: %s", e)
+        sqs_client = None
+
+
+def publish_to_queue(payload: list[dict]) -> None:
+    """
+    Publishes the processed stock analysis results to RabbitMQ or SQS.
+
+    Args:
+        payload (list[dict]): A list of dictionaries representing processed results.
+    """
+    for message in payload:
+        if QUEUE_TYPE == "rabbitmq":
+            _send_to_rabbitmq(message)
+        elif QUEUE_TYPE == "sqs":
+            _send_to_sqs(message)
         else:
-            raise ValueError("QUEUE_TYPE must be 'rabbitmq' or 'sqs'")
+            logger.error("Invalid QUEUE_TYPE specified. Use 'rabbitmq' or 'sqs'.")
 
-    def _connect_to_rabbitmq(self) -> None:
-        """Establishes a RabbitMQ connection with retries."""
-        retries = 5
-        for attempt in range(1, retries + 1):
-            try:
-                params = pika.ConnectionParameters(
-                    host=self.rabbitmq_host,
-                    virtual_host=self.rabbitmq_vhost,
-                    heartbeat=600,
-                    blocked_connection_timeout=300,
-                )
-                self.connection = pika.BlockingConnection(params)
-                self.channel = self.connection.channel()
-                logger.info("Connected to RabbitMQ")
-                return
-            except Exception as e:
-                logger.warning(
-                    "RabbitMQ connection failed (attempt %d/%d): %s",
-                    attempt,
-                    retries,
-                    e,
-                )
-                time.sleep(5)
-        raise ConnectionError("Failed to connect to RabbitMQ after retries.")
 
-    def send_message(self, message: dict) -> None:
-        """Sends a message to the configured queue system."""
-        payload = json.dumps(message)
+def _send_to_rabbitmq(data: dict) -> None:
+    """Helper to send a message to RabbitMQ."""
+    try:
+        credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(
+                host=RABBITMQ_HOST,
+                virtual_host=RABBITMQ_VHOST,
+                credentials=credentials,
+            )
+        )
+        channel = connection.channel()
 
-        if self.queue_type == "rabbitmq":
-            try:
-                self.channel.basic_publish(
-                    exchange=self.rabbitmq_exchange,
-                    routing_key=self.rabbitmq_routing_key,
-                    body=payload,
-                )
-                logger.info("Message sent to RabbitMQ")
-            except Exception as e:
-                logger.error("Failed to send message to RabbitMQ: %s", e)
-                raise
-        elif self.queue_type == "sqs":
-            try:
-                response = self.sqs_client.send_message(
-                    QueueUrl=self.sqs_queue_url,
-                    MessageBody=payload,
-                )
-                logger.info("Message sent to SQS: %s", response.get("MessageId"))
-            except Exception as e:
-                logger.error("Failed to send message to SQS: %s", e)
-                raise
+        channel.basic_publish(
+            exchange=RABBITMQ_EXCHANGE,
+            routing_key=RABBITMQ_ROUTING_KEY,
+            body=json.dumps(data),
+        )
+        connection.close()
+        logger.info("Published message to RabbitMQ")
+    except Exception as e:
+        logger.error("Failed to publish message to RabbitMQ: %s", e)
 
-    def close(self) -> None:
-        """Closes any open connections (mainly RabbitMQ)."""
-        if self.connection and self.connection.is_open:
-            self.connection.close()
-            logger.info("RabbitMQ connection closed")
 
-    def flush(self) -> None:
-        """Placeholder for any flush behavior."""
-        logger.debug("Flush called - no action taken")
+def _send_to_sqs(data: dict) -> None:
+    """Helper to send a message to AWS SQS."""
+    if not sqs_client or not SQS_QUEUE_URL:
+        logger.error("SQS client is not initialized or missing SQS_QUEUE_URL")
+        return
 
-    def health_check(self) -> bool:
-        """Returns True if the sender is healthy."""
-        if self.queue_type == "rabbitmq":
-            return self.connection.is_open if self.connection else False
-        if self.queue_type == "sqs":
-            return self.sqs_client is not None
-        return False
+    try:
+        response = sqs_client.send_message(
+            QueueUrl=SQS_QUEUE_URL,
+            MessageBody=json.dumps(data),
+        )
+        logger.info("Published message to SQS, MessageId: %s", response["MessageId"])
+    except Exception as e:
+        logger.error("Failed to publish message to SQS: %s", e)
