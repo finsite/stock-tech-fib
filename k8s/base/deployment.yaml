@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-tech-fib
+  labels:
+    app: stock-tech-fib
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stock-tech-fib
+  template:
+    metadata:
+      labels:
+        app: stock-tech-fib
+    spec:
+      containers:
+        - name: stock-tech-fib
+          image: stock-tech-fib:latest
+          ports:
+            - containerPort: 8080

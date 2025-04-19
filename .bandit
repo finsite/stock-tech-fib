@@ -87,6 +87,9 @@
 # B702 : use_of_mako_templates
 # B703 : django_mark_safe
 
+exclude_dirs:
+  - tests
+
 # (optional) list included test IDs here, eg '[B101, B406]':
 tests:
 
