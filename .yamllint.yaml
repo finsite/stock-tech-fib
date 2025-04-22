@@ -1,0 +1,24 @@
+extends: default
+
+rules:
+  line-length:
+    max: 120         # Allow longer lines for GitHub Actions, ArgoCD, etc.
+    level: warning   # Warn instead of failing the build
+
+  document-start:
+    level: warning   # Warn if "---" is missing, but don’t fail
+
+  comments-indentation: enable  # Enforce clean comment indentation
+
+  truthy:
+    level: warning   # Warn about 'yes'/'no' instead of 'true'/'false'
+
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+
+ignore: |
+  .github/workflows/*
+  k8s/base/*
+  k8s/application/*
+  k8s/overlays/*
