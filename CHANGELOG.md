@@ -1,4 +1,4 @@
 ## Changelog
 
-- migrating to pyproject.toml fully (Mark Quinn)
+- Enhance .gitignore with modern Python rules (Mark Quinn)
 - bump: patch version + changelog [skip ci] (github-actions[bot])
