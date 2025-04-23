@@ -6,14 +6,12 @@ labels: refactor
 assignees: ""
 ---
 
-**Describe the refactor**
-What part of the code needs improvement? Why?
+**Describe the refactor** What part of the code needs improvement? Why?
 
-**Reason for refactoring**
-Explain why the current implementation needs to be improved. Is it inefficient, outdated, or hard to understand?
+**Reason for refactoring** Explain why the current implementation needs to be
+improved. Is it inefficient, outdated, or hard to understand?
 
-**Proposed approach**
-Describe how the refactoring could be implemented.
+**Proposed approach** Describe how the refactoring could be implemented.
 
-**Additional context**
-Add any additional context or concerns related to the refactor.
+**Additional context** Add any additional context or concerns related to the
+refactor.

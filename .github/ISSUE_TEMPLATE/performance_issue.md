@@ -6,19 +6,18 @@ labels: performance
 assignees: ""
 ---
 
-**Describe the performance issue**
-What part of the project is performing poorly? Provide details.
+**Describe the performance issue** What part of the project is performing
+poorly? Provide details.
 
 ## Steps to Reproduce
 
 1. Describe the steps to reproduce the performance issue.
 2. Provide input data, if applicable.
 
-**Expected behavior**
-What performance improvement are you expecting?
+**Expected behavior** What performance improvement are you expecting?
 
-**Actual performance**
-Describe the current performance. Include benchmarks, logs, or metrics, if available.
+**Actual performance** Describe the current performance. Include benchmarks,
+logs, or metrics, if available.
 
 ## Environment
 
@@ -26,5 +25,4 @@ Describe the current performance. Include benchmarks, logs, or metrics, if avail
 - Python version: [e.g., 3.10.7]
 - Dependencies version: [e.g., `requirements.txt` output]
 
-**Additional context**
-Add any other context about the performance issue here.
+**Additional context** Add any other context about the performance issue here.

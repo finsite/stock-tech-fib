@@ -6,14 +6,13 @@ labels: question
 assignees: ""
 ---
 
-**Question**
-Describe your question or the help you need.
+**Question** Describe your question or the help you need.
 
-**What have you tried?**
-Describe the steps you have already taken to resolve the issue.
+**What have you tried?** Describe the steps you have already taken to resolve
+the issue.
 
-**Additional context**
-Add any other context or screenshots related to your question here.
+**Additional context** Add any other context or screenshots related to your
+question here.
 
 ## Environment
 

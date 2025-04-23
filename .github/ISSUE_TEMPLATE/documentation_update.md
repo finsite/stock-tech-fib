@@ -6,11 +6,11 @@ labels: documentation
 assignees: ""
 ---
 
-**Describe the problem**
-What part of the documentation is unclear, missing, or incorrect?
+**Describe the problem** What part of the documentation is unclear, missing, or
+incorrect?
 
-**Proposed fix**
-How would you update or clarify the documentation? Provide specific sections or examples.
+**Proposed fix** How would you update or clarify the documentation? Provide
+specific sections or examples.
 
-**Additional context**
-Add any additional context about the problem or your proposed fix here.
+**Additional context** Add any additional context about the problem or your
+proposed fix here.

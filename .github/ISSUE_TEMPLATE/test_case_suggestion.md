@@ -6,14 +6,12 @@ labels: testing
 assignees: ""
 ---
 
-**Describe the test case**
-What functionality or edge case should be tested?
+**Describe the test case** What functionality or edge case should be tested?
 
-**Reason for the test**
-Why is this test important? Does it improve coverage or address an uncovered edge case?
+**Reason for the test** Why is this test important? Does it improve coverage or
+address an uncovered edge case?
 
-**Proposed implementation**
-Provide a brief outline of how this test could be implemented.
+**Proposed implementation** Provide a brief outline of how this test could be
+implemented.
 
-**Additional context**
-Add any other context about the test case here.
+**Additional context** Add any other context about the test case here.
