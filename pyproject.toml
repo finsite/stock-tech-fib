@@ -125,7 +125,7 @@ version = "0.1.0"
 tag_format = "v$version"
 
 [tool.bumpversion]
-current_version = "0.1.21"
+current_version = "0.1.22"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"
