@@ -3,9 +3,9 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "stock-tech-fib"
+name = "template_python"
 version = "0.1.0"
-description = "A Python project to measure stock fibinacci levels"
+description = "A template for the default python project"
 readme = "README.md"
 requires-python = ">=3.7"
 license = { text = "MIT" }
@@ -123,3 +123,20 @@ skip_covered = true
 name = "cz_conventional_commits"
 version = "0.1.0"
 tag_format = "v$version"
+
+[tool.bumpversion]
+current_version = "0.1.21"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+search = "{current_version}"
+replace = "{new_version}"
+regex = false
+ignore_missing_version = false
+ignore_missing_files = false
+tag = true
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+allow_dirty = true
+commit = true
+message = "Bump version: {current_version} → {new_version}"
