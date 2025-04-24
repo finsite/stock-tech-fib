@@ -6,7 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Validate YAML
         uses: ibiqlik/action-yamllint@v3
+
       - name: Validate JSON
-        run: jq . **/*.json > /dev/null
+        run: |
+          FILES=$(find . -type f -name "*.json")
+          if [ -n "$FILES" ]; then
+            echo "$FILES" | xargs -n1 jq . > /dev/null
+          else
+            echo "✅ No JSON files found — skipping validation."
+          fi

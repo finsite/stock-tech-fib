@@ -35,17 +35,13 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
 
-      - name: Discover main module name
-        id: discover
-        run: |
-          echo "module=$(basename $(pwd))" >> $GITHUB_OUTPUT
-
       - name: Run tests with coverage and HTML report
         run: |
-          pytest --cov=${{ steps.discover.outputs.module }} \
-                 --cov-report=xml \
-                 --cov-fail-under=80 \
-                 --html=pytest-report.html
+          export PYTHONPATH=src
+          pytest --cov=app \
+                --cov-report=xml \
+                --cov-fail-under=80 \
+                --html=pytest-report.html
 
       - name: Upload HTML Test Report
         if: ${{ !env.ACT }}

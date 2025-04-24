@@ -8,6 +8,9 @@ on:
       - "docs/**"
       - ".github/**"
 
+permissions:
+  contents: write  # ✅ allow tag pushes and commits
+
 jobs:
   bump-version:
     runs-on: ubuntu-latest

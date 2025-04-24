@@ -34,9 +34,10 @@ safety==3.3.1               # Checks dependencies for known vulnerabilities
 # ======================
 # Documentation tools
 # ======================
-sphinx==8.2.3                           # Python documentation generator
+sphinx>=7.0,<8.0                        # Python documentation generator
 sphinx-rtd-theme==3.0.2                 # ReadTheDocs theme
 furo>=2023.9.10                         # Alternative modern responsive theme
+myst-parser==2.0.0                      # ✅ Required for Markdown (.md) support
 sphinx-autodoc-typehints==3.1.0        # Display type hints in docstrings
 doc8==1.1.2                             # Validates .rst and Sphinx doc files (optional)
 
