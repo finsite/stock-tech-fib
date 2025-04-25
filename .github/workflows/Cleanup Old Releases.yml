@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  cleanup-releases:
+  cleanup-old-releases:
     runs-on: ubuntu-latest
     steps:
       - name: Delete Old Releases

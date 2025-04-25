@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  helm-test:
+  helm-template-and-package-test:
     runs-on: ubuntu-latest
 
     steps:

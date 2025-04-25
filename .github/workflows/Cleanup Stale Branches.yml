@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  cleanup-branches:
+  cleanup-stale-branches:
     runs-on: ubuntu-latest
     steps:
       - name: Delete Merged Stale Branches

@@ -3,7 +3,7 @@ name: Static Analysis with Pylint
 on: [push, pull_request]
 
 jobs:
-  static-analysis:
+  static-analysis-with-pylint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

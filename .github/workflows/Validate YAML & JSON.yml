@@ -2,7 +2,7 @@ name: Validate YAML & JSON
 on: [push, pull_request]
 
 jobs:
-  validate:
+  validate-yaml-and-json:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

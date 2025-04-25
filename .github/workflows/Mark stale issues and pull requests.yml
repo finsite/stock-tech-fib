@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: "38 9 * * *"
 jobs:
-  stale:
+  mark-stale-issues-and-pull-requests:
     runs-on: ubuntu-latest
     permissions:
       issues: write

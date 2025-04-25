@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  expire-logs:
+  cleanup-old-workflow-logs:
     runs-on: ubuntu-latest
     steps:
       - name: Re-run Workflow to Expire Old Logs

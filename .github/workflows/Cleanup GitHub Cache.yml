@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  cleanup-cache:
+  cleanup-github-cache:
     runs-on: ubuntu-latest
     steps:
       - name: Delete Old Cache Entries

@@ -2,7 +2,7 @@ name: Performance Benchmarking
 on: [pull_request]
 
 jobs:
-  benchmark:
+  python-benchmark:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # ✅ Allows manual trigger
 
 jobs:
-  cleanup:
+  github-actions-cleanup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

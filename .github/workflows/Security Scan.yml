@@ -1,7 +1,7 @@
 name: Bandit Security Scan
 on: [push, pull_request]
 jobs:
-  security-scan:
+  bandit-security-scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

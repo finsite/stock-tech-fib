@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  cleanup-workflow-runs:
+  delete-old-workflow-runs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete Old Workflow Runs

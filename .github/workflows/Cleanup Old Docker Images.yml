@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  cleanup-docker-images:
+  cleanup-old-docker-images:
     runs-on: ubuntu-latest
     steps:
       - name: Delete Old Docker Images

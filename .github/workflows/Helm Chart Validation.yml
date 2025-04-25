@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  helm-lint:
+  helm-chart-validation:
     runs-on: ubuntu-latest
 
     steps:

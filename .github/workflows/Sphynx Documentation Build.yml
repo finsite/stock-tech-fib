@@ -3,7 +3,7 @@ name: Sphynx Documentation Build
 on: [push, pull_request]
 
 jobs:
-  docs:
+  sphynxdocs:
     runs-on: ubuntu-latest
 
     steps:
