@@ -1,9 +1,10 @@
 name: Helm Dry-Run Deployment
 
-# on: [push, pull_request]
-
 on:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   helm-dry-run:
@@ -12,6 +13,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Set chart directory
+        id: vars
+        run: |
+          echo "repo_name=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
 
       - name: Install Helm
         uses: azure/setup-helm@v4
@@ -26,17 +32,17 @@ jobs:
 
       - name: Helm Dependency Update (if needed)
         run: |
-          helm dependency update charts/stock_data_poller || echo "No dependencies"
+          helm dependency update charts/${{ env.repo_name }} || echo "No dependencies"
 
       - name: Helm Lint
-        run: helm lint charts/stock_data_poller
+        run: helm lint charts/${{ env.repo_name }}
 
       - name: Helm Dry Run Install
         run: |
-          helm install test-release charts/stock_data_poller \
+          helm install test-release charts/${{ env.repo_name }} \
             --dry-run \
             --debug \
-            --values charts/stock_data_poller/values.yaml
+            --values charts/${{ env.repo_name }}/values.yaml
 
       - name: Delete Kind Cluster
         if: always()

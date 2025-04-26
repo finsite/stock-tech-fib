@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   python-linting:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout Code

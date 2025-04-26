@@ -11,6 +11,8 @@ on:
 jobs:
   validate-kustomize-overlays:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         overlay: [dev, prod]

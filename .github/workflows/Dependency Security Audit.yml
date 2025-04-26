@@ -1,6 +1,9 @@
 name: Dependency Security Audit
 on: [push, pull_request]
 
+permissions:
+  contents: read
+  
 jobs:
   dependancy-security-audit:
     runs-on: ubuntu-latest

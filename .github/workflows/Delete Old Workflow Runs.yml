@@ -5,6 +5,10 @@ on:
     - cron: "0 0 * * 0" # Every Sunday
   workflow_dispatch:
 
+permissions:
+  actions: write  
+  contents: read  
+
 jobs:
   delete-old-workflow-runs:
     runs-on: ubuntu-latest

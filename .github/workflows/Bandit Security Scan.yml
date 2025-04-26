@@ -1,18 +1,26 @@
 name: Bandit Security Scan
+
 on: [push, pull_request]
+
 jobs:
   bandit-security-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install bandit safety
+
       - name: Run Bandit (code security)
         run: bandit .

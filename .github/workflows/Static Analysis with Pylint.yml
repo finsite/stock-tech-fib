@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   static-analysis-with-pylint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

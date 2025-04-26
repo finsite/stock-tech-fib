@@ -5,16 +5,39 @@ on:
     - cron: "0 0 1,15 * *" # 1st and 15th of every month
   workflow_dispatch:
 
+permissions:
+  packages: write
+  contents: read
+
 jobs:
   cleanup-old-docker-images:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Delete Old Docker Images
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract repository short name
+        id: extract
+        run: echo "REPO_NAME=$(basename '${{ github.repository }}')" >> $GITHUB_ENV
+
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Delete up to 50 old Docker Images (excluding 'latest')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for image_id in $(gh api "orgs/${{ github.repository_owner }}/packages/container/YOUR_IMAGE_NAME/versions" \
+          echo "Starting cleanup of old images for ${{ env.REPO_NAME }}..."
+          COUNT=0
+          for image_id in $(gh api "orgs/${{ github.repository_owner }}/packages/container/${{ env.REPO_NAME }}/versions" \
             -q '.[] | select(.metadata.container.tags | contains(["latest"]) | not) | .id'); do
             echo "Deleting image ID: $image_id"
-            gh api --method DELETE "orgs/${{ github.repository_owner }}/packages/container/YOUR_IMAGE_NAME/versions/$image_id"
+            gh api --method DELETE "orgs/${{ github.repository_owner }}/packages/container/${{ env.REPO_NAME }}/versions/$image_id"
+            COUNT=$((COUNT+1))
+            if [ "$COUNT" -ge 50 ]; then
+              echo "✅ Deleted 50 images, stopping to avoid rate limits."
+              break
+            fi
           done

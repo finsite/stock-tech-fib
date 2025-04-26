@@ -1,6 +1,9 @@
 name: Python Build & Install Check
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   python-build-test:
     runs-on: ubuntu-latest

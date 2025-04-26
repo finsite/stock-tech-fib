@@ -5,7 +5,9 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      actions: write
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
@@ -23,9 +25,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key:
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-${{
-            hashFiles('**/requirements*.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-${{ matrix.python-version }}-
 
@@ -38,10 +38,10 @@ jobs:
       - name: Run tests with coverage and HTML report
         run: |
           export PYTHONPATH=src
-          pytest --cov=app \
-                --cov-report=xml \
-                --cov-fail-under=80 \
-                --html=pytest-report.html
+          pytest --cov=src \
+                 --cov-report=xml \
+                 --cov-fail-under=80 \
+                 --html=pytest-report.html
 
       - name: Upload HTML Test Report
         if: ${{ !env.ACT }}

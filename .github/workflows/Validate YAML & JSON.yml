@@ -4,6 +4,8 @@ on: [push, pull_request]
 jobs:
   validate-yaml-and-json:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 

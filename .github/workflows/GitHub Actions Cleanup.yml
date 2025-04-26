@@ -3,7 +3,11 @@ name: GitHub Actions Cleanup
 on:
   schedule:
     - cron: "0 0 * * 0" # ✅ Runs every Sunday at midnight (UTC)
-  workflow_dispatch: # ✅ Allows manual trigger
+  workflow_dispatch: 
+
+permissions:
+  actions: write  
+  contents: read  
 
 jobs:
   github-actions-cleanup:

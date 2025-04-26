@@ -8,7 +8,8 @@ on:
 jobs:
   argocd-lint-and-sync-check:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

@@ -5,6 +5,9 @@ name: Helm Chart Validation
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   helm-chart-validation:
     runs-on: ubuntu-latest

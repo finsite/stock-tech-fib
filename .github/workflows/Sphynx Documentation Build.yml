@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   sphynxdocs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read    
 
     steps:
       - name: Checkout code
