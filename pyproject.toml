@@ -3,9 +3,9 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "template_python"
+name = "stock-tech-fib"
 version = "0.1.0"
-description = "A template for the default python project"
+description = "A template for the stock-tech-fib python project"
 readme = "README.md"
 requires-python = ">=3.7"
 license = { text = "MIT" }

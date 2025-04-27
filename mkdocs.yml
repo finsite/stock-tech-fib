@@ -1,7 +1,7 @@
-site_name: Template Python
-site_description: Documentation for the Template Python Project
+site_name: Stock-Tech-Fib
+site_description: Documentation for the stock-tech-fib Python Project
 site_author: Mark Quinn
-repo_url: https://github.com/finsite/template_python
+repo_url: https://github.com/finsite/stock-tech-fib
 theme:
   name: material
 
@@ -22,5 +22,4 @@ markdown_extensions:
   - toc:
       permalink: true
 
-site_url: https://finsite.github.io/template_python
-repo_url: https://github.com/finsite/template_python
+repo_url: https://github.com/finsite/stock-tech-fib

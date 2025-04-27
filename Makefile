@@ -1,6 +1,6 @@
 # Define variables
-APP_NAME = TEMPLATE_PYTHON
-NAMESPACE = TEMPLATE_PYTHON
+APP_NAME = STOCK-TECH-FIB
+NAMESPACE = STOCK-TECH-FIB
 
 # Kubernetes commands
 deploy:
