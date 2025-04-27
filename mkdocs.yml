@@ -1,0 +1,26 @@
+site_name: Template Python
+site_description: Documentation for the Template Python Project
+site_author: Mark Quinn
+repo_url: https://github.com/finsite/template_python
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - API Reference: api.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import sys; sys.path.append('src')
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+
+site_url: https://finsite.github.io/template_python
+repo_url: https://github.com/finsite/template_python

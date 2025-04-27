@@ -34,14 +34,8 @@ dev = [
   "flake8>=4.0",
   "black>=22.0",
   "mypy>=1.0",
-  "sphinx>=4.0",
-  "sphinx-rtd-theme>=1.0",
   "bandit>=1.7",
   "safety>=2.4"
-]
-docs = [
-  "sphinx>=4.0",
-  "sphinx-rtd-theme>=1.0"
 ]
 test = [
   "pytest>=7.0",
@@ -99,18 +93,6 @@ minversion = "7.0"
 addopts = "--strict-markers --tb=short -q"
 testpaths = ["tests"]
 
-[tool.docformatter]
-wrap-summaries = 88
-wrap-descriptions = 88
-pre-summary-newline = true
-make-summary-multi-line = false
-
-[tool.pydocstyle]
-convention = "google"
-add-ignore = ["D100", "D104"]
-match = ".*\\.py"
-match-dir = "[^\\.].*"
-
 [tool.coverage.run]
 branch = true
 source = ["src"]
@@ -141,37 +123,3 @@ allow_dirty = true
 commit = true
 message = "Bump version: {current_version} → {new_version}"
 
-[tool.deptry]
-ignore_notebooks = true
-exclude = ["tests/*"]
-ignore_transitive_dependencies = true
-known_dev_dependencies = [
-  "pytest",
-  "pytest-cov",
-  "pytest-benchmark",
-  "pytest-html",
-  "pytest-mock",
-  "flake8",
-  "flake8-docstrings",
-  "pylint",
-  "mypy",
-  "black",
-  "isort",
-  "ruff",
-  "xenon",
-  "bandit",
-  "safety",
-  "sphinx",
-  "sphinx-rtd-theme",
-  "furo",
-  "myst-parser",
-  "sphinx-autodoc-typehints",
-  "doc8",
-  "build",
-  "twine",
-  "bump-my-version",
-  "pre-commit",
-  "types-requests",
-  "types-python-dateutil",
-  "types-pyyaml"
-]
