@@ -9,7 +9,7 @@ jobs:
   cleanup-github-cache:
     runs-on: ubuntu-latest
     permissions:
-      actions: write  
+      actions: write
     steps:
       - name: Delete Old Cache Entries
         run: |

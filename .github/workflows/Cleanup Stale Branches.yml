@@ -9,7 +9,7 @@ jobs:
   cleanup-stale-branches:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # ✅ Required to delete branches
+      contents: write # ✅ Required to delete branches
 
     steps:
       - name: Delete Merged Stale Branches

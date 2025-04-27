@@ -19,7 +19,8 @@ jobs:
 
       - name: Extract repository short name
         id: extract
-        run: echo "REPO_NAME=$(basename '${{ github.repository }}')" >> $GITHUB_ENV
+        run:
+          echo "REPO_NAME=$(basename '${{ github.repository }}')" >> $GITHUB_ENV
 
       - name: Authenticate GitHub CLI
         run: |

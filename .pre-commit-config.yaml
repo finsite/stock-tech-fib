@@ -74,7 +74,9 @@ repos:
     hooks:
       - id: pip-audit
         name: pip-audit
-        entry: pip-audit --requirement requirements.txt --requirement requirements-dev.txt
+        entry:
+          pip-audit --requirement requirements.txt --requirement
+          requirements-dev.txt
         language: system
         types: [python]
         pass_filenames: false
@@ -154,3 +156,36 @@ repos:
   #   rev: 6.3.0
   #   hooks:
   #     - id: pydocstyle
+
+  - repo: https://github.com/fpgmaas/deptry.git
+    rev: "0.23.0"
+    hooks:
+      - id: deptry
+        args: ["--ignore", "DEP001,DEP002,DEP003"]
+
+  - repo: local
+    hooks:
+      - id: pip-compile-prod
+        name: Pip Compile Production Requirements
+        language: system
+        entry:
+          pip-compile --upgrade --output-file=requirements.txt requirements.in
+        files: ^requirements\.in$
+
+      - id: pip-compile-dev
+        name: Pip Compile Dev Requirements
+        language: system
+        entry:
+          pip-compile --upgrade --output-file=requirements-dev.txt
+          requirements-dev.in
+        files: ^requirements-dev\.in$
+
+  - repo: local
+    hooks:
+      - id: git-add-requirements
+        name: Git Add Requirements Files
+        language: system
+        entry: git add --intent-to-add requirements.txt requirements-dev.txt
+        files: ^requirements(-dev)?\.in$
+        always_run: true
+        pass_filenames: false

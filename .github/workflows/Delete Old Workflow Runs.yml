@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write  
-  contents: read  
+  actions: write
+  contents: read
 
 jobs:
   delete-old-workflow-runs:
