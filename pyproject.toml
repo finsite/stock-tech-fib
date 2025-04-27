@@ -125,7 +125,7 @@ version = "0.1.0"
 tag_format = "v$version"
 
 [tool.bumpversion]
-current_version = "0.1.22"
+current_version = "0.1.26"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"
@@ -140,3 +140,38 @@ tag_message = "Bump version: {current_version} → {new_version}"
 allow_dirty = true
 commit = true
 message = "Bump version: {current_version} → {new_version}"
+
+[tool.deptry]
+ignore_notebooks = true
+exclude = ["tests/*"]
+ignore_transitive_dependencies = true
+known_dev_dependencies = [
+  "pytest",
+  "pytest-cov",
+  "pytest-benchmark",
+  "pytest-html",
+  "pytest-mock",
+  "flake8",
+  "flake8-docstrings",
+  "pylint",
+  "mypy",
+  "black",
+  "isort",
+  "ruff",
+  "xenon",
+  "bandit",
+  "safety",
+  "sphinx",
+  "sphinx-rtd-theme",
+  "furo",
+  "myst-parser",
+  "sphinx-autodoc-typehints",
+  "doc8",
+  "build",
+  "twine",
+  "bump-my-version",
+  "pre-commit",
+  "types-requests",
+  "types-python-dateutil",
+  "types-pyyaml"
+]
