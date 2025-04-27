@@ -22,6 +22,8 @@ cycler==0.12.1
     # via matplotlib
 fonttools==4.57.0
     # via matplotlib
+hvac==2.3.0
+    # via -r requirements.in
 idna==3.10
     # via requests
 jmespath==1.0.1
@@ -61,7 +63,9 @@ python-dotenv==1.1.0
 pytz==2025.2
     # via pandas
 requests==2.32.3
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   hvac
 s3transfer==0.12.0
     # via boto3
 scipy==1.15.2
