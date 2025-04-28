@@ -1,7 +1,7 @@
+---
 # .prettierrc.yaml
-
-printWidth: 120          # Matches yamllint line-length max
-tabWidth: 2              # Matches yamllint indentation.spaces
+printWidth: 120  # Matches yamllint line-length max
+tabWidth: 2  # Matches yamllint indentation.spaces
 useTabs: false
 proseWrap: always
 yamlBracketSpacing: true

@@ -1,31 +1,24 @@
+---
 name: Helm Template & Package Check
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   helm-template-and-package-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Set chart directory
         id: vars
         run: |
           echo "repo_name=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
-
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
           version: v3.13.3
-
       - name: Run Helm Template Validation
         run: helm template charts/${{ env.repo_name }}/ --debug
-
       - name: Package Helm Chart
         run: helm package charts/${{ env.repo_name }}/

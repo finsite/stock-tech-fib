@@ -4,4 +4,4 @@ name: stock-tech-fib
 description: A Helm chart for stock-tech-fib
 type: application
 version: 0.1.0
-appVersion: "1.0"
+appVersion: '1.0'

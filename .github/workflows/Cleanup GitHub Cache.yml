@@ -1,10 +1,9 @@
+---
 name: Cleanup GitHub Cache
-
 on:
   schedule:
-    - cron: "0 0 * * 0" # Every Sunday
+    - cron: 0 0 * * 0  # Every Sunday
   workflow_dispatch:
-
 jobs:
   cleanup-github-cache:
     runs-on: ubuntu-latest

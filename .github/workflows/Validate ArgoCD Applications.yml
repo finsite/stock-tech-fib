@@ -1,13 +1,11 @@
+---
 name: Validate ArgoCD Applications
-
 # on:
 #   pull_request:
 #   push:
 #     branches: [main]
-
 on:
   workflow_dispatch:
-
 jobs:
   validate-argocdapps:
     runs-on: ubuntu-latest
@@ -16,14 +14,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
       - name: Install kubeconform
         run: |
           curl -L -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/download/v0.6.3/kubeconform-linux-amd64.tar.gz
           tar -xzf kubeconform.tar.gz kubeconform
           sudo mv kubeconform /usr/local/bin
-
       - name: Validate ArgoCD Application Manifests
-        run: |
+        run: |-
           kubeconform -strict -summary -kubernetes-version 1.27 -schema-location default \
             $(find k8s/application -name "*.yaml")

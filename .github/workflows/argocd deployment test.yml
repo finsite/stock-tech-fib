@@ -1,10 +1,8 @@
+---
 name: ArgoCD Deployment Test
-
 # on: [push, pull_request]
-
 on:
   workflow_dispatch:
-
 jobs:
   argocd-test-deploy:
     runs-on: ubuntu-latest
@@ -13,32 +11,26 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Set Up Kubernetes (Kind)
         uses: helm/kind-action@v1
-
       - name: Install ArgoCD
         run: |
           kubectl create namespace argocd
           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
           echo "Waiting for ArgoCD components to become ready..."
           kubectl rollout status deployment argocd-server -n argocd --timeout=180s
           kubectl rollout status deployment argocd-repo-server -n argocd --timeout=180s
           kubectl rollout status deployment argocd-application-controller -n argocd --timeout=180s
-
       - name: Apply ArgoCD Application
         run: |
           echo "Applying ArgoCD application manifest..."
           kubectl apply -f k8s/application/dev.yaml
-
       - name: Wait for ArgoCD CRDs
         run: |
           echo "Waiting for ArgoCD Application CRD to become available..."
           kubectl wait --for condition=Established --timeout=60s crd/applications.argoproj.io
-
       - name: Wait for Application to Appear in ArgoCD
-        run: |
+        run: |-
           echo "Waiting for the ArgoCD application to be registered..."
           for i in {1..10}; do
             kubectl get applications -n argocd && break

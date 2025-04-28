@@ -1,10 +1,9 @@
+---
 name: Cleanup Artifacts
-
 on:
   schedule:
-    - cron: "0 0 * * 0" # Every Sunday
+    - cron: 0 0 * * 0  # Every Sunday
   workflow_dispatch:
-
 jobs:
   cleanup-artifacts:
     runs-on: ubuntu-latest
@@ -14,7 +13,7 @@ jobs:
       - name: Delete Old Artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
+        run: |-
           echo "Deleting old artifacts..."
           for artifact_id in $(curl -s -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" \

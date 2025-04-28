@@ -1,6 +1,6 @@
+---
 name: Validate YAML & JSON
 on: [push, pull_request]
-
 jobs:
   validate-yaml-and-json:
     runs-on: ubuntu-latest
@@ -8,12 +8,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-
       - name: Validate YAML
         uses: ibiqlik/action-yamllint@v3
-
       - name: Validate JSON
-        run: |
+        run: |-
           FILES=$(find . -type f -name "*.json")
           if [ -n "$FILES" ]; then
             echo "$FILES" | xargs -n1 jq . > /dev/null

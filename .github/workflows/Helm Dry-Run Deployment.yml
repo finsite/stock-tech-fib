@@ -1,49 +1,38 @@
+---
 name: Helm Dry-Run Deployment
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   helm-dry-run:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Set chart directory
         id: vars
         run: |
           echo "repo_name=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
-
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
           version: v3.13.3
-
       - name: Install Kind
         uses: engineerd/setup-kind@v0.5.0
-
       - name: Create Kind Cluster
         run: kind create cluster --wait 60s
-
       - name: Helm Dependency Update (if needed)
         run: |
           helm dependency update charts/${{ env.repo_name }} || echo "No dependencies"
-
       - name: Helm Lint
         run: helm lint charts/${{ env.repo_name }}
-
       - name: Helm Dry Run Install
         run: |
           helm install test-release charts/${{ env.repo_name }} \
             --dry-run \
             --debug \
             --values charts/${{ env.repo_name }}/values.yaml
-
       - name: Delete Kind Cluster
         if: always()
         run: kind delete cluster

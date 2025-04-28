@@ -2,18 +2,18 @@
 # updates:
 #   # Docker dependencies (for base image updates)
 #   - package-ecosystem: "docker"
-#     directory: "/" # Path to Dockerfile
+#     directory: "/"  # Path to Dockerfile
 #     schedule:
-#       interval: "weekly" # Check for updates weekly
+#       interval: "weekly"  # Check for updates weekly
 
 #   # Helm dependencies (for chart dependency updates)
 #   - package-ecosystem: "helm"
-#     directory: "charts/my-kubernetes-app" # Path to your Helm chart directory
+#     directory: "charts/my-kubernetes-app"  # Path to your Helm chart directory
 #     schedule:
-#       interval: "weekly" # Check for updates weekly
+#       interval: "weekly"  # Check for updates weekly
 
 #   # GitHub Actions dependencies (for updating actions versions)
 #   - package-ecosystem: "github-actions"
-#     directory: ".github/workflows" # Path to GitHub Actions workflows directory
+#     directory: ".github/workflows"  # Path to GitHub Actions workflows directory
 #     schedule:
-#       interval: "weekly" # Check for updates weekly
+#       interval: "weekly"  # Check for updates weekly

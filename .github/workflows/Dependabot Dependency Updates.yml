@@ -1,31 +1,23 @@
+---
 name: Dependabot Dependency Updates
-
 on:
   push:
-    branches:
-      - main
-
+    branches: [main]
 permissions:
   contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
-
+          python-version: 3.x
       - name: Install pip-tools
         run: pip install pip-tools
-
       - name: Compile dependencies
         run: pip-compile requirements.in || pip-compile requirements.txt
-
       - name: Install dependencies
         run: pip install -r requirements.txt

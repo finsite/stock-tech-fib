@@ -1,3 +1,4 @@
+---
 name: Create Greetings on Pull Request
 on:
   # Trigger on issues and pull requests
@@ -19,9 +20,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: |
             👋 Welcome to the repository, @${{ github.event.sender.login }}!
-
             Thank you for opening an issue. A team member will review it soon. Please make sure you've followed the issue template and provided all the necessary details to help us assist you efficiently.
-          pr-message: |
+          pr-message: |-
             🚀 Welcome aboard, @${{ github.event.sender.login }}!
-
             Thank you for submitting your first pull request! Our team will review it shortly. Make sure your PR follows our [contribution guidelines](CONTRIBUTING.md), and feel free to reach out if you have any questions.

@@ -1,13 +1,11 @@
+---
 name: Validate Kustomize Overlays
-
 # on:
 #   pull_request:
 #   push:
 #     branches: [main]
-
 on:
   workflow_dispatch:
-
 jobs:
   validate-kustomize-overlays:
     runs-on: ubuntu-latest
@@ -19,12 +17,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
       - name: Install Kustomize
         run: |
           curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
           sudo mv kustomize /usr/local/bin
-
       - name: Validate overlay ${{ matrix.overlay }}
-        run: |
+        run: |-
           kustomize build k8s/overlays/${{ matrix.overlay }} | tee result.yaml | kubectl apply --dry-run=client -f -

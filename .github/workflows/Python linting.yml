@@ -1,25 +1,20 @@
+---
 name: Python Linting
-
 on: [push, pull_request]
-
 jobs:
   python-linting:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
-
+          python-version: '3.13'
       - name: Install linters
         run: pip install ruff pylint
-
       - name: Run Ruff
         run: |
           echo "### Ruff Linting" >> $GITHUB_STEP_SUMMARY
@@ -30,11 +25,10 @@ jobs:
           else
             echo "✅ Ruff passed with no issues" >> $GITHUB_STEP_SUMMARY
           fi
-
       - name: Run Pylint
         env:
           PYTHONPATH: ./src
-        run: |
+        run: |-
           echo "### Pylint Linting" >> $GITHUB_STEP_SUMMARY
           pylint src/ | tee pylint_output.txt
           if grep -q "rated at" pylint_output.txt; then

@@ -1,21 +1,18 @@
+---
 name: GitHub Actions Cleanup
-
 on:
   schedule:
-    - cron: "0 0 * * 0" # ✅ Runs every Sunday at midnight (UTC)
+    - cron: 0 0 * * 0  # ✅ Runs every Sunday at midnight (UTC)
   workflow_dispatch:
-
 permissions:
   actions: write
   contents: read
-
 jobs:
   github-actions-cleanup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Delete Old Workflow Runs (Older than 30 Days)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,7 +24,6 @@ jobs:
               | xargs -I {} curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/repos/${{ github.repository }}/actions/runs/{}" || true
           echo "Old workflow runs deleted."
-
       - name: Delete Old Artifacts (Older than 7 Days)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,11 +35,10 @@ jobs:
               | xargs -I {} curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/{}" || true
           echo "Old artifacts deleted."
-
       - name: Delete Old Cache Entries
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
+        run: |-
           echo "Fetching old caches..."
           gh cache list --repo ${{ github.repository }} | awk '{print $1}' | xargs -I {} gh cache delete {} || true
           echo "Old cache deleted."

@@ -1,13 +1,11 @@
+---
 name: Expire Old Workflow Logs
-
 on:
   schedule:
-    - cron: "0 0 * * 0" # Every Sunday
+    - cron: 0 0 * * 0  # Every Sunday
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   cleanup-old-workflow-logs:
     runs-on: ubuntu-latest

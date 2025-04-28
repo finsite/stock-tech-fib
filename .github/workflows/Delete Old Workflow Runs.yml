@@ -1,14 +1,12 @@
+---
 name: Cleanup Workflow Runs
-
 on:
   schedule:
-    - cron: "0 0 * * 0" # Every Sunday
+    - cron: 0 0 * * 0  # Every Sunday
   workflow_dispatch:
-
 permissions:
   actions: write
   contents: read
-
 jobs:
   delete-old-workflow-runs:
     runs-on: ubuntu-latest
@@ -16,7 +14,7 @@ jobs:
       - name: Delete Old Workflow Runs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
+        run: |-
           echo "Deleting old workflow runs..."
           for run_id in $(curl -s -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/repos/${{ github.repository }}/actions/runs?per_page=100" \

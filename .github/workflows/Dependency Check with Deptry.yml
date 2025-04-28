@@ -1,33 +1,27 @@
+---
 name: Dependency Check with Deptry
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
 permissions:
   contents: read
-
 jobs:
   depcheck:
     name: Validate Dependencies with Deptry
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.11
-
       - name: Install Deptry
         run: |
           python -m pip install --upgrade pip
           pip install deptry
-
       - name: Run Deptry
-        run: |
+        run: |-
           deptry src/ --ignore DEP001,DEP002,DEP003

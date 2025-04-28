@@ -1,25 +1,19 @@
+---
 name: Helm Chart Validation
-
 # on: [push, pull_request]
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   helm-chart-validation:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.13.3 # Optional: pin to stable v3
-
+          version: v3.13.3  # Optional: pin to stable v3
       - name: Lint Helm Chart
         run: helm lint charts/stock_data_poller/

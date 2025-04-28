@@ -1,9 +1,8 @@
+---
 name: Validate Kubernetes YAML
 # on: [push, pull_request]
-
 on:
   workflow_dispatch:
-
 jobs:
   validate-kubernetes-files:
     runs-on: ubuntu-latest

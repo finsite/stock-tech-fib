@@ -1,10 +1,8 @@
+---
 name: ArgoCD Linting & Sync Check
-
 # on: [push, pull_request]
-
 on:
   workflow_dispatch:
-
 jobs:
   argocd-lint-and-sync-check:
     runs-on: ubuntu-latest
@@ -13,8 +11,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Lint ArgoCD Application YAML
-        run: |
+        run: |-
           echo "Linting ArgoCD Application manifest..."
           kubectl apply --dry-run=client --validate=true -f k8s/application/dev.yaml

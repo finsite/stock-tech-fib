@@ -1,13 +1,14 @@
+---
 repos:
   # ✅ Basic Code Hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v5.0.0"
+    rev: v5.0.0
     hooks:
       - id: check-yaml
       - id: check-json
       - id: detect-private-key
       - id: check-added-large-files
-        args: ["--maxkb=5000"]
+        args: [--maxkb=5000]
       - id: debug-statements
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
@@ -21,11 +22,11 @@ repos:
     hooks:
       - id: codespell
         exclude: package-lock.json
-        args: ["--ignore-words-list", "hte"]
+        args: [--ignore-words-list, hte]
 
   # ✅ Python Code Formatters & Linters
   - repo: https://github.com/psf/black
-    rev: "25.1.0"
+    rev: 25.1.0
     hooks:
       - id: black
 
@@ -35,13 +36,11 @@ repos:
   #     - id: ruff
   #       args: [--fix]
   #     - id: ruff-format
-
   - repo: https://github.com/asottile/pyupgrade
-    rev: "v3.19.1"
+    rev: v3.19.1
     hooks:
       - id: pyupgrade
-        args: ["--py311-plus"]
-
+        args: [--py311-plus]
   - repo: https://github.com/pre-commit/mirrors-isort
     rev: v5.10.1
     hooks:
@@ -62,10 +61,10 @@ repos:
 
   # ✅ Security
   - repo: https://github.com/PyCQA/bandit
-    rev: "1.8.3"
+    rev: 1.8.3
     hooks:
       - id: bandit
-        args: ["-r", "src", "tests"]
+        args: [-r, src, tests]
         pass_filenames: false
         language: python
 
@@ -74,13 +73,10 @@ repos:
     hooks:
       - id: pip-audit
         name: pip-audit
-        entry:
-          pip-audit --requirement requirements.txt --requirement
-          requirements-dev.txt
+        entry: pip-audit --requirement requirements.txt --requirement requirements-dev.txt
         language: system
         types: [python]
         pass_filenames: false
-
   - repo: local
     hooks:
       - id: pip-check
@@ -98,21 +94,19 @@ repos:
   #       entry: hadolint
   #       language: system
   #       files: Dockerfile
-
   - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: "v0.10.0"
+    rev: v0.10.0
     hooks:
       - id: shellcheck
         entry: shellcheck
         language: system
-
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: "v4.0.0-alpha.8"
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         files: \.(json|ya?ml|md|html|css)$
-        args: ["--print-width", "80"]
-        additional_dependencies: ["prettier@latest"]
+        args: [--print-width, '80']
+        additional_dependencies: [prettier@latest]
 
   # - repo: local
   #   hooks:
@@ -156,30 +150,23 @@ repos:
   #   rev: 6.3.0
   #   hooks:
   #     - id: pydocstyle
-
   - repo: https://github.com/fpgmaas/deptry.git
-    rev: "0.23.0"
+    rev: 0.23.0
     hooks:
       - id: deptry
-        args: ["--ignore", "DEP001,DEP002,DEP003"]
-
+        args: [--ignore, 'DEP001,DEP002,DEP003']
   - repo: local
     hooks:
       - id: pip-compile-prod
         name: Pip Compile Production Requirements
         language: system
-        entry:
-          pip-compile --upgrade --output-file=requirements.txt requirements.in
+        entry: pip-compile --upgrade --output-file=requirements.txt requirements.in
         files: ^requirements\.in$
-
       - id: pip-compile-dev
         name: Pip Compile Dev Requirements
         language: system
-        entry:
-          pip-compile --upgrade --output-file=requirements-dev.txt
-          requirements-dev.in
+        entry: pip-compile --upgrade --output-file=requirements-dev.txt requirements-dev.in
         files: ^requirements-dev\.in$
-
   - repo: local
     hooks:
       - id: git-add-requirements
