@@ -19,7 +19,7 @@ jobs:
         with:
           version: v3.13.3
       - name: Install Kind
-        uses: engineerd/setup-kind@v0.5.0
+        uses: engineerd/setup-kind@v0.6.2
       - name: Create Kind Cluster
         run: kind create cluster --wait 60s
       - name: Helm Dependency Update (if needed)
