@@ -30,7 +30,7 @@ repos:
     hooks:
       - id: black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.2  # (latest stable at time of writing)
+    rev: v0.11.7  # (latest stable at time of writing)
     hooks:
       - id: ruff
         args: [--fix]
@@ -103,9 +103,14 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        files: \.(json|ya?ml|md|html|css)$
+        files: \.(json|md|html|css)$  # REMOVE yaml and yml from the file list
         args: [--print-width, '80']
         additional_dependencies: [prettier@latest]
+  - repo: https://github.com/lyz-code/yamlfix
+    rev: 1.17.0
+    hooks:
+      - id: yamlfix
+        files: \.(yaml|yml)$
 
   # - repo: local
   #   hooks:
