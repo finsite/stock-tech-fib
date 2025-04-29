@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.42] - 2025-04-29
+
 ## [0.1.41] - 2025-04-29
 
 - (Placeholder for new changes)
