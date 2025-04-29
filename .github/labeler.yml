@@ -26,3 +26,6 @@ feature:
 # Add 'release' label to PRs opened against the main branch
 release:
   - base-branch: main
+# Add 'dependencies' label to Dependabot PRs
+dependencies:
+  - head-branch: ^dependabot
