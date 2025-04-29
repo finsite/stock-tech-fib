@@ -30,12 +30,13 @@ repos:
     hooks:
       - id: black
 
-  # - repo: https://github.com/astral-sh/ruff-pre-commit
-  #   rev: v0.11.2
-  #   hooks:
-  #     - id: ruff
-  #       args: [--fix]
-  #     - id: ruff-format
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.2 # (latest stable at time of writing)
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
     hooks:
@@ -73,7 +74,9 @@ repos:
     hooks:
       - id: pip-audit
         name: pip-audit
-        entry: pip-audit --requirement requirements.txt --requirement requirements-dev.txt
+        entry:
+          pip-audit --requirement requirements.txt --requirement
+          requirements-dev.txt
         language: system
         types: [python]
         pass_filenames: false
@@ -105,7 +108,7 @@ repos:
     hooks:
       - id: prettier
         files: \.(json|ya?ml|md|html|css)$
-        args: [--print-width, '80']
+        args: [--print-width, "80"]
         additional_dependencies: [prettier@latest]
 
   # - repo: local
@@ -154,18 +157,21 @@ repos:
     rev: 0.23.0
     hooks:
       - id: deptry
-        args: [--ignore, 'DEP001,DEP002,DEP003']
+        args: [--ignore, "DEP001,DEP002,DEP003"]
   - repo: local
     hooks:
       - id: pip-compile-prod
         name: Pip Compile Production Requirements
         language: system
-        entry: pip-compile --upgrade --output-file=requirements.txt requirements.in
+        entry:
+          pip-compile --upgrade --output-file=requirements.txt requirements.in
         files: ^requirements\.in$
       - id: pip-compile-dev
         name: Pip Compile Dev Requirements
         language: system
-        entry: pip-compile --upgrade --output-file=requirements-dev.txt requirements-dev.in
+        entry:
+          pip-compile --upgrade --output-file=requirements-dev.txt
+          requirements-dev.in
         files: ^requirements-dev\.in$
   - repo: local
     hooks:
