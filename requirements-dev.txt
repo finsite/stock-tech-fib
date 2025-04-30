@@ -14,9 +14,9 @@ bandit==1.8.3
     # via -r requirements-dev.in
 black==24.10.0
     # via -r requirements-dev.in
-boto3==1.38.3
+boto3==1.38.5
     # via -r D:\git\stock-tech-fib\requirements.in
-botocore==1.38.3
+botocore==1.38.5
     # via
     #   boto3
     #   s3transfer
@@ -58,7 +58,7 @@ dparse==0.6.4
     # via
     #   safety
     #   safety-schemas
-filelock==3.16.1
+filelock==3.18.0
     # via safety
 flake8==7.2.0
     # via -r requirements-dev.in
@@ -146,11 +146,11 @@ pycodestyle==2.13.0
     # via flake8
 pycparser==2.22
     # via cffi
-pydantic==2.9.2
+pydantic==2.11.4
     # via
     #   safety
     #   safety-schemas
-pydantic-core==2.23.4
+pydantic-core==2.34.1
     # via pydantic
 pyflakes==3.3.2
     # via flake8
@@ -215,7 +215,7 @@ tomlkit==0.13.2
     # via safety
 tqdm==4.67.1
     # via nltk
-typer==0.15.2
+typer==0.15.3
     # via safety
 types-setuptools==79.0.0.20250422
     # via requirements-parser
