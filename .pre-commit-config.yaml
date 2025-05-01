@@ -1,6 +1,5 @@
 ---
 repos:
-  # ✅ Basic Code Hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -15,25 +14,21 @@ repos:
       - id: end-of-file-fixer
       - id: mixed-line-ending
         args: [--fix=lf]
-
-  # ✅ Spelling
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
       - id: codespell
         exclude: package-lock.json
         args: [--ignore-words-list, hte]
-
-  # ✅ Python Code Formatters & Linters
   - repo: https://github.com/psf/black
     rev: 25.1.0
     hooks:
       - id: black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.7  # (latest stable at time of writing)
+    rev: v0.11.7
     hooks:
       - id: ruff
-        args: [--fix]
+        args: [--fix, --extend-select=D, ANN]
       - id: ruff-format
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
@@ -44,21 +39,39 @@ repos:
     rev: v5.10.1
     hooks:
       - id: isort
-
-  # - repo: https://github.com/myint/docformatter
-  #   rev: v1.7.5
-  #   hooks:
-  #     - id: docformatter
-  #       args: ["--in-place", "--recursive"]
-
-  # ✅ Type Checking & Static Analysis
-  # - repo: https://github.com/pre-commit/mirrors-mypy
-  #   rev: v1.15.0
-  #   hooks:
-  #     - id: mypy
-  #       args: ["--strict", "src"]
-
-  # ✅ Security
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        require_serial: true
+        args:
+          - --disable=all
+          - --enable=missing-function-docstring,missing-class-docstring
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright type checking
+        entry: pyright
+        language: node
+        types: [python]
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: docformatter
+        name: Format docstrings with docformatter
+        entry: docformatter
+        language: system
+        types: [python]
+        args:
+          - --in-place
+          - --recursive
+          - --wrap-summaries=88
+          - --wrap-descriptions=88
+          - --pre-summary-newline
+        files: \.py$
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.3
     hooks:
@@ -112,24 +125,6 @@ repos:
       - id: yamlfix
         files: \.(yaml|yml)$
 
-  # - repo: local
-  #   hooks:
-  #     - id: docformatter
-  #       name: Format docstrings with docformatter
-  #       entry: docformatter
-  #       language: system
-  #       types: [python]
-  #       args:
-  #         [
-  #           "--in-place",
-  #           "--recursive",
-  #           "--wrap-summaries",
-  #           "88",
-  #           "--wrap-descriptions",
-  #           "88",
-  #         ]
-  #       files: \.py$
-
   # ✅ Commit Message Linting
   # - repo: https://github.com/commitizen-tools/commitizen
   #   rev: "v4.4.1"
@@ -149,11 +144,13 @@ repos:
   #       language: system
   #       pass_filenames: false
 
-  # ✅ Docstring Enforcement
-  # - repo: https://github.com/PyCQA/pydocstyle
-  #   rev: 6.3.0
+  # - repo: local
   #   hooks:
-  #     - id: pydocstyle
+  #     - id: pytest-cov
+  #       name: Pytest with Coverage Enforcement
+  #       entry: pytest --maxfail=3 --disable-warnings --cov=src --cov-report=term-missing --cov-fail-under=85
+  #       language: system
+  #       pass_filenames: false
   - repo: https://github.com/fpgmaas/deptry.git
     rev: 0.23.0
     hooks:

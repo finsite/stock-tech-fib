@@ -1,8 +1,8 @@
 """
 Module to handle output of analysis results to a chosen output target.
 
-This implementation logs the result, prints it to stdout,
-and sends the data to RabbitMQ or SQS.
+This implementation logs the result, prints it to stdout, and sends the data to RabbitMQ
+or SQS.
 """
 
 import json

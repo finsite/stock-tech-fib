@@ -7,9 +7,7 @@ arguments: the current version, and the part of the version to increment ('major
 
 The tool will then print a new version string with the specified part
 incremented.
-
 """
-
 
 import sys
 
@@ -29,7 +27,6 @@ def next_version(current: str, part: str) -> str:
 
     Raises:
         ValueError: If the specified part is not 'major', 'minor', or 'patch'.
-
     """
     v = Version(current)
     if part == "major":
