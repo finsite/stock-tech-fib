@@ -4,15 +4,15 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in requirements.in
 #
-boto3==1.38.7
+boto3==1.38.8
     # via -r requirements.in
-botocore==1.38.7
+botocore==1.38.8
     # via
     #   boto3
     #   s3transfer
 certifi==2025.4.26
     # via requests
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
     # via requests
 colorama==0.4.6
     # via loguru
