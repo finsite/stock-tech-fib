@@ -18,7 +18,7 @@ QUEUE_TYPE = os.getenv("QUEUE_TYPE", "rabbitmq").lower()
 # RabbitMQ config
 RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
 RABBITMQ_EXCHANGE = os.getenv("RABBITMQ_EXCHANGE", "stock_analysis")
-RABBITMQ_ROUTING_KEY = os.getenv("RABBITMQ_ROUTING_KEY", "fib")
+RABBITMQ_ROUTING_KEY = os.getenv("RABBITMQ_ROUTING_KEY", "candlestick")
 RABBITMQ_VHOST = os.getenv("RABBITMQ_VHOST", "/")
 RABBITMQ_USER = os.getenv("RABBITMQ_USER", "guest")
 RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD", "guest")

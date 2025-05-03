@@ -5,7 +5,7 @@ This function logs the result of API request operations, including the symbol, r
 limit, and whether the request was successful or not.
 """
 
-from src.utils.setup_logger import setup_logger
+from app.utils.setup_logger import setup_logger
 
 # Initialize logger for this module
 logger = setup_logger(__name__)

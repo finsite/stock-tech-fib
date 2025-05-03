@@ -6,6 +6,7 @@ or SQS.
 """
 
 import json
+from typing import Any
 
 from app.logger import setup_logger
 from app.queue_sender import publish_to_queue
@@ -14,7 +15,7 @@ from app.queue_sender import publish_to_queue
 logger = setup_logger(__name__)
 
 
-def send_to_output(data: dict[str, any]) -> None:
+def send_to_output(data: dict[str, Any]) -> None:
     """
     Outputs processed analysis results to the configured output system.
 

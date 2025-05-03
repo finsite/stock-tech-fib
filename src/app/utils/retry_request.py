@@ -61,4 +61,6 @@ def retry_request(
 
     # Log the final failure and raise the last exception encountered
     logger.error(f"All {max_retries} attempts failed. Last error: {last_exception}")
-    raise last_exception
+    if last_exception is not None:
+        raise last_exception
+    raise RuntimeError("All retries failed but no exception was captured.")
