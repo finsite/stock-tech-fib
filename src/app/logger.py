@@ -15,10 +15,11 @@ def setup_logger(name: str = "app") -> logging.Logger:
     The log level will be set to INFO.
 
     Args:
-        name (str): The name of the logger. Defaults to "app".
+      name(str): The name of the logger. Defaults to "app".
+      name: str:  (Default value = "app")
 
     Returns:
-        logging.Logger: The configured logger.
+      logging.Logger: The configured logger.
     """
     logger: logging.Logger = logging.getLogger(name)
 

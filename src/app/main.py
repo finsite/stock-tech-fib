@@ -35,6 +35,10 @@ def main() -> None:
     messages from the configured message queue. It logs the start of the
     service and invokes the `consume_messages` function to begin processing
     messages.
+
+    Args:
+
+    Returns:
     """
     logger.info("Starting Fibonacci Analysis Service...")
     consume_messages()

@@ -100,7 +100,18 @@ def calculate_fibonacci_levels(
     swing_high: float | None = None,
     swing_low: float | None = None,
 ) -> dict[str, float]:
-    """Calculate Fibonacci retracement or extension levels."""
+    """
+    Calculate Fibonacci retracement or extension levels.
+
+    Args:
+      data: pd.DataFrame:
+      method: Literal["retracement":
+      "extension"]:  (Default value = "retracement")
+      swing_high: float | None:  (Default value = None)
+      swing_low: float | None:  (Default value = None)
+
+    Returns:
+    """
     try:
         if swing_high is None:
             high_series = data.get("High", pd.Series(dtype=float))

@@ -27,6 +27,14 @@ def track_polling_metrics(status: Literal["success", "failure"], source: str, sy
     Raises:
     ------
         ValueError: If the status is not 'success' or 'failure'.
+
+    Args:
+      status: Literal["success":
+      "failure"]:
+      source: str:
+      symbol: str:
+
+    Returns:
     """
     # Validate status
     if status not in {"success", "failure"}:

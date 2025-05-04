@@ -1,6 +1,6 @@
 # 📌 Project TODO: Stock Poller Enhancements
 
-This TODO list outlines the remaining work required to bring the stock-* poller repositories to MVP and production quality.
+This TODO list outlines the remaining work required to bring the stock-\* poller repositories to MVP and production quality.
 
 ---
 

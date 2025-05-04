@@ -7,14 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_vault_secrets() -> dict[str, str]:
-    """
-    Load secrets from Vault using AppRole login, with fallback to empty dict.
-
-    Returns
-    -------
-    dict[str, str]
-        Dictionary of key-value secrets from the appropriate Vault path.
-    """
+    """Load secrets from Vault using AppRole login, with fallback to empty dict."""
     vault_addr = os.getenv("VAULT_ADDR", "http://127.0.0.1:8200")
     role_id = os.getenv("VAULT_ROLE_ID")
     secret_id = os.getenv("VAULT_SECRET_ID")

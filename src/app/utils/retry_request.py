@@ -37,6 +37,15 @@ def retry_request(
     ------
         ValueError: If the function to be retried is None.
         Exception: The last exception encountered if all retries fail.
+
+    Args:
+      func: Callable[[]:
+      Any]:
+      *:
+      max_retries: int:  (Default value = 3)
+      delay_seconds: int:  (Default value = 5)
+
+    Returns:
     """
     # Validate the function to be retried
     if func is None:
