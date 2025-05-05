@@ -58,7 +58,7 @@ dparse==0.6.4
     # via
     #   safety
     #   safety-schemas
-filelock==3.16.1
+filelock==3.18.0
     # via safety
 flake8==7.2.0
     # via -r requirements-dev.in
@@ -148,11 +148,11 @@ pycodestyle==2.13.0
     # via flake8
 pycparser==2.22
     # via cffi
-pydantic==2.9.2
+pydantic==2.11.4
     # via
     #   safety
     #   safety-schemas
-pydantic-core==2.23.4
+pydantic-core==2.34.1
     # via pydantic
 pyflakes==3.3.2
     # via flake8
@@ -222,7 +222,7 @@ tqdm==4.67.1
     # via nltk
 typer==0.15.3
     # via safety
-types-setuptools==80.1.0.20250503
+types-setuptools==80.3.0.20250505
     # via requirements-parser
 typing-extensions==4.13.2
     # via
