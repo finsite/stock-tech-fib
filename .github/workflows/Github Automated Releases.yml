@@ -1,0 +1,36 @@
+---
+name: GitHub Automated Releases
+on:
+  push:
+    tags: [v*]
+permissions:
+  contents: write
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Commitizen
+        run: pip install commitizen
+      - name: Generate changelog section for this tag
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          cz changelog --dry-run --version "$VERSION" > changelog.md
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          cat changelog.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.CHANGELOG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

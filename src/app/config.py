@@ -1,8 +1,8 @@
 """
 Configuration module for queue consumer pollers.
 
-Provides typed getter functions to retrieve configuration values from Vault,
-environment variables, or defaults.
+Provides typed getter functions to retrieve configuration values from Vault, environment
+variables, or defaults.
 """
 
 import os
@@ -14,18 +14,17 @@ _vault = VaultClient()
 
 
 def get_config_value(key: str, default: str | None = None) -> str:
-    """Retrieve a configuration value from Vault, environment variable, or default.
+    """
+    Retrieve a configuration value from Vault, environment variable, or default.
 
     Args:
       key(str): Configuration key to fetch.
       default(Optional[str]): Fallback value if key is not found.
-      key: str: 
+      key: str:
       default: str | None:  (Default value = None)
 
     Returns:
       str: The resolved value.
-
-    
     """
     val = _vault.get(key, os.getenv(key))
     if val is None:
@@ -39,8 +38,9 @@ def get_config_value(key: str, default: str | None = None) -> str:
 # 📬 Queue Configuration
 # ------------------------------------------------------------------------------
 
+
 def get_queue_type() -> str:
-    """ """
+    """"""
     return get_config_value("QUEUE_TYPE", "rabbitmq")
 
 

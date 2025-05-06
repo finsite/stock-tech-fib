@@ -1,6 +1,6 @@
 ---
 site_name: Stock-Tech-Fib
-site_description: Documentation for the stock-tech-fib Python Project
+site_description: Documentation for the Stock-Tech-Fib Project
 site_author: Mark Quinn
 repo_url: https://github.com/finsite/stock-tech-fib
 theme:
@@ -8,12 +8,14 @@ theme:
 nav:
   - Home: index.md
   - API Reference: api.md
+  - More Details: more-details.md
+  - Other Topic: other-topic.md
 plugins:
   - search
   - mkdocstrings:
       handlers:
         python:
-          setup_commands: [import sys; sys.path.append('src')]
+          paths: [src]
 markdown_extensions:
   - admonition
   - toc:

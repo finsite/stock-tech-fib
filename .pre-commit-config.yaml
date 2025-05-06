@@ -124,17 +124,21 @@ repos:
     hooks:
       - id: yamlfix
         files: \.(yaml|yml)$
-
-  # ✅ Commit Message Linting
-  # - repo: https://github.com/commitizen-tools/commitizen
-  #   rev: "v4.4.1"
-  #   hooks:
-  #     - id: commitizen
-  #       name: Commitizen Conventional Commit Linter
-  #       entry: cz check
-  #       language: python
-  #       stages: [commit-msg]
-
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.6.2
+    hooks:
+      - id: commitizen
+        name: Commitizen Conventional Commit Linter
+        entry: cz check
+        language: python
+        stages: [commit-msg]
+  - repo: local
+    hooks:
+      - id: commitizen-changelog-check
+        name: Commitizen Changelog Dry Run
+        entry: cz changelog --dry-run
+        language: system
+        stages: [pre-push]
   # ✅ Run Tests
   # - repo: local
   #   hooks:

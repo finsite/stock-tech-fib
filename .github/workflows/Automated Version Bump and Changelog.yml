@@ -1,56 +1,4 @@
 ---
-# ---
-# name: Automated Version Bump and Changelog
-# on:
-#   push:
-#     branches: [main]
-#     paths-ignore: [README.md, docs/**, .github/**]
-# permissions:
-#   contents: write  # ✅ allow tag pushes and commits
-# jobs:
-#   bump-version:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repo
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0  # Needed for tags and full history
-#       - name: Set up Python
-#         uses: actions/setup-python@v5
-#         with:
-#           python-version: '3.13'
-#       - name: Install tools
-#         run: |
-#           pip install bump-my-version
-#           sudo apt-get update
-#           sudo apt-get install -y git
-#       - name: Configure Git
-#         run: |
-#           git config user.name "github-actions[bot]"
-#           git config user.email "github-actions[bot]@users.noreply.github.com"
-#           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-#       - name: Ensure initial tag exists
-#         run: |
-#           if ! git describe --tags --abbrev=0 >/dev/null 2>&1; then
-#             git tag v0.0.0
-#             git push --tags
-#           fi
-#       - name: Get latest tag
-#         id: latest_tag
-#         run: |
-#           echo "tag=$(git describe --tags --abbrev=0 || echo 'v0.0.0')" >> $GITHUB_OUTPUT
-#       - name: Generate changelog
-#         run: |
-#           echo "## Changelog" > CHANGELOG.md
-#           echo "" >> CHANGELOG.md
-#           git log ${{ steps.latest_tag.outputs.tag }}..HEAD --pretty=format:"- %s (%an)" >> CHANGELOG.md
-#       - name: Bump patch version
-#         run: |-
-#           bump-my-version bump patch --verbose
-#           git add CHANGELOG.md
-#           git commit -m "bump: patch version + changelog [skip ci]" || echo "No changes to commit"
-#           git push
-#           git push --tags
 name: Automated Version Bump and Changelog
 on:
   push:
@@ -69,25 +17,22 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
-      - name: Install bump-my-version
-        run: |
-          pip install bump-my-version
+          python-version: '3.11'
+      - name: Install Commitizen
+        run: pip install commitizen
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-      - name: Ensure initial tag exists
+      - name: Ensure initial tag exists (if needed)
         run: |
           if ! git describe --tags --abbrev=0 >/dev/null 2>&1; then
             git tag v0.0.0
             git push --tags
           fi
-      - name: Bump patch version and update changelog
+      - name: Bump version and generate changelog
         run: |-
-          bump-my-version bump patch --verbose
-          git add pyproject.toml CHANGELOG.md
-          git commit -m "bump: patch version + changelog [skip ci]" || echo "No changes to commit"
+          cz bump --yes --changelog || exit 1
           git push
           git push --tags
