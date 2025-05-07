@@ -18,10 +18,20 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }}
           --password-stdin
-      - name: Extract version from pyproject.toml
+      - name: Set up Python and install Commitizen
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Commitizen
+        run: pip install commitizen
+      - name: Extract version from Commitizen
         id: get_version
         run: |
-          VERSION=$(grep '^current_version' pyproject.toml | head -n 1 | cut -d '"' -f2)
+          VERSION=$(cz version --project)
+          if [ -z "$VERSION" ]; then
+            echo "❌ VERSION is empty. Cannot tag Docker image."
+            exit 1
+          fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
       - name: Build and push Docker image
         run: |-
