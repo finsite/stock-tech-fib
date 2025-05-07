@@ -5,6 +5,12 @@
 - Making sure Dockerfile is correct (Mark Quinn)
 - bump: patch version + changelog [skip ci] (github-actions[bot])
 
+## v0.2.1 (2025-05-06)
+
+### Fix
+
+- **docs**: Fix pyproject.toml to adjust version to dynamic = [version]
+
 ## v0.2.0 (2025-05-06)
 
 ### Feat
