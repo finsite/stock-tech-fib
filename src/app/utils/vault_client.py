@@ -57,8 +57,7 @@ class VaultClient:
             self.secrets = {}
 
     def get(self, key: str, default: str | None = None) -> str | None:
-        """
-        Retrieve a secret by key.
+        """Retrieve a secret by key.
 
         Args:
           key(str): The secret key to retrieve.
@@ -67,5 +66,6 @@ class VaultClient:
           default: str | None:  (Default value = None)
 
         Returns:
+
         """
         return self.secrets.get(key, default)

@@ -4,9 +4,9 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in requirements.in
 #
-boto3==1.38.9
+boto3==1.38.11
     # via -r requirements.in
-botocore==1.38.9
+botocore==1.38.11
     # via
     #   boto3
     #   s3transfer
@@ -22,7 +22,7 @@ cycler==0.12.1
     # via matplotlib
 fonttools==4.57.0
     # via matplotlib
-hvac==2.3.0
+hvac==1.2.1
     # via -r requirements.in
 idna==3.10
     # via requests
@@ -36,7 +36,7 @@ loguru==0.7.3
     # via -r requirements.in
 matplotlib==3.10.1
     # via -r requirements.in
-numpy==2.2.5
+numpy==1.26.4
     # via
     #   -r requirements.in
     #   contourpy

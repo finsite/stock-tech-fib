@@ -1,5 +1,4 @@
-"""
-The module initializes the utilities package for the application.
+"""The module initializes the utilities package for the application.
 
 Utilities included:
 - retry_request: Function for retrying operations with exponential backoff.

@@ -1,5 +1,4 @@
-"""
-Main entry point of the application.
+"""Main entry point of the application.
 
 This script is responsible for starting the Fibonacci Analysis Service.
 
@@ -12,6 +11,7 @@ Imports:
 Attributes
 ----------
     logger (logging.Logger): Configured logger for the application.
+
 """
 
 import os
@@ -28,8 +28,7 @@ logger = setup_logger(__name__)
 
 
 def main() -> None:
-    """
-    Main entry point of the application.
+    """Main entry point of the application.
 
     This function starts the Fibonacci Analysis Service by consuming
     messages from the configured message queue. It logs the start of the
@@ -39,6 +38,7 @@ def main() -> None:
     Args:
 
     Returns:
+
     """
     logger.info("Starting Fibonacci Analysis Service...")
     consume_messages()

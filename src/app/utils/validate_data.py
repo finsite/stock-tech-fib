@@ -1,5 +1,4 @@
-"""
-Validate stock data to ensure it conforms to the required schema.
+"""Validate stock data to ensure it conforms to the required schema.
 
 The module provides a function to validate stock data dictionaries
 containing the following required keys: 'symbol', 'price', 'volume',
@@ -16,8 +15,7 @@ logger = setup_logger(__name__)
 
 
 def validate_data(data: dict[str, Any]) -> bool:
-    """
-    Validates the data to ensure it conforms to the required schema.
+    """Validates the data to ensure it conforms to the required schema.
 
     The function checks that the input data is a dictionary containing
     the required keys: 'symbol', 'price', 'volume', and 'timestamp'.
@@ -37,6 +35,7 @@ def validate_data(data: dict[str, Any]) -> bool:
     Notes:
     -----
     The function logs an error message for each validation failure.
+
     """
     required_keys: set[str] = {"symbol", "price", "volume", "timestamp"}
 
@@ -75,8 +74,7 @@ def validate_data(data: dict[str, Any]) -> bool:
 
 
 def _validate_symbol(symbol: str) -> bool:
-    """
-    Validates the 'symbol' field to ensure it is a string of alphabetical characters.
+    """Validates the 'symbol' field to ensure it is a string of alphabetical characters.
 
     Args:
       symbol(str): The value of the 'symbol' field.
@@ -90,6 +88,7 @@ def _validate_symbol(symbol: str) -> bool:
     The function checks the provided symbol to ensure it is a string and contains
     only alphabetical characters. The function logs an error message if the
     validation fails.
+
     """
     if not isinstance(symbol, str) or not symbol.isalpha():
         logger.error(f"Invalid symbol format: {symbol}")
@@ -98,8 +97,7 @@ def _validate_symbol(symbol: str) -> bool:
 
 
 def _validate_price(price: Any) -> bool:
-    """
-    Validates the 'price' field to ensure it is a non-negative number.
+    """Validates the 'price' field to ensure it is a non-negative number.
 
     Args:
       price(Any): The value of the 'price' field.
@@ -114,6 +112,7 @@ def _validate_price(price: Any) -> bool:
         The function checks the provided price to ensure it is an integer or
         float and if it is non-negative. If the validation fails, an error
         message is logged.
+
     """
     # Check if the price is an integer or float and if it is non-negative
     if not isinstance(price, (int, float)) or price < 0:
@@ -123,8 +122,7 @@ def _validate_price(price: Any) -> bool:
 
 
 def _validate_volume(volume: Any) -> bool:
-    """
-    Validates the 'volume' field to ensure it is a non-negative integer.
+    """Validates the 'volume' field to ensure it is a non-negative integer.
 
     Args:
     ----
@@ -144,6 +142,7 @@ def _validate_volume(volume: Any) -> bool:
       volume: Any:
 
     Returns:
+
     """
     if not isinstance(volume, int) or volume < 0:
         logger.error(f"Invalid volume format: {volume}")
@@ -152,8 +151,7 @@ def _validate_volume(volume: Any) -> bool:
 
 
 def _validate_timestamp(timestamp: Any) -> bool:
-    """
-    Validates the 'timestamp' field to ensure it is a string.
+    """Validates the 'timestamp' field to ensure it is a string.
 
     The function checks that the provided timestamp is of type string.
     It logs an error if the validation fails.
@@ -170,6 +168,7 @@ def _validate_timestamp(timestamp: Any) -> bool:
       timestamp: Any:
 
     Returns:
+
     """
     # Ensure the timestamp is a string
     if not isinstance(timestamp, str):

@@ -2,8 +2,7 @@ import logging
 
 
 def setup_logger(name: str = "app") -> logging.Logger:
-    """
-    Sets up a logger with the specified name.
+    """Sets up a logger with the specified name.
 
     If a logger with the same name already exists, it will be reused.
     Otherwise, a new logger will be created with the specified name.
@@ -20,6 +19,7 @@ def setup_logger(name: str = "app") -> logging.Logger:
 
     Returns:
       logging.Logger: The configured logger.
+
     """
     logger: logging.Logger = logging.getLogger(name)
 

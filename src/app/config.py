@@ -1,5 +1,4 @@
-"""
-Configuration module for queue consumer pollers.
+"""Configuration module for queue consumer pollers.
 
 Provides typed getter functions to retrieve configuration values from Vault, environment
 variables, or defaults.
@@ -14,8 +13,7 @@ _vault = VaultClient()
 
 
 def get_config_value(key: str, default: str | None = None) -> str:
-    """
-    Retrieve a configuration value from Vault, environment variable, or default.
+    """Retrieve a configuration value from Vault, environment variable, or default.
 
     Args:
       key(str): Configuration key to fetch.
@@ -25,6 +23,7 @@ def get_config_value(key: str, default: str | None = None) -> str:
 
     Returns:
       str: The resolved value.
+
     """
     val = _vault.get(key, os.getenv(key))
     if val is None:
