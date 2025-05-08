@@ -1,4 +1,5 @@
-"""The module provides a decorator for retrying a function if it raises an exception.
+"""The module provides a decorator for retrying a function if it raises an
+exception.
 
 The decorator `retry_request` retries a given function if it raises an exception.
 It waits for a specified delay in seconds between retries, and attempts up to
@@ -45,6 +46,14 @@ def retry_request(
 
     Returns:
 
+    Args:
+      func: Callable[[]:
+      Any]:
+      *:
+      max_retries: int:  (Default value = 3)
+      delay_seconds: int:  (Default value = 5)
+
+    Returns:
     """
     # Validate the function to be retried
     if func is None:

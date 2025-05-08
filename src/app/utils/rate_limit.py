@@ -25,7 +25,6 @@ class RateLimiter:
     Args:
 
     Returns:
-
     """
 
     def __init__(self, max_requests: int, time_window: float) -> None:
@@ -43,7 +42,6 @@ class RateLimiter:
         Returns:
         -------
             None
-
         """
         self._max_requests = max_requests
         self._time_window = time_window
@@ -52,8 +50,8 @@ class RateLimiter:
         self._last_check = time.time()
 
     def acquire(self, context: str = "RateLimiter") -> None:
-        """Acquire permission to proceed with a request. Blocks if the rate limit is
-        exceeded.
+        """Acquire permission to proceed with a request. Blocks if the rate
+        limit is exceeded.
 
         Args:
         ----
@@ -69,6 +67,10 @@ class RateLimiter:
 
         Returns:
 
+        Args:
+          context: str:  (Default value = "RateLimiter")
+
+        Returns:
         """
         with self._lock:  # type: ignore # type: threading.Lock
             current_time: float = time.time()

@@ -77,7 +77,8 @@
 #         return {}
 """Processor for calculating Fibonacci retracement and extension levels.
 
-This module provides utilities for analyzing stock price data using Fibonacci tools.
+This module provides utilities for analyzing stock price data using
+Fibonacci tools.
 """
 
 from typing import Literal
@@ -104,12 +105,15 @@ def calculate_fibonacci_levels(
     Args:
       data: pd.DataFrame:
       method: Literal["retracement":
-      "extension"]:  (Default value = "retracement")
+      "extension"]: (Default value = "retracement")
+      swing_high: float | None:  (Default value = None)
+      swing_low: float | None:  (Default value = None)
+      data: pd.DataFrame:
+      method: Literal["retracement":
       swing_high: float | None:  (Default value = None)
       swing_low: float | None:  (Default value = None)
 
     Returns:
-
     """
     try:
         if swing_high is None:

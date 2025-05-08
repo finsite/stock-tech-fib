@@ -164,8 +164,8 @@
 #         logger.error("Invalid QUEUE_TYPE specified. Use 'rabbitmq' or 'sqs'.")
 """Handles message queue consumption for RabbitMQ and SQS.
 
-This module receives stock data, applies Fibonacci analysis, and sends processed results
-to the output handler.
+This module receives stock data, applies Fibonacci analysis, and sends
+processed results to the output handler.
 """
 
 import json
@@ -241,11 +241,14 @@ def consume_rabbitmq() -> None:
     )
 
     def callback(ch, method, properties, body: bytes) -> None:
-        """Args:
-          ch:
-          method:
-          properties:
+        """
+
+        Args:
+          ch: 
+          method: 
+          properties: 
           body: bytes:
+          body: bytes: 
 
         Returns:
 

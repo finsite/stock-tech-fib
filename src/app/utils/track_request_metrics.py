@@ -1,7 +1,7 @@
 """Tracks metrics for individual API requests.
 
-This function logs the result of API request operations, including the symbol, rate
-limit, and whether the request was successful or not.
+This function logs the result of API request operations, including the
+symbol, rate limit, and whether the request was successful or not.
 """
 
 from app.utils.setup_logger import setup_logger
@@ -27,9 +27,12 @@ def track_request_metrics(
       rate_limit: int:
       time_window: float:
       success: bool:  (Default value = True)
+      symbol: str:
+      rate_limit: int:
+      time_window: float:
+      success: bool:  (Default value = True)
 
     Returns:
-
     """
     status = "success" if success else "failure"
     message = (

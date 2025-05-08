@@ -16,10 +16,10 @@ def setup_logger(name: str = "app") -> logging.Logger:
     Args:
       name(str): The name of the logger. Defaults to "app".
       name: str:  (Default value = "app")
+      name: str:  (Default value = "app")
 
     Returns:
       logging.Logger: The configured logger.
-
     """
     logger: logging.Logger = logging.getLogger(name)
 

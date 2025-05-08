@@ -11,7 +11,6 @@ Imports:
 Attributes
 ----------
     logger (logging.Logger): Configured logger for the application.
-
 """
 
 import os
@@ -38,7 +37,6 @@ def main() -> None:
     Args:
 
     Returns:
-
     """
     logger.info("Starting Fibonacci Analysis Service...")
     consume_messages()
