@@ -14,9 +14,9 @@ bandit==1.8.3
     # via -r requirements-dev.in
 black==24.10.0
     # via -r requirements-dev.in
-boto3==1.38.11
+boto3==1.38.13
     # via -r D:\git\stock-tech-fib\requirements.in
-botocore==1.38.11
+botocore==1.38.13
     # via
     #   boto3
     #   s3transfer
@@ -29,7 +29,7 @@ cffi==1.17.1
     # via cryptography
 charset-normalizer==3.4.2
     # via requests
-click==8.1.8
+click==8.2.0
     # via
     #   black
     #   deptry
@@ -58,11 +58,11 @@ dparse==0.6.4
     # via
     #   safety
     #   safety-schemas
-filelock==3.16.1
+filelock==3.18.0
     # via safety
 flake8==7.2.0
     # via -r requirements-dev.in
-fonttools==4.57.0
+fonttools==4.58.0
     # via matplotlib
 h11==0.16.0
     # via httpcore
@@ -97,7 +97,7 @@ markupsafe==3.0.2
     # via jinja2
 marshmallow==4.0.0
     # via safety
-matplotlib==3.10.1
+matplotlib==3.10.3
     # via -r D:\git\stock-tech-fib\requirements.in
 mccabe==0.7.0
     # via flake8
@@ -148,11 +148,11 @@ pycodestyle==2.13.0
     # via flake8
 pycparser==2.22
     # via cffi
-pydantic==2.9.2
+pydantic==2.11.4
     # via
     #   safety
     #   safety-schemas
-pydantic-core==2.23.4
+pydantic-core==2.34.1
     # via pydantic
 pyflakes==3.3.2
     # via flake8
@@ -196,7 +196,7 @@ ruamel-yaml==0.18.10
     # via
     #   safety
     #   safety-schemas
-ruff==0.11.8
+ruff==0.11.9
     # via -r requirements-dev.in
 s3transfer==0.12.0
     # via boto3
@@ -204,7 +204,7 @@ safety==3.5.0
     # via -r requirements-dev.in
 safety-schemas==0.0.14
     # via safety
-scipy==1.15.2
+scipy==1.15.3
     # via -r D:\git\stock-tech-fib\requirements.in
 shellingham==1.5.4
     # via typer
@@ -222,7 +222,7 @@ tqdm==4.67.1
     # via nltk
 typer==0.15.3
     # via safety
-types-setuptools==80.3.0.20250505
+types-setuptools==80.4.0.20250511
     # via requirements-parser
 typing-extensions==4.13.2
     # via
