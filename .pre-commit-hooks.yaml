@@ -1,0 +1,6 @@
+---
+- id: preflight-check
+  name: Preflight Checks
+  entry: make preflight
+  language: system
+  pass_filenames: false

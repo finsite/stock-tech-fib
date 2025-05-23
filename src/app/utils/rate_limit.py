@@ -23,8 +23,11 @@ class RateLimiter:
     Allows a specified number of requests within a time window.
 
     Args:
+    ----
 
     Returns:
+    -------
+
     """
 
     def __init__(self, max_requests: int, time_window: float) -> None:
@@ -42,6 +45,7 @@ class RateLimiter:
         Returns:
         -------
             None
+
         """
         self._max_requests = max_requests
         self._time_window = time_window
@@ -63,14 +67,19 @@ class RateLimiter:
             None
 
         Args:
+        ----
           context: str:  (Default value = "RateLimiter")
 
         Returns:
+        -------
 
         Args:
+        ----
           context: str:  (Default value = "RateLimiter")
 
         Returns:
+        -------
+
         """
         with self._lock:  # type: ignore # type: threading.Lock
             current_time: float = time.time()

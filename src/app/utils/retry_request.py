@@ -38,6 +38,7 @@ def retry_request(
         Exception: The last exception encountered if all retries fail.
 
     Args:
+    ----
       func: Callable[[]:
       Any]:
       *:
@@ -45,8 +46,10 @@ def retry_request(
       delay_seconds: int:  (Default value = 5)
 
     Returns:
+    -------
 
     Args:
+    ----
       func: Callable[[]:
       Any]:
       *:
@@ -54,6 +57,8 @@ def retry_request(
       delay_seconds: int:  (Default value = 5)
 
     Returns:
+    -------
+
     """
     # Validate the function to be retried
     if func is None:

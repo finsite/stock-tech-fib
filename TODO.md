@@ -1,111 +1,135 @@
-# 📌 Project TODO: Stock Poller Enhancements
+# 📌 Project TODO: Stock-\* Poller & Analysis Engine
 
-This TODO list outlines the remaining work required to bring the stock-\* poller repositories to MVP and production quality.
+This TODO list outlines the remaining work to finalize the `stock-*` repositories, ensuring all pollers and processors are production-grade, consistent, and maintainable.
 
 ---
 
 ## ✅ Core Functionality
 
-- [ ] Ensure poller correctly loads:
-  - [ ] Symbols from config
-  - [ ] API key from Vault/env
-  - [ ] Correct poller type is selected
-- [ ] Add health check endpoints or CLI flags
-- [ ] Implement dry-run/test mode for poller output verification
+- [ ] Ensure poller loads:
+  - [ ] Symbols from configuration
+  - [ ] API keys from Vault or environment
+  - [ ] Correct poller/processor module for the strategy
+- [ ] Add CLI flags or health check endpoints
+- [ ] Add dry-run/test mode for output verification
 
 ---
 
 ## 🔐 Vault Integration
 
-- [ ] Automatically initialize Vault for each poller (dev/staging)
-- [ ] Create Vault policies per poller type
-- [ ] Automate token injection via GitHub Actions/CI
-- [ ] Add fallback to environment variables with logging
+- [ ] Auto-initialize Vault secrets in dev/staging
+- [ ] One policy per poller/processor
+- [ ] Vault fallback to env vars (with warnings)
+- [ ] Log all failed or missing Vault lookups
 
 ---
 
 ## 📨 Messaging (RabbitMQ / SQS)
 
-- [ ] Unify queue interface (RabbitMQ/SQS abstraction)
-- [ ] Graceful retry/backoff strategies
-- [ ] Improve test coverage for queue failures
-- [ ] Add queue health checks
+- [ ] Ensure all pollers:
+  - [ ] Use `queue_sender.py` + `queue_handler.py`
+  - [ ] Use `get_queue_type()` and RabbitMQ/SQS fallback logic
+- [ ] Add retry logic + exponential backoff
+- [ ] Add metrics for:
+  - [ ] Publish latency
+  - [ ] Queue delivery success/fail
+- [ ] Validate metrics hooks (`track_polling_metrics`, `track_request_metrics`)
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Configuration Standardization
 
-- [ ] Standardize all configuration via `app/config.py`
-- [ ] Ensure every poller can:
-  - [ ] Use Vault
-  - [ ] Use `.env` overrides (optional)
-  - [ ] Log missing config values
-
----
-
-## 🧪 Testing
-
-- [ ] Increase test coverage to >90%
-- [ ] Mock APIs cleanly (e.g., Finnhub, AlphaVantage)
-- [ ] Add test cases for:
-  - [ ] Rate limiting
-  - [ ] Timeout behavior
-  - [ ] Data validation failures
-- [ ] Add integration test runner (`tests/integration/`)
+- [ ] Use `config.py` in all repos with:
+  - [ ] `get_polling_interval()`
+  - [ ] `get_batch_size()`
+  - [ ] `get_rabbitmq_queue()` and routing helpers
+- [ ] Log missing or defaulted config keys
+- [ ] Validate config with test runner
+- [ ] Support JSON/INI overrides optionally
 
 ---
 
-## 💬 Slack & Alerting Integration
+## 🧪 Testing & Validation
 
-- [ ] Add support for sending poller status or failures to Slack
-- [ ] Allow toggling Slack alerts with an env flag (`ENABLE_SLACK_ALERTS`)
-- [ ] Send daily summary or heartbeat if no errors
+- [ ] Test coverage >90%:
+  - [ ] Poller startup + shutdown
+  - [ ] Message parsing
+  - [ ] Vault + config fallbacks
+- [ ] Add `tests/integration/` runner
+- [ ] Mock API calls for:
+  - [ ] Rate limits
+  - [ ] Timeout handling
+  - [ ] Malformed response handling
 
 ---
 
-## 🧠 Caching / Optimization
+## 🧠 Caching & Optimization
 
-- [ ] Implement symbol result caching to avoid duplicate API calls
-- [ ] Consider in-memory cache (e.g. `functools.lru_cache`) for:
-  - [ ] Rate limit enforcement
-  - [ ] Queue metrics
-- [ ] Batch requests where possible (e.g. yfinance allows this)
-- [ ] Profile pollers to identify bottlenecks (e.g. queue send time)
+- [ ] Enable LRU caching for symbol configs
+- [ ] Consider Redis or in-memory cache where useful
+- [ ] Use batch API requests where supported
+- [ ] Profile slow pollers (e.g., using `cProfile` or `pyinstrument`)
+
+---
+
+## 🔊 Logging Enhancements
+
+- [ ] Add `LOG_LEVEL` via environment
+- [ ] Add structured logging (`loguru`, `structlog`)
+- [ ] Optionally log to file
+- [ ] Validate all logs include symbol, timestamp, and context
 
 ---
 
 ## 📈 Metrics
 
-- [ ] Send metrics to stdout/Prometheus for:
-  - [ ] API response times
-  - [ ] Successful vs failed polls
+- [ ] Poller metrics (stdout or Prometheus-ready)
+  - [ ] Request durations
   - [ ] Queue send latency
-- [ ] Add `track_polling_metrics()` and `track_request_metrics()` to all pollers
+  - [ ] Poll success/failure counts
+- [ ] Standardize:
+  - [ ] `track_polling_metrics()`
+  - [ ] `track_request_metrics()`
 
 ---
 
-## 🔄 CI/CD Integration
+## 💬 Slack Integration (Optional)
 
-- [ ] Ensure GitHub Actions CI runs:
-  - [ ] Pre-commit hooks
-  - [ ] Linting (ruff, black, mypy)
-  - [ ] Tests
-- [ ] Publish Docker images or zip bundles (optional)
-- [ ] Add version tagging via GitHub releases
+- [ ] Add Slack notifier module
+- [ ] Send alert on critical failure or threshold
+- [ ] Send daily summary if `ENABLE_SLACK_ALERTS=true`
 
 ---
 
-## 🧹 Cleanup
+## 🧹 Code & Repo Hygiene
 
-- [ ] Remove unused imports, redundant code
-- [ ] Validate all docstrings and type hints
-- [ ] Delete placeholder templates (if any)
-- [ ] Ensure consistent directory structure across all repos
+- [ ] Validate all:
+  - [ ] Type annotations
+  - [ ] Function/class/module docstrings
+- [ ] Remove unused imports
+- [ ] Ensure consistent folder structure (`src/app`)
+- [ ] Lint all code using `ruff`, `black`, `mypy`, `yamlfix`
+
+---
+
+## 🔄 CI/CD + Tooling
+
+- [ ] GitHub Actions:
+  - [ ] Linting (black, ruff, mypy)
+  - [ ] Tests with coverage
+  - [ ] Pre-commit enforcement
+- [ ] Add support for:
+  - [ ] Version bumping via Commitizen
+  - [ ] SBOM and provenance (SLSA, Cosign)
+- [ ] Publish Docker image (optional)
 
 ---
 
 ## 📝 Documentation
 
 - [ ] Add README badges: build, test, coverage
-- [ ] Include setup instructions in `README.md`
-- [ ] Add `CONTRIBUTING.md` and `LICENSE` if missing
+- [ ] Expand README with:
+  - [ ] Setup instructions
+  - [ ] Example usage
+- [ ] Add CONTRIBUTING.md
+- [ ] Ensure LICENSE (Apache 2.0 or MIT) exists

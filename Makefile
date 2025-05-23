@@ -1,13 +1,40 @@
-# Define variables
-APP_NAME = STOCK-TECH-FIB
-NAMESPACE = STOCK-TECH-FIB
+.PHONY: help install test lint audit format clean compile preflight
 
-# Kubernetes commands
-deploy:
-	helm upgrade --install $(APP_NAME) charts/$(APP_NAME) --namespace $(NAMESPACE) --create-namespace
+help:
+	@echo "Usage: make [target]"
+	@echo "Targets:"
+	@echo "  install      Install dependencies (core + dev)"
+	@echo "  compile      Compile requirements.in and requirements-dev.in"
+	@echo "  lint         Run ruff, mypy, and YAML formatters (non-destructive)"
+	@echo "  audit        Run pip check, pip-audit, and deptry"
+	@echo "  test         Run pytest with coverage and HTML report"
+	@echo "  format       Auto-format using black, ruff --fix, and yamlfix"
+	@echo "  preflight    Run compile, format, lint, audit, and pre-commit hooks"
+	@echo "  clean        Remove __pycache__ and .pyc files"
 
-delete:
-	helm uninstall $(APP_NAME) --namespace $(NAMESPACE)
+install:
+	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
 
-status:
-	kubectl get all -n $(NAMESPACE)
+compile:
+	pip-compile --upgrade requirements.in
+	pip-compile --upgrade requirements-dev.in
+
+lint:
+	ruff . --ignore D100,D407,D414 && mypy src && yamlfix .
+
+audit:
+	pip check && pip-audit && deptry src
+
+test:
+	pytest --cov=src --cov-report=term-missing --cov-report=html
+
+format:
+	black . && ruff . --fix && yamlfix .
+
+preflight: compile format lint audit
+	pre-commit run --all-files
+
+clean:
+	find . -type d -name "__pycache__" -exec rm -r {} + || true
+	find . -name "*.pyc" -delete || true
