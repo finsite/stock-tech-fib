@@ -3,7 +3,7 @@
 Provides `analyze()` as the main entrypoint for queue-based analysis workflows.
 """
 
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
 import pandas as pd
 
@@ -19,10 +19,13 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
     """Main processor entrypoint for Fibonacci analysis.
 
     Args:
+    ----
         data (dict): Message containing 'symbol', 'timestamp', and OHLC history.
 
     Returns:
+    -------
         dict: Analysis results including retracement and extension levels.
+
     """
     try:
         df = pd.DataFrame(data.get("history", []))
@@ -74,13 +77,16 @@ def calculate_fibonacci_levels(
     """Calculate Fibonacci retracement or extension levels.
 
     Args:
+    ----
         data (pd.DataFrame): Historical OHLC stock data.
         method (str): 'retracement' or 'extension'.
         swing_high (float, optional): Manual high override.
         swing_low (float, optional): Manual low override.
 
     Returns:
+    -------
         tuple: (level map, swing_high, swing_low)
+
     """
     try:
         if swing_high is None:
