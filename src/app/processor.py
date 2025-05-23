@@ -3,7 +3,7 @@
 Provides `analyze()` as the main entrypoint for queue-based analysis workflows.
 """
 
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import pandas as pd
 
@@ -19,20 +19,17 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
     """Main processor entrypoint for Fibonacci analysis.
 
     Args:
-    ----
         data (dict): Message containing 'symbol', 'timestamp', and OHLC history.
 
     Returns:
-    -------
         dict: Analysis results including retracement and extension levels.
-
     """
     try:
         df = pd.DataFrame(data.get("history", []))
         symbol = data.get("symbol", "N/A")
         timestamp = data.get("timestamp", "N/A")
 
-        if df.empty or not {"High", "Low"}.issubset(df.columns):
+        if df.empty or "High" not in df.columns or "Low" not in df.columns:
             logger.warning("Missing or invalid history data for symbol: %s", symbol)
             return {
                 "symbol": symbol,
@@ -77,32 +74,40 @@ def calculate_fibonacci_levels(
     """Calculate Fibonacci retracement or extension levels.
 
     Args:
-    ----
         data (pd.DataFrame): Historical OHLC stock data.
         method (str): 'retracement' or 'extension'.
         swing_high (float, optional): Manual high override.
         swing_low (float, optional): Manual low override.
 
     Returns:
-    -------
         tuple: (level map, swing_high, swing_low)
-
     """
     try:
         if swing_high is None:
-            swing_high = float(data.get("High", pd.Series(dtype=float)).max())
-        if swing_low is None:
-            swing_low = float(data.get("Low", pd.Series(dtype=float)).min())
+            high_series = data.get("High")
+            if isinstance(high_series, pd.Series):
+                high_value = high_series.max()
+                if pd.notna(high_value):
+                    swing_high = float(high_value)
 
-        if pd.isna(swing_high) or pd.isna(swing_low):
-            logger.error("Invalid swing points detected.")
+        if swing_low is None:
+            low_series = data.get("Low")
+            if isinstance(low_series, pd.Series):
+                low_value = low_series.min()
+                if pd.notna(low_value):
+                    swing_low = float(low_value)
+
+        if swing_high is None or swing_low is None:
+            logger.error("Invalid swing points detected: High=%s, Low=%s", swing_high, swing_low)
             return {}, None, None
 
-        levels = {}
+        levels: dict[str, float] = {}
+
         if method == "retracement":
             for level in RETRACEMENT_LEVELS:
                 price = swing_high - (swing_high - swing_low) * level
                 levels[f"{int(level * 100)}%"] = round(price, 2)
+
         elif method == "extension":
             for level in EXTENSION_LEVELS:
                 price = swing_high + (swing_high - swing_low) * (level - 1)
