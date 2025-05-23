@@ -4,6 +4,13 @@
 - Making sure Dockerfile is correct (Mark Quinn)
 - bump: patch version + changelog [skip ci] (github-actions[bot])
 
+## v0.2.6 (2025-05-15)
+
+### Fix
+
+- **config**: Updating compatibiltiy requirements for pylint
+- **config**: Updating compatibiltiy requirements for pylint
+
 ## v0.2.5 (2025-05-08)
 
 ### Fix
