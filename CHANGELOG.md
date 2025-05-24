@@ -1,12 +1,13 @@
-## Unreleased
+## v0.4.0 (2025-05-24)
 
 ### Feat
 
+- **versioning**: enforce version consistency across pyproject.toml, __init__.py, and changelog
 - **poller**: fix queue_sender to make sure it's standardized
 
 ### Fix
 
-- **poller**: update processor.py to be pyright compliant
+- **poller**: integrate updates
 
 ## v0.3.1 (2025-05-23)
 
