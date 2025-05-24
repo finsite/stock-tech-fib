@@ -8,6 +8,12 @@
 
 - **poller**: update processor.py to be pyright compliant
 
+## v0.3.1 (2025-05-23)
+
+### Fix
+
+- **poller**: update processor.py to be pyright compliant
+
 ## v0.3.0 (2025-05-23)
 
 ### Feat
