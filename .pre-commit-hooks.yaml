@@ -4,3 +4,10 @@
   entry: make preflight
   language: system
   pass_filenames: false
+- id: check-version-consistency
+  name: Check Version Consistency
+  entry: .hooks/check-version-consistency.py
+  language: python
+  types: [python]
+  description: |-
+    Ensure that pyproject.toml and src/app/__init__.py have matching version numbers.

@@ -1,51 +1,62 @@
-# Changelog
+## Unreleased
 
-- Merge branch 'main' of https://github.com/finsite/stock-tech-fib (Mark Quinn)
-- Making sure Dockerfile is correct (Mark Quinn)
-- bump: patch version + changelog [skip ci] (github-actions[bot])
+### Feat
+
+- **poller**: fix queue_sender to make sure it's standardized
+
+### Fix
+
+- **poller**: update processor.py to be pyright compliant
 
 ## v0.3.0 (2025-05-23)
 
 ### Feat
 
 - **poller**: integrate updates
-- **poller**: fix queue_sender to make sure it's standardized
-
-## v0.2.6 (2025-05-15)
 
 ### Fix
 
-- **config**: Updating compatibiltiy requirements for pylint
+- **poller**: update processor.py to be pyright compliant
+
+## v0.2.6 (2025-05-15)
+
+### Feat
+
+- **poller**: fix queue_sender to make sure it's standardized
+
+### Fix
+
 - **config**: Updating compatibiltiy requirements for pylint
 
 ## v0.2.5 (2025-05-08)
 
 ### Fix
 
-- **docs**: Running docformatter to fix repos
+- **config**: Updating compatibiltiy requirements for pylint
 
 ## v0.2.4 (2025-05-07)
 
 ### Fix
 
-- **test**: Disable pytest performance benchmark
+- **docs**: Running docformatter to fix repos
 
 ## v0.2.3 (2025-05-07)
 
 ### Fix
 
-- **lint**: Fix pre-commit and disable pytest workflow
+- **test**: Disable pytest performance benchmark
 
 ## v0.2.2 (2025-05-07)
 
 ### Fix
 
-- **docker**: Fix workflow not getting version
+- **lint**: Fix pre-commit and disable pytest workflow
 
 ## v0.2.1 (2025-05-06)
 
 ### Fix
 
+- **docker**: Fix workflow not getting version
 - **docs**: Fix pyproject.toml to adjust version to dynamic = [version]
 
 ## v0.2.0 (2025-05-06)
