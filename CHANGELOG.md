@@ -1,3 +1,10 @@
+## v0.4.3 (2025-06-03)
+
+### Fix
+
+- **deps**: recompile requirements-dev.txt and resolve conflicts
+- **deps**: standardize termcolor to 2.5.0
+
 ## v0.4.2 (2025-06-03)
 
 ### Fix
