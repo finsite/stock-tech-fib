@@ -1,7 +1,11 @@
 ---
 # .prettierrc.yaml
-printWidth: 120  # Matches yamllint line-length max
-tabWidth: 2  # Matches yamllint indentation.spaces
-useTabs: false
-proseWrap: always
-yamlBracketSpacing: true
+printWidth: 120  # Wrap lines at 120 characters for YAML, JSON, code, etc.
+tabWidth: 2  # Use 2 spaces for indentation
+useTabs: false  # Do not use tab characters, only spaces
+proseWrap: always  # Always wrap prose (Markdown text, etc.)
+yamlBracketSpacing: true  # Add spaces inside YAML brackets for readability
+overrides:
+  - files: '*.md'
+    options:
+      printWidth: 100  # For Markdown files, wrap text at 100 characters
