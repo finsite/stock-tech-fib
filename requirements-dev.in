@@ -25,4 +25,4 @@ safety>=3.0,<4.0
 # Dependency scanner
 # ======================
 deptry>=0.12.0,<1.0
-termcolor==2.5.0
+termcolor==2.3.0
