@@ -1,3 +1,9 @@
+## v0.4.1 (2025-06-03)
+
+### Fix
+
+- **files**: Cleanup redundant files and standardize
+
 ## v0.4.0 (2025-05-24)
 
 ### Feat
