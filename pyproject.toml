@@ -116,3 +116,39 @@ changelog_file = "CHANGELOG.md"
 version_files = [
   "src/app/__init__.py"
 ]
+
+[tool.commitizen.customize]
+info.title = "Conventional Commits"
+info.description = "Standardized commit format across stock-* repos"
+info.message = "Write your commit message using the prompts below:"
+info.example = "feat(queue): support fallback from SQS to RabbitMQ"
+
+[tool.commitizen.customize.types]
+feat = "✨ A new feature"
+fix = "🐛 A bug fix"
+chore = "🔧 Build process, tooling, maintenance"
+docs = "📝 Documentation only changes"
+refactor = "♻️ Code refactoring without behavior change"
+style = "🎨 Code formatting, whitespace, etc."
+test = "✅ Adding or updating tests"
+ci = "🔁 CI/CD pipeline changes"
+build = "📦 Changes to packaging/build system"
+
+[tool.commitizen.customize.scopes]
+pollers = ""
+config = ""
+vault = ""
+queue = ""
+main = ""
+metrics = ""
+tests = ""
+lint = ""
+types = ""
+ci = ""
+docker = ""
+deps = ""
+docs = ""
+versioning = ""
+template = ""
+init = ""
+release = ""

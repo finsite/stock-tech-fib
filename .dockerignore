@@ -1,0 +1,77 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+.pytest_cache/
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Pre-commit & lint artifacts
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.dmypy.json
+.dmypy.json
+.pylint.d/
+
+# Logs and local config
+*.log
+*.bak
+*.swp
+*.swo
+*.tmp
+*.orig
+
+# VSCode & IDE configs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Git and GitHub artifacts
+.git/
+.gitattributes
+.gitignore
+.github/
+
+# Project metadata
+*.toml
+*.yaml
+*.yml
+*.json
+*.md
+
+# Docker-specific exclusions
+Dockerfile
+.dockerignore
+
+# Optional: exclude template and docs
+.template/
+docs/
+mkdocs.yml
