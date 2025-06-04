@@ -24,7 +24,7 @@ def validate_data(data: dict[str, Any]) -> bool:
     :param data: The data to validate.
     :type data: dict[str
     :param data: dict[str:
-    :param Any: returns: True if data is valid, False otherwise.
+    :param Any: param data: dict[str:
     :param data: dict[str:
     :param Any: returns: True if data is valid, False otherwise.
     :param data: dict[str:
@@ -32,6 +32,8 @@ def validate_data(data: dict[str, Any]) -> bool:
     :param data: type data: dict[str :
     :param Any: param data:
     :param data: dict[str:
+    :param data: dict[str:
+    :param Any: returns: True if data is valid, False otherwise.
     :param data: dict[str:
     :param Any: returns: True if data is valid, False otherwise.
     :param data: dict[str: 
@@ -100,8 +102,10 @@ def _validate_symbol(symbol: str) -> bool:
     :param symbol: str:
     :param symbol: str:
     :param symbol: str:
+    :param symbol: str:
     :param symbol: type symbol: str :
     :param symbol: type symbol: str :
+    :param symbol: str:
     :param symbol: str:
     :param symbol: str:
     :param symbol: str: 
@@ -126,8 +130,10 @@ def _validate_price(price: Any) -> bool:
     :param price: Any:
     :param price: Any:
     :param price: Any:
+    :param price: Any:
     :param price: type price: Any :
     :param price: type price: Any :
+    :param price: Any:
     :param price: Any:
     :param price: Any:
     :param price: Any: 
@@ -164,6 +170,10 @@ def _validate_volume(volume: Any) -> bool:
         A non-negative integer is used to represent the volume of a stock quote.
         The function checks that the provided volume is of type int and if it
         is non-negative. If the validation fails, an error message is logged.
+    
+    Args:
+      volume: Any:
+    :param volume: Any:
     :param volume: Any:
     :param volume: Any: 
 
@@ -189,6 +199,7 @@ def _validate_timestamp(timestamp: Any) -> bool:
     :param timestamp: Any:
     :param timestamp: type timestamp: Any :
     :param timestamp: type timestamp: Any :
+    :param timestamp: Any:
     :param timestamp: Any:
     :param timestamp: Any:
     :param timestamp: Any: 

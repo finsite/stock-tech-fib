@@ -78,6 +78,7 @@ class RateLimiter:
         :param context: str:  (Default value = "RateLimiter")
         :param context: str:  (Default value = "RateLimiter")
         :param context: str:  (Default value = "RateLimiter")
+        :param context: str:  (Default value = "RateLimiter")
 
         """
         with self._lock:

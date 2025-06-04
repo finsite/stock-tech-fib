@@ -27,9 +27,12 @@ def retry_request(
     raises an exception after the maximum number of retries, it raises that
     exception.
 
-    :param func: The function to be retried.
-    :param max_retries: The maximum number of retry attempts. Defaults to 3.
-    :param delay_seconds: The delay in seconds between retries. Defaults to 5.
+    :param func: The function to be retried
+    :param max_retries: The maximum number of retry attempts
+    :param delay_seconds: The delay in seconds between retries
+    :param func: Callable
+    :param Any: param max_retries: int
+    :param delay_seconds: int
     :param func: Callable[[]:
     :param Any: param *:
     :param max_retries: int:  (Default value = 3)
@@ -54,6 +57,10 @@ def retry_request(
     :param delay_seconds: Default value = 5)
     :type delay_seconds: int :
     :param func: Callable[[]:
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
+    :param func: Callable[[]:
+    :param Any: param *:
     :param max_retries: int:  (Default value = 3)
     :param delay_seconds: int:  (Default value = 5)
     :param func: Callable[[]:

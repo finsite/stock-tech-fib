@@ -25,6 +25,7 @@ def publish_to_queue(payload: list[dict]) -> None:
     :param payload: type payload: list[dict] :
     :param payload: list[dict]:
     :param payload: list[dict]:
+    :param payload: list[dict]:
     :param payload: list[dict]: 
 
     """
@@ -49,6 +50,7 @@ def _send_to_rabbitmq(data: dict) -> None:
     :param data: dict:
     :param data: type data: dict :
     :param data: type data: dict :
+    :param data: dict:
     :param data: dict:
     :param data: dict:
     :param data: dict: 
@@ -89,6 +91,7 @@ def _send_to_sqs(data: dict) -> None:
     :param data: dict:
     :param data: type data: dict :
     :param data: type data: dict :
+    :param data: dict:
     :param data: dict:
     :param data: dict:
     :param data: dict: 

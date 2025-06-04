@@ -33,6 +33,10 @@ def validate_environment_variables(required_variables: list[str]) -> None:
     Notes:
     -----
         The function logs a success message if all variables are set, and raises an error if any variables are missing.
+    
+    Args:
+      required_variables: list[str]:
+    :param required_variables: list[str]:
     :param required_variables: list[str]:
     :param required_variables: list[str]: 
 
