@@ -16,20 +16,20 @@ logger = setup_logger(__name__)
 
 def validate_data(data: dict[str, Any]) -> bool:
     """Validates the data to ensure it conforms to the required schema.
-
+    
     The function checks that the input data is a dictionary containing
     the required keys: 'symbol', 'price', 'volume', and 'timestamp'.
     It also validates the individual fields using helper functions.
 
-    Args:
-        data (dict[str, Any]): The data to validate.
-
-    Returns:
-        bool: True if data is valid, False otherwise.
-
-    Raises:
-        TypeError: If the data is not a dictionary.
-
+    :param data: The data to validate.
+    :type data: dict[str
+    :param data: dict[str: 
+    :param Any]: 
+    :returns: True if data is valid, False otherwise.
+    :rtype: bool
+    :raises TypeError: If the data is not a dictionary.
+    Notes:
+    :raises TypeError: If the data is not a dictionary.
     Notes:
         The function logs an error message for each validation failure.
 
@@ -79,14 +79,12 @@ def validate_data(data: dict[str, Any]) -> bool:
 def _validate_symbol(symbol: str) -> bool:
     """Validates the 'symbol' field to ensure it is a string of alphabetical characters.
 
-    Args:
-        symbol (str): The value of the 'symbol' field.
-
-    Returns:
-        bool: True if valid, False otherwise.
-
+    :param symbol: The value of the 'symbol' field.
+    :type symbol: str
+    :param symbol: str: 
+    :returns: True if valid, False otherwise.
     Notes:
-        Logs an error if the symbol is not a string or contains non-alphabetical characters.
+    :rtype: bool
 
     """
     if not isinstance(symbol, str) or not symbol.isalpha():
@@ -98,14 +96,12 @@ def _validate_symbol(symbol: str) -> bool:
 def _validate_price(price: Any) -> bool:
     """Validates the 'price' field to ensure it is a non-negative number.
 
-    Args:
-        price (Any): The value of the 'price' field.
-
-    Returns:
-        bool: True if valid, False otherwise.
-
+    :param price: The value of the 'price' field.
+    :type price: Any
+    :param price: Any: 
+    :returns: True if valid, False otherwise.
     Notes:
-        Logs an error if the price is not a number or is negative.
+    :rtype: bool
 
     """
     # Check if the price is an integer or float and if it is non-negative
@@ -117,21 +113,24 @@ def _validate_price(price: Any) -> bool:
 
 def _validate_volume(volume: Any) -> bool:
     """Validates the 'volume' field to ensure it is a non-negative integer.
-
+    
     Args:
     ----
         volume (Any): The value of the 'volume' field.
-
+    
     Returns:
     -------
         bool: True if valid, False otherwise.
-
+    
     Notes:
     -----
         A non-negative integer is used to represent the volume of a stock quote.
         The function checks that the provided volume is of type int and if it
         is non-negative. If the validation fails, an error message is logged.
 
+    :param volume: Any: 
+
+    
     """
     if not isinstance(volume, int) or volume < 0:
         logger.error(f"Invalid volume format: {volume}")
@@ -141,18 +140,21 @@ def _validate_volume(volume: Any) -> bool:
 
 def _validate_timestamp(timestamp: Any) -> bool:
     """Validates the 'timestamp' field to ensure it is a string.
-
+    
     The function checks that the provided timestamp is of type string.
     It logs an error if the validation fails.
-
+    
     Args:
     ----
         timestamp (Any): The value of the 'timestamp' field.
-
+    
     Returns:
     -------
         bool: True if valid, False otherwise.
 
+    :param timestamp: Any: 
+
+    
     """
     # Ensure the timestamp is a string
     if not isinstance(timestamp, str):

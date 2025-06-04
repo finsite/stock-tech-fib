@@ -16,9 +16,9 @@ logger = setup_logger(__name__)
 def publish_to_queue(payload: list[dict]) -> None:
     """Publishes processed candlestick analysis results to RabbitMQ or SQS.
 
-    Args:
-    ----
-        payload (list[dict]): A list of message payloads to publish.
+    :param payload: A list of message payloads to publish.
+    :type payload: list[dict]
+    :param payload: list[dict]: 
 
     """
     queue_type = config.get_queue_type()
@@ -35,9 +35,9 @@ def publish_to_queue(payload: list[dict]) -> None:
 def _send_to_rabbitmq(data: dict) -> None:
     """Sends a single message to RabbitMQ using config-based credentials.
 
-    Args:
-    ----
-        data (dict): The message payload to send.
+    :param data: The message payload to send.
+    :type data: dict
+    :param data: dict: 
 
     """
     try:
@@ -68,9 +68,9 @@ def _send_to_rabbitmq(data: dict) -> None:
 def _send_to_sqs(data: dict) -> None:
     """Sends a single message to AWS SQS using the configured queue.
 
-    Args:
-    ----
-        data (dict): The message payload to send.
+    :param data: The message payload to send.
+    :type data: dict
+    :param data: dict: 
 
     """
     sqs_url = config.get_sqs_queue_url()

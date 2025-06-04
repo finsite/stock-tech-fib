@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 class VaultClient:
     """Handles interaction with HashiCorp Vault using AppRole
     authentication.
+
+
     """
 
     def __init__(self) -> None:
@@ -44,14 +46,16 @@ class VaultClient:
 
     def _authenticate(self) -> None:
         """Authenticate to Vault using AppRole.
-
+        
         This function attempts to authenticate to Vault using the AppRole
         authentication backend. It takes the role ID and secret ID from the
         environment and attempts to authenticate up to 3 times in case of
         failure.
-
+        
         If the authentication is successful, it sets the client's token and
         logs a success message. If it fails, it logs an error message.
+
+
         """
         if not self.role_id or not self.secret_id:
             logger.warning("🔐 VAULT_ROLE_ID or VAULT_SECRET_ID not set — skipping Vault load.")
@@ -76,11 +80,13 @@ class VaultClient:
 
     def _load_secrets(self) -> None:
         """Load secrets from Vault's KV v2 backend.
-
+        
         This method constructs the path to the secrets based on the poller and environment
         attributes, attempts to read the secrets from Vault, and updates the internal secrets
         dictionary. If an error occurs during the process, it logs a warning and resets the
         secrets dictionary to empty.
+
+
         """
         try:
             # Construct the path for the secrets in Vault
@@ -102,20 +108,24 @@ class VaultClient:
 
     def get(self, key: str, default: str | None = None) -> str | None:
         """Retrieve a secret by key.
-
+        
         This method accesses the internal secrets dictionary to fetch the value
         associated with the given key. If the key does not exist in the dictionary,
         it returns the provided default value.
-
+        
         Args:
         ----
             key (str): The secret key to retrieve.
             default (Optional[str]): Default value to return if key not found.
-
+        
         Returns:
         -------
             Optional[str]: The secret value if found, otherwise the default value.
 
+        :param key: str: 
+        :param default: str | None:  (Default value = None)
+
+        
         """
         # Retrieve the secret value from the dictionary, defaulting if not found
         return self.secrets.get(key, default)

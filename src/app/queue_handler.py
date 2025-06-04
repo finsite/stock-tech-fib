@@ -50,7 +50,11 @@ if QUEUE_TYPE == "sqs":
 
 
 def validate_dataframe(df: pd.DataFrame) -> bool:
-    """Ensure the DataFrame includes necessary OHLC columns."""
+    """Ensure the DataFrame includes necessary OHLC columns.
+
+    :param df: pd.DataFrame: 
+
+    """
     if df.empty:
         logger.warning("Received empty DataFrame — skipping analysis.")
         return False
@@ -62,6 +66,7 @@ def validate_dataframe(df: pd.DataFrame) -> bool:
 
 
 def connect_to_rabbitmq() -> pika.BlockingConnection:
+    """ """
     retries = 5
     while retries > 0:
         try:
@@ -77,6 +82,7 @@ def connect_to_rabbitmq() -> pika.BlockingConnection:
 
 
 def consume_rabbitmq() -> None:
+    """ """
     connection = connect_to_rabbitmq()
     channel = connection.channel()
 
@@ -87,6 +93,14 @@ def consume_rabbitmq() -> None:
     )
 
     def callback(ch, method, properties, body: bytes) -> None:
+        """
+
+        :param ch: 
+        :param method: 
+        :param properties: 
+        :param body: bytes: 
+
+        """
         try:
             message = json.loads(body)
             logger.info("Received message: %s", message)
@@ -130,6 +144,7 @@ def consume_rabbitmq() -> None:
 
 
 def consume_sqs() -> None:
+    """ """
     if not sqs_client or not SQS_QUEUE_URL:
         logger.error("SQS not initialized or missing queue URL.")
         return

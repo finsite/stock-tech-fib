@@ -21,7 +21,7 @@ def retry_request(
     func: Callable[[], Any], *, max_retries: int = 3, delay_seconds: int = 5
 ) -> Any | None:
     """Retries a given function if it raises an exception.
-
+    
     The function is retried up to a maximum number of times. Between each retry,
     the function waits for a specified delay in seconds. If the function still
     raises an exception after the maximum number of retries, it raises that
@@ -30,9 +30,15 @@ def retry_request(
     :param func: The function to be retried.
     :param max_retries: The maximum number of retry attempts. Defaults to 3.
     :param delay_seconds: The delay in seconds between retries. Defaults to 5.
-    :return: The result of the function if successful, or None if all retries fail.
+    :param func: Callable[[]: 
+    :param Any]: 
+    :param *: 
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
+    :returns: The result of the function if successful, or None if all retries fail.
     :raises ValueError: If the function to be retried is None.
     :raises Exception: The last exception encountered if all retries fail.
+
     """
     # Validate the function to be retried
     if func is None:
