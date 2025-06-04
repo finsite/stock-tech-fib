@@ -39,7 +39,6 @@ def validate_data(data: dict[str, Any]) -> bool:
     :param data: dict[str:
     :param Any]:
     :returns: True if data is valid, False otherwise.
-    :rtype: bool
     :raises TypeError: If the data is not a dictionary.
 
     Notes
@@ -114,6 +113,7 @@ def _validate_symbol(symbol: str) -> bool:
 
     Notes
     -----
+        Returns `False` if the input is invalid or missing.
 
     """
     if not isinstance(symbol, str) or not symbol.isalpha():
@@ -142,6 +142,7 @@ def _validate_price(price: Any) -> bool:
 
     Notes
     -----
+        Returns `False` if the input is invalid or missing.
 
     """
     # Check if the price is an integer or float and if it is non-negative

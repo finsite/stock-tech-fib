@@ -109,36 +109,13 @@ class VaultClient:
     def get(self, key: str, default: str | None = None) -> str | None:
         """Retrieve a secret by key.
 
-        This method accesses the internal secrets dictionary to fetch the value
-        associated with the given key. If the key does not exist in the dictionary,
-        it returns the provided default value.
-
         Args:
-        ----
-            key (str): The secret key to retrieve.
-            default (Optional[str]): Default value to return if key not found.
+            key: The key of the secret to retrieve.
+            default: A fallback value if the key is not found.
 
-        :param key: str:
-        :param default: str | None:  (Default value = None)
-        :param key: str:
-        :param default: str | None:  (Default value = None)
-        :param key: str:
-        :param default: str | None:  (Default value = None)
-        :param key: type key: str :
-        :param default: Default value = None)
-        :type default: str | None :
-        :param key: type key: str :
-        :param default: Default value = None)
-        :type default: str | None :
-        :param key: str:
-        :param default: str | None:  (Default value = None)
-        :param key: str:
-        :param default: str | None:  (Default value = None)
-        :param key: str:
-        :param default: str | None:  (Default value = None)
-        :param key: str:
-        :param default: str | None:  (Default value = None)
+        Returns:
+            The secret value, or the default if not found.
 
-        """
+        """        
         # Retrieve the secret value from the dictionary, defaulting if not found
         return self.secrets.get(key, default)

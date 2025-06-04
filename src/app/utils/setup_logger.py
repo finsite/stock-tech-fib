@@ -10,36 +10,12 @@ import logging
 def setup_logger(name: str | None = None, level: int = logging.INFO) -> logging.Logger:
     """Configure and return a logger for the application.
 
-    Logs messages to the console using a StreamHandler and a specified format.
-    If the logger already exists, it reuses the existing instance.
-
     Args:
-    ----
-        name (Optional[str]): Name of the logger. Defaults to "poller" if not specified.
-        level (int): Logging level to use. Defaults to logging.INFO.
+        name: Optional name of the logger.
+        level: Logging level (e.g., logging.INFO, logging.DEBUG).
 
-    :param name: str | None:  (Default value = None)
-    :param level: int:  (Default value = logging.INFO)
-    :param name: str | None:  (Default value = None)
-    :param level: int:  (Default value = logging.INFO)
-    :param name: str | None:  (Default value = None)
-    :param level: int:  (Default value = logging.INFO)
-    :param name: Default value = None)
-    :type name: str | None :
-    :param level: Default value = logging.INFO)
-    :type level: int :
-    :param name: Default value = None)
-    :type name: str | None :
-    :param level: Default value = logging.INFO)
-    :type level: int :
-    :param name: str | None:  (Default value = None)
-    :param level: int:  (Default value = logging.INFO)
-    :param name: str | None:  (Default value = None)
-    :param level: int:  (Default value = logging.INFO)
-    :param name: str | None:  (Default value = None)
-    :param level: int:  (Default value = logging.INFO)
-    :param name: str | None:  (Default value = None)
-    :param level: int:  (Default value = logging.INFO)
+    Returns:
+        A configured logger instance.
 
     """
     # Default logger name if not provided
