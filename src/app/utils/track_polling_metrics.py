@@ -16,6 +16,10 @@ logger = setup_logger(__name__)
 def track_polling_metrics(status: Literal["success", "failure"], source: str, symbol: str) -> None:
     """Tracks metrics for polling operations.
 
+    Logs the result of polling operations, including the source of the data
+    and the symbol being polled. Raises a ValueError if the status is not
+    'success' or 'failure'.
+
     Args:
     ----
         status (Literal["success", "failure"]): The status of the operation ('success' or 'failure').
@@ -26,33 +30,15 @@ def track_polling_metrics(status: Literal["success", "failure"], source: str, sy
     ------
         ValueError: If the status is not 'success' or 'failure'.
 
-    Args:
-    ----
-      status: Literal["success":
-      "failure"]:
-      source: str:
-      symbol: str:
-
-    Returns:
-    -------
-
-    Args:
-    ----
-      status: Literal["success":
-      "failure"]:
-      source: str:
-      symbol: str:
-
-    Returns:
-    -------
-
     """
     # Validate status
     if status not in {"success", "failure"}:
         raise ValueError("Invalid status. Must be 'success' or 'failure'.")
 
-    # Log the result
+    # Construct the log message
     message = f"Polling {status} for symbol '{symbol}' from source '{source}'."
+
+    # Log the result based on status
     if status == "success":
         logger.info(message)
     else:

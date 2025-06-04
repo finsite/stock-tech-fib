@@ -22,43 +22,17 @@ def retry_request(
 ) -> Any | None:
     """Retries a given function if it raises an exception.
 
-    Args:
-    ----
-        func (Callable[[], Any]): The function to be retried.
-        max_retries (int): The maximum number of retry attempts. Defaults to 3.
-        delay_seconds (int): The delay in seconds between retries. Defaults to 5.
+    The function is retried up to a maximum number of times. Between each retry,
+    the function waits for a specified delay in seconds. If the function still
+    raises an exception after the maximum number of retries, it raises that
+    exception.
 
-    Returns:
-    -------
-        Optional[Any]: The result of the function if successful, or None if all retries fail.
-
-    Raises:
-    ------
-        ValueError: If the function to be retried is None.
-        Exception: The last exception encountered if all retries fail.
-
-    Args:
-    ----
-      func: Callable[[]:
-      Any]:
-      *:
-      max_retries: int:  (Default value = 3)
-      delay_seconds: int:  (Default value = 5)
-
-    Returns:
-    -------
-
-    Args:
-    ----
-      func: Callable[[]:
-      Any]:
-      *:
-      max_retries: int:  (Default value = 3)
-      delay_seconds: int:  (Default value = 5)
-
-    Returns:
-    -------
-
+    :param func: The function to be retried.
+    :param max_retries: The maximum number of retry attempts. Defaults to 3.
+    :param delay_seconds: The delay in seconds between retries. Defaults to 5.
+    :return: The result of the function if successful, or None if all retries fail.
+    :raises ValueError: If the function to be retried is None.
+    :raises Exception: The last exception encountered if all retries fail.
     """
     # Validate the function to be retried
     if func is None:
@@ -69,8 +43,9 @@ def retry_request(
     # Attempt to execute the function up to max_retries times
     for attempt in range(1, max_retries + 1):
         try:
+            # Call the function and return its result if successful
             logger.debug(f"Attempt {attempt} of {max_retries}.")
-            return func()  # Call the function and return its result if successful
+            return func()
         except Exception as exception:
             last_exception = exception  # Store the exception
             logger.warning(

@@ -18,23 +18,14 @@ def track_request_metrics(
 ) -> None:
     """Tracks metrics for individual API requests.
 
-    Args:
-    ----
-      symbol(str): The stock symbol for the request.
-      rate_limit(int): The number of allowed requests.
-      time_window(float): The rate limit window in seconds.
-      success(bool): Whether the request was successful.
-      symbol: str:
-      rate_limit: int:
-      time_window: float:
-      success: bool:  (Default value = True)
-      symbol: str:
-      rate_limit: int:
-      time_window: float:
-      success: bool:  (Default value = True)
+    Logs the result of API request operations, including the symbol,
+    rate limit, and whether the request was successful or not.
 
-    Returns:
-    -------
+    Args:
+        symbol (str): The stock symbol for the request.
+        rate_limit (int): The number of allowed requests.
+        time_window (float): The rate limit window in seconds.
+        success (bool): Whether the request was successful. Defaults to True.
 
     """
     status = "success" if success else "failure"

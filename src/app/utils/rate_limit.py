@@ -23,34 +23,42 @@ class RateLimiter:
     Allows a specified number of requests within a time window.
 
     Args:
-    ----
+        max_requests (int): Maximum allowed requests in the window.
+        time_window (float): The duration of the window in seconds.
 
     Returns:
-    -------
+        None
 
     """
 
     def __init__(self, max_requests: int, time_window: float) -> None:
         """Initialize the RateLimiter.
 
-        The constructor takes in the maximum number of requests allowed within a
-        specified time window and initializes the internal state of the rate
-        limiter.
+        This constructor sets up a token bucket-based rate limiter
+        that controls the number of requests allowed within a given
+        time window.
 
         Args:
         ----
-            max_requests (int): Maximum number of requests allowed.
-            time_window (float): Time window in seconds.
+            max_requests (int): The maximum number of requests allowed in the time window.
+            time_window (float): The duration of the time window in seconds.
 
         Returns:
         -------
             None
 
         """
+        # Initialize maximum requests and time window
         self._max_requests = max_requests
         self._time_window = time_window
-        self._tokens = max_requests
+
+        # Start with a full bucket of tokens
+        self._tokens: float = float(max_requests)
+
+        # Lock to ensure thread safety
         self._lock = threading.Lock()
+
+        # Record the last time tokens were checked
         self._last_check = time.time()
 
     def acquire(self, context: str = "RateLimiter") -> None:
@@ -66,34 +74,23 @@ class RateLimiter:
         -------
             None
 
-        Args:
-        ----
-          context: str:  (Default value = "RateLimiter")
-
-        Returns:
-        -------
-
-        Args:
-        ----
-          context: str:  (Default value = "RateLimiter")
-
-        Returns:
-        -------
-
         """
-        with self._lock:  # type: ignore # type: threading.Lock
+        with self._lock:
             current_time: float = time.time()
             elapsed: float = current_time - self._last_check
 
+            # Calculate the number of tokens to add to the bucket
             tokens_to_add: float = elapsed * (self._max_requests / self._time_window)
-            self._tokens: float = min(self._max_requests, self._tokens + tokens_to_add)
-            self._last_check: float = current_time
+            self._tokens = min(self._max_requests, self._tokens + tokens_to_add)
+            self._last_check = current_time
 
+            # Log the replenished tokens
             logger.debug(
                 f"[{context}] Replenished {tokens_to_add:.2f} tokens. "
                 f"Available tokens: {self._tokens:.2f}"
             )
 
+            # If the rate limit is reached, wait for some time
             if self._tokens < 1:
                 sleep_time: float = (1 - self._tokens) * (self._time_window / self._max_requests)
                 logger.info(
@@ -102,5 +99,6 @@ class RateLimiter:
                 time.sleep(sleep_time)
                 self._tokens = 1
 
+            # Consume a token and log the remaining tokens
             self._tokens -= 1
             logger.debug(f"[{context}] Consumed a token. Remaining tokens: {self._tokens:.2f}")
