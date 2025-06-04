@@ -15,7 +15,7 @@ _vault = VaultClient()
 def get_config_value(key: str, default: str | None = None) -> str:
     """Retrieve a configuration value from Vault, environment variable, or
     default.
-
+    
     Args:
     ----
       key(str): Configuration key to fetch.
@@ -25,33 +25,24 @@ def get_config_value(key: str, default: str | None = None) -> str:
       key: str:
       default: str | None:  (Default value = None)
 
-    Parameters
-    ----------
-    key :
-        str:
-    default :
-        str | None:  (Default value = None)
-    key :
-        str:
-    default :
-        str | None:  (Default value = None)
-    key :
-        str:
-    default :
-        str | None:  (Default value = None)
-    key : str :
+    :param key: str:
+    :param default: str | None:  (Default value = None)
+    :param key: str:
+    :param default: str | None:  (Default value = None)
+    :param key: str:
+    :param default: str | None:  (Default value = None)
+    :param key: 
+    :type key: str :
+    :param default: (Default value = None)
+    :type default: str | None :
+    :param key: 
+    :type key: str :
+    :param default: (Default value = None)
+    :type default: str | None :
+    :param key: str: 
+    :param default: str | None:  (Default value = None)
 
-    default : str | None :
-        (Default value = None)
-    key: str :
-
-    default: str | None :
-         (Default value = None)
-
-    Returns
-    -------
-
-
+    
     """
     val = _vault.get(key, os.getenv(key))
     if val is None:

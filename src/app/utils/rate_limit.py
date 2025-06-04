@@ -19,20 +19,15 @@ logger = setup_logger(__name__)
 
 class RateLimiter:
     """A rate limiter based on the token bucket algorithm.
-
+    
     Allows a specified number of requests within a time window.
 
-    Parameters
-    ----------
-    max_requests : int
-        Maximum allowed requests in the window.
-    time_window : float
-        The duration of the window in seconds.
+    :param max_requests: Maximum allowed requests in the window.
+    :type max_requests: int
+    :param time_window: The duration of the window in seconds.
+    :type time_window: float
 
-    Returns
-    -------
-
-
+    
     """
 
     def __init__(self, max_requests: int, time_window: float) -> None:
@@ -68,29 +63,22 @@ class RateLimiter:
     def acquire(self, context: str = "RateLimiter") -> None:
         """Acquire permission to proceed with a request. Blocks if the rate
         limit is exceeded.
-
+        
         Args:
         ----
             context (str, optional): Optional context for logging (e.g., poller type).
                 Defaults to "RateLimiter".
 
-        Parameters
-        ----------
-        context :
-            str:  (Default value = "RateLimiter")
-        context :
-            str:  (Default value = "RateLimiter")
-        context :
-            str:  (Default value = "RateLimiter")
-        context : str :
-            (Default value = "RateLimiter")
-        context: str :
-             (Default value = "RateLimiter")
+        :param context: str:  (Default value = "RateLimiter")
+        :param context: str:  (Default value = "RateLimiter")
+        :param context: str:  (Default value = "RateLimiter")
+        :param context: (Default value = "RateLimiter")
+        :type context: str :
+        :param context: (Default value = "RateLimiter")
+        :type context: str :
+        :param context: str:  (Default value = "RateLimiter")
 
-        Returns
-        -------
-
-
+        
         """
         with self._lock:
             current_time: float = time.time()

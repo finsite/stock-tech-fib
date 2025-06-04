@@ -52,23 +52,16 @@ if QUEUE_TYPE == "sqs":
 def validate_dataframe(df: pd.DataFrame) -> bool:
     """Ensure the DataFrame includes necessary OHLC columns.
 
-    Parameters
-    ----------
-    df :
-        pd.DataFrame:
-    df :
-        pd.DataFrame:
-    df :
-        pd.DataFrame:
-    df : pd.DataFrame :
+    :param df: pd.DataFrame:
+    :param df: pd.DataFrame:
+    :param df: pd.DataFrame:
+    :param df: 
+    :type df: pd.DataFrame :
+    :param df: 
+    :type df: pd.DataFrame :
+    :param df: pd.DataFrame: 
 
-    df: pd.DataFrame :
-
-
-    Returns
-    -------
-
-
+    
     """
     if df.empty:
         logger.warning("Received empty DataFrame — skipping analysis.")
@@ -110,25 +103,17 @@ def consume_rabbitmq() -> None:
     def callback(ch, method, properties, body: bytes) -> None:
         """
 
-        Parameters
-        ----------
-        ch :
-            param method:
-        properties :
-            param body: bytes:
-        method :
-            param body: bytes:
-        body :
-            bytes:
-        body : bytes :
+        :param ch: param method:
+        :param properties: param body: bytes:
+        :param method: param body: bytes:
+        :param body: bytes:
+        :param body: 
+        :type body: bytes :
+        :param body: 
+        :type body: bytes :
+        :param body: bytes: 
 
-        body: bytes :
-
-
-        Returns
-        -------
-
-
+        
         """
         try:
             message = json.loads(body)

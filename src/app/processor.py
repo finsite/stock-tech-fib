@@ -17,32 +17,23 @@ EXTENSION_LEVELS = [1.272, 1.618, 2.0, 2.618]
 
 def analyze(data: dict[str, Any]) -> dict[str, Any]:
     """Main processor entrypoint for Fibonacci analysis.
-
+    
     Args:
     ----
         data (dict): Message containing 'symbol', 'timestamp', and OHLC history.
 
-    Parameters
-    ----------
-    data :
-        dict[str:
-    Any :
-        param data: dict[str:
-    Any :
-        param data: dict[str:
-    Any :
+    :param data: dict[str:
+    :param Any: param data: dict[str:
+    :param Any: param data: dict[str:
+    :param Any: 
+    :param data: 
+    :type data: dict[str :
+    :param Any]: 
+    :param data: 
+    :type data: dict[str :
+    :param data: dict[str: 
 
-    data : dict[str :
-
-    Any] :
-
-    data: dict[str :
-
-
-    Returns
-    -------
-
-
+    
     """
     try:
         df = pd.DataFrame(data.get("history", []))
@@ -92,7 +83,7 @@ def calculate_fibonacci_levels(
     swing_low: float | None = None,
 ) -> tuple[dict[str, float], float | None, float | None]:
     """Calculate Fibonacci retracement or extension levels.
-
+    
     Args:
     ----
         data (pd.DataFrame): Historical OHLC stock data.
@@ -100,43 +91,35 @@ def calculate_fibonacci_levels(
         swing_high (float, optional): Manual high override.
         swing_low (float, optional): Manual low override.
 
-    Parameters
-    ----------
-    data :
-        pd.DataFrame:
-    method :
-        Literal["retracement":
-    data :
-        pd.DataFrame:
-    method :
-        Literal["retracement":
-    data :
-        pd.DataFrame:
-    method :
-        Literal["retracement":
-    data : pd.DataFrame :
+    :param data: pd.DataFrame:
+    :param method: Literal["retracement":
+    :param data: pd.DataFrame:
+    :param method: Literal["retracement":
+    :param data: pd.DataFrame:
+    :param method: Literal["retracement":
+    :param data: 
+    :type data: pd.DataFrame :
+    :param method: 
+    :type method: Literal["retracement" :
+    :param "extension"]: (Default value = "retracement")
+    :param swing_high: (Default value = None)
+    :type swing_high: float | None :
+    :param swing_low: (Default value = None)
+    :type swing_low: float | None :
+    :param data: 
+    :type data: pd.DataFrame :
+    :param method: 
+    :type method: Literal["retracement" :
+    :param swing_high: (Default value = None)
+    :type swing_high: float | None :
+    :param swing_low: (Default value = None)
+    :type swing_low: float | None :
+    :param data: pd.DataFrame: 
+    :param method: Literal["retracement": 
+    :param swing_high: float | None:  (Default value = None)
+    :param swing_low: float | None:  (Default value = None)
 
-    method : Literal["retracement" :
-
-    "extension"] :
-        (Default value = "retracement")
-    swing_high : float | None :
-        (Default value = None)
-    swing_low : float | None :
-        (Default value = None)
-    data: pd.DataFrame :
-
-    method: Literal["retracement" :
-
-    swing_high: float | None :
-         (Default value = None)
-    swing_low: float | None :
-         (Default value = None)
-
-    Returns
-    -------
-
-
+    
     """
     try:
         if swing_high is None:

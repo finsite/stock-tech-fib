@@ -21,67 +21,46 @@ def retry_request(
     func: Callable[[], Any], *, max_retries: int = 3, delay_seconds: int = 5
 ) -> Any | None:
     """Retries a given function if it raises an exception.
-
+    
     The function is retried up to a maximum number of times. Between each retry,
     the function waits for a specified delay in seconds. If the function still
     raises an exception after the maximum number of retries, it raises that
     exception.
 
-    Parameters
-    ----------
-    func :
-        The function to be retried.
-    max_retries :
-        The maximum number of retry attempts. Defaults to 3.
-    delay_seconds :
-        The delay in seconds between retries. Defaults to 5.
-    func :
-        Callable[[]:
-    Any :
-        param *:
-    max_retries :
-        int:  (Default value = 3)
-    delay_seconds :
-        int:  (Default value = 5)
-    func :
-        Callable[[]:
-    Any :
-        param *:
-    max_retries :
-        int:  (Default value = 3)
-    delay_seconds :
-        int:  (Default value = 5)
-    func :
-        Callable[[]:
-    Any :
-        param *:
-    max_retries :
-        int:  (Default value = 3)
-    delay_seconds :
-        int:  (Default value = 5)
-    func : Callable[[] :
+    :param func: The function to be retried.
+    :param max_retries: The maximum number of retry attempts. Defaults to 3.
+    :param delay_seconds: The delay in seconds between retries. Defaults to 5.
+    :param func: Callable[[]:
+    :param Any: param *:
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
+    :param func: Callable[[]:
+    :param Any: param *:
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
+    :param func: Callable[[]:
+    :param Any: param *:
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
+    :param func: 
+    :type func: Callable[[] :
+    :param Any]: 
+    :param *: 
+    :param max_retries: (Default value = 3)
+    :type max_retries: int :
+    :param delay_seconds: (Default value = 5)
+    :type delay_seconds: int :
+    :param func: 
+    :type func: Callable[[] :
+    :param max_retries: (Default value = 3)
+    :type max_retries: int :
+    :param delay_seconds: (Default value = 5)
+    :type delay_seconds: int :
+    :param func: Callable[[]: 
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
 
-    Any] :
-
-    * :
-
-    max_retries : int :
-        (Default value = 3)
-    delay_seconds : int :
-        (Default value = 5)
-    func: Callable[[] :
-
-    max_retries: int :
-         (Default value = 3)
-    delay_seconds: int :
-         (Default value = 5)
-
-    Returns
-    -------
-    type
-        The result of the function if successful, or None if all retries fail.
-
-
+    
     """
     # Validate the function to be retried
     if func is None:

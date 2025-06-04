@@ -17,33 +17,24 @@ logger = setup_logger(__name__)
 
 def send_to_output(data: dict[str, Any]) -> None:
     """Outputs processed analysis results to the configured output system.
-
+    
     This includes logging the result, printing to console, and
     sending to RabbitMQ or SQS, unless OUTPUT_MODE is 'log'.
 
-    Parameters
-    ----------
-    data : dict[str
-        The processed analysis result.
-    data :
-        dict[str:
-    Any :
-        param data: dict[str:
-    Any :
-        param data: dict[str:
-    Any :
+    :param data: The processed analysis result.
+    :type data: dict[str
+    :param data: dict[str:
+    :param Any: param data: dict[str:
+    :param Any: param data: dict[str:
+    :param Any: 
+    :param data: 
+    :type data: dict[str :
+    :param Any]: 
+    :param data: 
+    :type data: dict[str :
+    :param data: dict[str: 
 
-    data : dict[str :
-
-    Any] :
-
-    data: dict[str :
-
-
-    Returns
-    -------
-
-
+    
     """
     try:
         formatted_output = json.dumps(data, indent=4)

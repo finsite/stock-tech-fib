@@ -18,26 +18,19 @@ logger = setup_logger(__name__)
 
 def validate_environment_variables(required_variables: list[str]) -> None:
     """Verify that all required environment variables are set.
-
+    
     Args:
     ----
         required_variables (List[str]): A list of environment variables that are required for the script to run.
 
-    Parameters
-    ----------
-    required_variables :
-        list[str]:
-    required_variables :
-        list[str]:
-    required_variables :
-        list[str]:
-    required_variables : list[str] :
-
-    required_variables: list[str] :
-
-
-    Returns
-    -------
+    :param required_variables: list[str]:
+    :param required_variables: list[str]:
+    :param required_variables: list[str]:
+    :param required_variables: 
+    :type required_variables: list[str] :
+    :param required_variables: 
+    :type required_variables: list[str] :
+    :param required_variables: list[str]: 
 
     Notes
     -----

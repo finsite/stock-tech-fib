@@ -17,37 +17,28 @@ logger = setup_logger(__name__)
 def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
     """Makes a GET request to the specified URL with a specified timeout.
 
-    Parameters
-    ----------
-    url : str
-        The URL to request.
-    timeout : int
-        The timeout in seconds. Defaults to 10 seconds.
-    url :
-        str:
-    timeout :
-        int:  (Default value = 10)
-    url :
-        str:
-    timeout :
-        int:  (Default value = 10)
-    url :
-        str:
-    timeout :
-        int:  (Default value = 10)
-    url : str :
+    :param url: The URL to request.
+    :type url: str
+    :param timeout: The timeout in seconds. Defaults to 10 seconds.
+    :type timeout: int
+    :param url: str:
+    :param timeout: int:  (Default value = 10)
+    :param url: str:
+    :param timeout: int:  (Default value = 10)
+    :param url: str:
+    :param timeout: int:  (Default value = 10)
+    :param url: 
+    :type url: str :
+    :param timeout: (Default value = 10)
+    :type timeout: int :
+    :param url: 
+    :type url: str :
+    :param timeout: (Default value = 10)
+    :type timeout: int :
+    :param url: str: 
+    :param timeout: int:  (Default value = 10)
 
-    timeout : int :
-        (Default value = 10)
-    url: str :
-
-    timeout: int :
-         (Default value = 10)
-
-    Returns
-    -------
-
-
+    
     """
     if not url:
         logger.error("URL cannot be empty.")

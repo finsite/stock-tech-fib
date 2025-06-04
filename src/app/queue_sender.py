@@ -16,25 +16,18 @@ logger = setup_logger(__name__)
 def publish_to_queue(payload: list[dict]) -> None:
     """Publishes processed candlestick analysis results to RabbitMQ or SQS.
 
-    Parameters
-    ----------
-    payload : list[dict]
-        A list of message payloads to publish.
-    payload :
-        list[dict]:
-    payload :
-        list[dict]:
-    payload :
-        list[dict]:
-    payload : list[dict] :
+    :param payload: A list of message payloads to publish.
+    :type payload: list[dict]
+    :param payload: list[dict]:
+    :param payload: list[dict]:
+    :param payload: list[dict]:
+    :param payload: 
+    :type payload: list[dict] :
+    :param payload: 
+    :type payload: list[dict] :
+    :param payload: list[dict]: 
 
-    payload: list[dict] :
-
-
-    Returns
-    -------
-
-
+    
     """
     queue_type = config.get_queue_type()
 
@@ -50,25 +43,18 @@ def publish_to_queue(payload: list[dict]) -> None:
 def _send_to_rabbitmq(data: dict) -> None:
     """Sends a single message to RabbitMQ using config-based credentials.
 
-    Parameters
-    ----------
-    data : dict
-        The message payload to send.
-    data :
-        dict:
-    data :
-        dict:
-    data :
-        dict:
-    data : dict :
+    :param data: The message payload to send.
+    :type data: dict
+    :param data: dict:
+    :param data: dict:
+    :param data: dict:
+    :param data: 
+    :type data: dict :
+    :param data: 
+    :type data: dict :
+    :param data: dict: 
 
-    data: dict :
-
-
-    Returns
-    -------
-
-
+    
     """
     try:
         credentials = pika.PlainCredentials(
@@ -98,25 +84,18 @@ def _send_to_rabbitmq(data: dict) -> None:
 def _send_to_sqs(data: dict) -> None:
     """Sends a single message to AWS SQS using the configured queue.
 
-    Parameters
-    ----------
-    data : dict
-        The message payload to send.
-    data :
-        dict:
-    data :
-        dict:
-    data :
-        dict:
-    data : dict :
+    :param data: The message payload to send.
+    :type data: dict
+    :param data: dict:
+    :param data: dict:
+    :param data: dict:
+    :param data: 
+    :type data: dict :
+    :param data: 
+    :type data: dict :
+    :param data: dict: 
 
-    data: dict :
-
-
-    Returns
-    -------
-
-
+    
     """
     sqs_url = config.get_sqs_queue_url()
     region = config.get_sqs_region()
