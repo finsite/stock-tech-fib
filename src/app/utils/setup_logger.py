@@ -9,10 +9,10 @@ import logging
 
 def setup_logger(name: str | None = None, level: int = logging.INFO) -> logging.Logger:
     """Configure and return a logger for the application.
-    
+
     Logs messages to the console using a StreamHandler and a specified format.
     If the logger already exists, it reuses the existing instance.
-    
+
     Args:
     ----
         name (Optional[str]): Name of the logger. Defaults to "poller" if not specified.

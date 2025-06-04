@@ -19,7 +19,7 @@ logger = setup_logger(__name__)
 
 class RateLimiter:
     """A rate limiter based on the token bucket algorithm.
-    
+
     Allows a specified number of requests within a time window.
 
     :param max_requests: Maximum allowed requests in the window.
@@ -62,7 +62,7 @@ class RateLimiter:
     def acquire(self, context: str = "RateLimiter") -> None:
         """Acquire permission to proceed with a request. Blocks if the rate
         limit is exceeded.
-        
+
         Args:
         ----
             context (str, optional): Optional context for logging (e.g., poller type).

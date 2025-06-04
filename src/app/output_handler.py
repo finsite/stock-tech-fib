@@ -17,7 +17,7 @@ logger = setup_logger(__name__)
 
 def send_to_output(data: dict[str, Any]) -> None:
     """Outputs processed analysis results to the configured output system.
-    
+
     This includes logging the result, printing to console, and
     sending to RabbitMQ or SQS, unless OUTPUT_MODE is 'log'.
 
@@ -31,9 +31,9 @@ def send_to_output(data: dict[str, Any]) -> None:
     :param data: dict[str:
     :param data: dict[str:
     :param Any: param data: dict[str:
-    :param Any: 
-    :param data: dict[str: 
-    :param Any]: 
+    :param Any:
+    :param data: dict[str:
+    :param Any]:
 
     """
     try:

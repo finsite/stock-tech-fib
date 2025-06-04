@@ -16,7 +16,7 @@ logger = setup_logger(__name__)
 
 def validate_data(data: dict[str, Any]) -> bool:
     """Validates the data to ensure it conforms to the required schema.
-    
+
     The function checks that the input data is a dictionary containing
     the required keys: 'symbol', 'price', 'volume', and 'timestamp'.
     It also validates the individual fields using helper functions.
@@ -36,17 +36,17 @@ def validate_data(data: dict[str, Any]) -> bool:
     :param Any: returns: True if data is valid, False otherwise.
     :param data: dict[str:
     :param Any: returns: True if data is valid, False otherwise.
-    :param data: dict[str: 
-    :param Any]: 
+    :param data: dict[str:
+    :param Any]:
     :returns: True if data is valid, False otherwise.
     :rtype: bool
     :raises TypeError: If the data is not a dictionary.
-    
+
     Notes
     -----
     TypeError
         If the data is not a dictionary.
-    
+
     Notes
     -----
         The function logs an error message for each validation failure.
@@ -108,12 +108,12 @@ def _validate_symbol(symbol: str) -> bool:
     :param symbol: str:
     :param symbol: str:
     :param symbol: str:
-    :param symbol: str: 
+    :param symbol: str:
     :returns: True if valid, False otherwise.
     :rtype: bool
 
-Notes
------
+    Notes
+    -----
 
     """
     if not isinstance(symbol, str) or not symbol.isalpha():
@@ -136,12 +136,12 @@ def _validate_price(price: Any) -> bool:
     :param price: Any:
     :param price: Any:
     :param price: Any:
-    :param price: Any: 
+    :param price: Any:
     :returns: True if valid, False otherwise.
     :rtype: bool
 
-Notes
------
+    Notes
+    -----
 
     """
     # Check if the price is an integer or float and if it is non-negative
@@ -153,7 +153,7 @@ Notes
 
 def _validate_volume(volume: Any) -> bool:
     """Validates the 'volume' field to ensure it is a non-negative integer.
-    
+
     Args:
     ----
         volume (Any): The value of the 'volume' field.
@@ -164,18 +164,18 @@ def _validate_volume(volume: Any) -> bool:
     :param volume: type volume: Any :
     :param volume: type volume: Any :
     :param volume: Any:
-    
+
     Notes:
     -----
         A non-negative integer is used to represent the volume of a stock quote.
         The function checks that the provided volume is of type int and if it
         is non-negative. If the validation fails, an error message is logged.
-    
+
     Args:
       volume: Any:
     :param volume: Any:
     :param volume: Any:
-    :param volume: Any: 
+    :param volume: Any:
 
     """
     if not isinstance(volume, int) or volume < 0:
@@ -186,10 +186,10 @@ def _validate_volume(volume: Any) -> bool:
 
 def _validate_timestamp(timestamp: Any) -> bool:
     """Validates the 'timestamp' field to ensure it is a string.
-    
+
     The function checks that the provided timestamp is of type string.
     It logs an error if the validation fails.
-    
+
     Args:
     ----
         timestamp (Any): The value of the 'timestamp' field.
@@ -202,7 +202,7 @@ def _validate_timestamp(timestamp: Any) -> bool:
     :param timestamp: Any:
     :param timestamp: Any:
     :param timestamp: Any:
-    :param timestamp: Any: 
+    :param timestamp: Any:
 
     """
     # Ensure the timestamp is a string

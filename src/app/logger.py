@@ -4,14 +4,14 @@ import os
 
 def setup_logger(name: str = "app") -> logging.Logger:
     """Sets up and returns a logger with the specified name.
-    
+
     If a logger with the same name already exists, it is reused.
     Otherwise, a new logger is created and configured to log to stdout
     with the format:
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    
+
     The default log level is controlled via the LOG_LEVEL environment variable.
-    
+
     Args:
     ----
         name (str): The name of the logger. Defaults to "app".

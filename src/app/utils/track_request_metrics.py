@@ -17,7 +17,7 @@ def track_request_metrics(
     success: bool = True,
 ) -> None:
     """Tracks metrics for individual API requests.
-    
+
     Logs the result of API request operations, including the symbol,
     rate limit, and whether the request was successful or not.
 
@@ -67,9 +67,9 @@ def track_request_metrics(
     :param rate_limit: int:
     :param time_window: float:
     :param success: bool:  (Default value = True)
-    :param symbol: str: 
-    :param rate_limit: int: 
-    :param time_window: float: 
+    :param symbol: str:
+    :param rate_limit: int:
+    :param time_window: float:
     :param success: bool:  (Default value = True)
 
     """

@@ -46,12 +46,12 @@ class VaultClient:
 
     def _authenticate(self) -> None:
         """Authenticate to Vault using AppRole.
-        
+
         This function attempts to authenticate to Vault using the AppRole
         authentication backend. It takes the role ID and secret ID from the
         environment and attempts to authenticate up to 3 times in case of
         failure.
-        
+
         If the authentication is successful, it sets the client's token and
         logs a success message. If it fails, it logs an error message.
 
@@ -80,7 +80,7 @@ class VaultClient:
 
     def _load_secrets(self) -> None:
         """Load secrets from Vault's KV v2 backend.
-        
+
         This method constructs the path to the secrets based on the poller and environment
         attributes, attempts to read the secrets from Vault, and updates the internal secrets
         dictionary. If an error occurs during the process, it logs a warning and resets the
@@ -108,11 +108,11 @@ class VaultClient:
 
     def get(self, key: str, default: str | None = None) -> str | None:
         """Retrieve a secret by key.
-        
+
         This method accesses the internal secrets dictionary to fetch the value
         associated with the given key. If the key does not exist in the dictionary,
         it returns the provided default value.
-        
+
         Args:
         ----
             key (str): The secret key to retrieve.
@@ -136,7 +136,7 @@ class VaultClient:
         :param default: str | None:  (Default value = None)
         :param key: str:
         :param default: str | None:  (Default value = None)
-        :param key: str: 
+        :param key: str:
         :param default: str | None:  (Default value = None)
 
         """
