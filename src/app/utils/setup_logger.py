@@ -24,18 +24,19 @@ def setup_logger(name: str | None = None, level: int = logging.INFO) -> logging.
     :param level: int:  (Default value = logging.INFO)
     :param name: str | None:  (Default value = None)
     :param level: int:  (Default value = logging.INFO)
-    :param name: (Default value = None)
+    :param name: Default value = None)
     :type name: str | None :
-    :param level: (Default value = logging.INFO)
+    :param level: Default value = logging.INFO)
     :type level: int :
-    :param name: (Default value = None)
+    :param name: Default value = None)
     :type name: str | None :
-    :param level: (Default value = logging.INFO)
+    :param level: Default value = logging.INFO)
     :type level: int :
     :param name: str | None:  (Default value = None)
     :param level: int:  (Default value = logging.INFO)
+    :param name: str | None:  (Default value = None)
+    :param level: int:  (Default value = logging.INFO)
 
-    
     """
     # Default logger name if not provided
     logger_name = name or "poller"

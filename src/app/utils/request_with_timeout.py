@@ -27,18 +27,17 @@ def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
     :param timeout: int:  (Default value = 10)
     :param url: str:
     :param timeout: int:  (Default value = 10)
-    :param url: 
-    :type url: str :
-    :param timeout: (Default value = 10)
+    :param url: type url: str :
+    :param timeout: Default value = 10)
     :type timeout: int :
-    :param url: 
-    :type url: str :
-    :param timeout: (Default value = 10)
+    :param url: type url: str :
+    :param timeout: Default value = 10)
     :type timeout: int :
+    :param url: str:
+    :param timeout: int:  (Default value = 10)
     :param url: str: 
     :param timeout: int:  (Default value = 10)
 
-    
     """
     if not url:
         logger.error("URL cannot be empty.")

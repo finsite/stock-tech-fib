@@ -21,13 +21,11 @@ def publish_to_queue(payload: list[dict]) -> None:
     :param payload: list[dict]:
     :param payload: list[dict]:
     :param payload: list[dict]:
-    :param payload: 
-    :type payload: list[dict] :
-    :param payload: 
-    :type payload: list[dict] :
+    :param payload: type payload: list[dict] :
+    :param payload: type payload: list[dict] :
+    :param payload: list[dict]:
     :param payload: list[dict]: 
 
-    
     """
     queue_type = config.get_queue_type()
 
@@ -48,13 +46,11 @@ def _send_to_rabbitmq(data: dict) -> None:
     :param data: dict:
     :param data: dict:
     :param data: dict:
-    :param data: 
-    :type data: dict :
-    :param data: 
-    :type data: dict :
+    :param data: type data: dict :
+    :param data: type data: dict :
+    :param data: dict:
     :param data: dict: 
 
-    
     """
     try:
         credentials = pika.PlainCredentials(
@@ -89,13 +85,11 @@ def _send_to_sqs(data: dict) -> None:
     :param data: dict:
     :param data: dict:
     :param data: dict:
-    :param data: 
-    :type data: dict :
-    :param data: 
-    :type data: dict :
+    :param data: type data: dict :
+    :param data: type data: dict :
+    :param data: dict:
     :param data: dict: 
 
-    
     """
     sqs_url = config.get_sqs_queue_url()
     region = config.get_sqs_region()

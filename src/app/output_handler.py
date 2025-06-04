@@ -26,15 +26,12 @@ def send_to_output(data: dict[str, Any]) -> None:
     :param data: dict[str:
     :param Any: param data: dict[str:
     :param Any: param data: dict[str:
-    :param Any: 
-    :param data: 
-    :type data: dict[str :
-    :param Any]: 
-    :param data: 
-    :type data: dict[str :
+    :param Any: param data:
+    :param Any: param data:
+    :param data: dict[str:
     :param data: dict[str: 
+    :param Any]: 
 
-    
     """
     try:
         formatted_output = json.dumps(data, indent=4)

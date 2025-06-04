@@ -29,23 +29,24 @@ def validate_data(data: dict[str, Any]) -> bool:
     :param Any: returns: True if data is valid, False otherwise.
     :param data: dict[str:
     :param Any: returns: True if data is valid, False otherwise.
-    :param data: 
-    :type data: dict[str :
-    :param Any]: 
-    :param data: 
-    :type data: dict[str :
+    :param data: type data: dict[str :
+    :param Any: param data:
+    :param data: dict[str:
     :param data: dict[str: 
+    :param Any]: 
     :returns: True if data is valid, False otherwise.
     :rtype: bool
     :raises TypeError: If the data is not a dictionary.
-
+    
     Notes
     -----
     TypeError
         If the data is not a dictionary.
+    
     Notes
     -----
         The function logs an error message for each validation failure.
+
     """
     # Define the set of required keys
     required_keys: set[str] = {"symbol", "price", "volume", "timestamp"}
@@ -97,16 +98,16 @@ def _validate_symbol(symbol: str) -> bool:
     :param symbol: str:
     :param symbol: str:
     :param symbol: str:
-    :param symbol: 
-    :type symbol: str :
-    :param symbol: 
-    :type symbol: str :
+    :param symbol: type symbol: str :
+    :param symbol: type symbol: str :
+    :param symbol: str:
     :param symbol: str: 
     :returns: True if valid, False otherwise.
     :rtype: bool
 
-    Notes
-    -----
+Notes
+-----
+
     """
     if not isinstance(symbol, str) or not symbol.isalpha():
         logger.error(f"Invalid symbol format: {symbol}")
@@ -122,16 +123,16 @@ def _validate_price(price: Any) -> bool:
     :param price: Any:
     :param price: Any:
     :param price: Any:
-    :param price: 
-    :type price: Any :
-    :param price: 
-    :type price: Any :
+    :param price: type price: Any :
+    :param price: type price: Any :
+    :param price: Any:
     :param price: Any: 
     :returns: True if valid, False otherwise.
     :rtype: bool
 
-    Notes
-    -----
+Notes
+-----
+
     """
     # Check if the price is an integer or float and if it is non-negative
     if not isinstance(price, (int, float)) or price < 0:
@@ -150,17 +151,17 @@ def _validate_volume(volume: Any) -> bool:
     :param volume: Any:
     :param volume: Any:
     :param volume: Any:
-    :param volume: 
-    :type volume: Any :
-    :param volume: 
-    :type volume: Any :
-    :param volume: Any: 
-
-    Notes
+    :param volume: type volume: Any :
+    :param volume: type volume: Any :
+    :param volume: Any:
+    
+    Notes:
     -----
         A non-negative integer is used to represent the volume of a stock quote.
         The function checks that the provided volume is of type int and if it
         is non-negative. If the validation fails, an error message is logged.
+    :param volume: Any: 
+
     """
     if not isinstance(volume, int) or volume < 0:
         logger.error(f"Invalid volume format: {volume}")
@@ -181,13 +182,11 @@ def _validate_timestamp(timestamp: Any) -> bool:
     :param timestamp: Any:
     :param timestamp: Any:
     :param timestamp: Any:
-    :param timestamp: 
-    :type timestamp: Any :
-    :param timestamp: 
-    :type timestamp: Any :
+    :param timestamp: type timestamp: Any :
+    :param timestamp: type timestamp: Any :
+    :param timestamp: Any:
     :param timestamp: Any: 
 
-    
     """
     # Ensure the timestamp is a string
     if not isinstance(timestamp, str):

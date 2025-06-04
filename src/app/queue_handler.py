@@ -55,13 +55,11 @@ def validate_dataframe(df: pd.DataFrame) -> bool:
     :param df: pd.DataFrame:
     :param df: pd.DataFrame:
     :param df: pd.DataFrame:
-    :param df: 
-    :type df: pd.DataFrame :
-    :param df: 
-    :type df: pd.DataFrame :
+    :param df: type df: pd.DataFrame :
+    :param df: type df: pd.DataFrame :
+    :param df: pd.DataFrame:
     :param df: pd.DataFrame: 
 
-    
     """
     if df.empty:
         logger.warning("Received empty DataFrame — skipping analysis.")
@@ -107,13 +105,11 @@ def consume_rabbitmq() -> None:
         :param properties: param body: bytes:
         :param method: param body: bytes:
         :param body: bytes:
-        :param body: 
-        :type body: bytes :
-        :param body: 
-        :type body: bytes :
+        :param body: type body: bytes :
+        :param body: type body: bytes :
+        :param body: bytes:
         :param body: bytes: 
 
-        
         """
         try:
             message = json.loads(body)

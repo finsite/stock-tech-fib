@@ -27,7 +27,6 @@ class RateLimiter:
     :param time_window: The duration of the window in seconds.
     :type time_window: float
 
-    
     """
 
     def __init__(self, max_requests: int, time_window: float) -> None:
@@ -72,13 +71,13 @@ class RateLimiter:
         :param context: str:  (Default value = "RateLimiter")
         :param context: str:  (Default value = "RateLimiter")
         :param context: str:  (Default value = "RateLimiter")
-        :param context: (Default value = "RateLimiter")
+        :param context: Default value = "RateLimiter")
         :type context: str :
-        :param context: (Default value = "RateLimiter")
+        :param context: Default value = "RateLimiter")
         :type context: str :
         :param context: str:  (Default value = "RateLimiter")
+        :param context: str:  (Default value = "RateLimiter")
 
-        
         """
         with self._lock:
             current_time: float = time.time()

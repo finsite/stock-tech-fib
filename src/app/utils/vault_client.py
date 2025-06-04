@@ -19,7 +19,6 @@ class VaultClient:
     authentication.
 
 
-    
     """
 
     def __init__(self) -> None:
@@ -57,7 +56,6 @@ class VaultClient:
         logs a success message. If it fails, it logs an error message.
 
 
-        
         """
         if not self.role_id or not self.secret_id:
             logger.warning("🔐 VAULT_ROLE_ID or VAULT_SECRET_ID not set — skipping Vault load.")
@@ -89,7 +87,6 @@ class VaultClient:
         secrets dictionary to empty.
 
 
-        
         """
         try:
             # Construct the path for the secrets in Vault
@@ -127,18 +124,17 @@ class VaultClient:
         :param default: str | None:  (Default value = None)
         :param key: str:
         :param default: str | None:  (Default value = None)
-        :param key: 
-        :type key: str :
-        :param default: (Default value = None)
+        :param key: type key: str :
+        :param default: Default value = None)
         :type default: str | None :
-        :param key: 
-        :type key: str :
-        :param default: (Default value = None)
+        :param key: type key: str :
+        :param default: Default value = None)
         :type default: str | None :
+        :param key: str:
+        :param default: str | None:  (Default value = None)
         :param key: str: 
         :param default: str | None:  (Default value = None)
 
-        
         """
         # Retrieve the secret value from the dictionary, defaulting if not found
         return self.secrets.get(key, default)

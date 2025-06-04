@@ -42,25 +42,26 @@ def retry_request(
     :param Any: param *:
     :param max_retries: int:  (Default value = 3)
     :param delay_seconds: int:  (Default value = 5)
-    :param func: 
-    :type func: Callable[[] :
+    :param func: type func: Callable[[] :
+    :param Any: param *:
+    :param max_retries: Default value = 3)
+    :type max_retries: int :
+    :param delay_seconds: Default value = 5)
+    :type delay_seconds: int :
+    :param func: type func: Callable[[] :
+    :param max_retries: Default value = 3)
+    :type max_retries: int :
+    :param delay_seconds: Default value = 5)
+    :type delay_seconds: int :
+    :param func: Callable[[]:
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
+    :param func: Callable[[]: 
     :param Any]: 
     :param *: 
-    :param max_retries: (Default value = 3)
-    :type max_retries: int :
-    :param delay_seconds: (Default value = 5)
-    :type delay_seconds: int :
-    :param func: 
-    :type func: Callable[[] :
-    :param max_retries: (Default value = 3)
-    :type max_retries: int :
-    :param delay_seconds: (Default value = 5)
-    :type delay_seconds: int :
-    :param func: Callable[[]: 
     :param max_retries: int:  (Default value = 3)
     :param delay_seconds: int:  (Default value = 5)
 
-    
     """
     # Validate the function to be retried
     if func is None:

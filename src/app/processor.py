@@ -25,15 +25,12 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
     :param data: dict[str:
     :param Any: param data: dict[str:
     :param Any: param data: dict[str:
-    :param Any: 
-    :param data: 
-    :type data: dict[str :
-    :param Any]: 
-    :param data: 
-    :type data: dict[str :
+    :param Any: param data:
+    :param Any: param data:
+    :param data: dict[str:
     :param data: dict[str: 
+    :param Any]: 
 
-    
     """
     try:
         df = pd.DataFrame(data.get("history", []))
@@ -97,29 +94,14 @@ def calculate_fibonacci_levels(
     :param method: Literal["retracement":
     :param data: pd.DataFrame:
     :param method: Literal["retracement":
-    :param data: 
-    :type data: pd.DataFrame :
-    :param method: 
-    :type method: Literal["retracement" :
-    :param "extension"]: (Default value = "retracement")
-    :param swing_high: (Default value = None)
-    :type swing_high: float | None :
-    :param swing_low: (Default value = None)
-    :type swing_low: float | None :
-    :param data: 
-    :type data: pd.DataFrame :
-    :param method: 
-    :type method: Literal["retracement" :
-    :param swing_high: (Default value = None)
-    :type swing_high: float | None :
-    :param swing_low: (Default value = None)
-    :type swing_low: float | None :
+    :param data: type data: pd.DataFrame :
+    :param method: type method: Literal["retracement" :
     :param data: pd.DataFrame: 
     :param method: Literal["retracement": 
+    :param "extension"]:  (Default value = "retracement")
     :param swing_high: float | None:  (Default value = None)
     :param swing_low: float | None:  (Default value = None)
 
-    
     """
     try:
         if swing_high is None:
