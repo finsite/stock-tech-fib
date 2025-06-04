@@ -24,6 +24,7 @@ def send_to_output(data: dict[str, Any]) -> None:
     :param data: The processed analysis result.
     :type data: dict[str
     :param data: dict[str:
+    :param Any: param data: dict[str:
     :param Any: 
     :param data: dict[str: 
     :param Any]: 

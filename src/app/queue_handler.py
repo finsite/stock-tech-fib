@@ -53,6 +53,7 @@ def validate_dataframe(df: pd.DataFrame) -> bool:
     """Ensure the DataFrame includes necessary OHLC columns.
 
     :param df: pd.DataFrame:
+    :param df: pd.DataFrame:
     :param df: pd.DataFrame: 
 
     """
@@ -98,7 +99,7 @@ def consume_rabbitmq() -> None:
 
         :param ch: param method:
         :param properties: param body: bytes:
-        :param method: 
+        :param method: param body: bytes:
         :param body: bytes: 
 
         """

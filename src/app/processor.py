@@ -27,6 +27,7 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
         dict: Analysis results including retracement and extension levels.
 
     :param data: dict[str:
+    :param Any: param data: dict[str:
     :param Any: 
     :param data: dict[str: 
     :param Any]: 
@@ -92,6 +93,8 @@ def calculate_fibonacci_levels(
     -------
         tuple: (level map, swing_high, swing_low)
 
+    :param data: pd.DataFrame:
+    :param method: Literal["retracement":
     :param data: pd.DataFrame:
     :param method: Literal["retracement":
     :param data: pd.DataFrame: 
