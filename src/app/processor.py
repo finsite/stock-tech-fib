@@ -28,6 +28,8 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
     :param Any: param data:
     :param Any: param data:
     :param data: dict[str:
+    :param data: dict[str:
+    :param Any: 
     :param data: dict[str: 
     :param Any]: 
 
@@ -96,6 +98,8 @@ def calculate_fibonacci_levels(
     :param method: Literal["retracement":
     :param data: type data: pd.DataFrame :
     :param method: type method: Literal["retracement" :
+    :param data: pd.DataFrame:
+    :param method: Literal["retracement":
     :param data: pd.DataFrame: 
     :param method: Literal["retracement": 
     :param "extension"]:  (Default value = "retracement")

@@ -58,6 +58,7 @@ def validate_dataframe(df: pd.DataFrame) -> bool:
     :param df: type df: pd.DataFrame :
     :param df: type df: pd.DataFrame :
     :param df: pd.DataFrame:
+    :param df: pd.DataFrame:
     :param df: pd.DataFrame: 
 
     """
@@ -107,6 +108,7 @@ def consume_rabbitmq() -> None:
         :param body: bytes:
         :param body: type body: bytes :
         :param body: type body: bytes :
+        :param body: bytes:
         :param body: bytes:
         :param body: bytes: 
 

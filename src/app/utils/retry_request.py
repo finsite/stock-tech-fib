@@ -56,6 +56,10 @@ def retry_request(
     :param func: Callable[[]:
     :param max_retries: int:  (Default value = 3)
     :param delay_seconds: int:  (Default value = 5)
+    :param func: Callable[[]:
+    :param Any: param *:
+    :param max_retries: int:  (Default value = 3)
+    :param delay_seconds: int:  (Default value = 5)
     :param func: Callable[[]: 
     :param Any]: 
     :param *: 

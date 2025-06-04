@@ -132,6 +132,8 @@ class VaultClient:
         :type default: str | None :
         :param key: str:
         :param default: str | None:  (Default value = None)
+        :param key: str:
+        :param default: str | None:  (Default value = None)
         :param key: str: 
         :param default: str | None:  (Default value = None)
 
