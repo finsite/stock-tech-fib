@@ -17,18 +17,33 @@ logger = setup_logger(__name__)
 def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
     """Makes a GET request to the specified URL with a specified timeout.
 
-    :param url: The URL to request.
-    :type url: str
-    :param timeout: The timeout in seconds. Defaults to 10 seconds.
-    :type timeout: int
-    :param url: str:
-    :param timeout: int:  (Default value = 10)
-    :param url: str:
-    :param timeout: int:  (Default value = 10)
-    :param url: str: 
-    :param timeout: int:  (Default value = 10)
-    :returns: The JSON response as a dictionary, or None if a timeout occurred.
-    :rtype: dict[str, Any] | None
+    Parameters
+    ----------
+    url : str
+        The URL to request.
+    timeout : int
+        The timeout in seconds. Defaults to 10 seconds.
+    url :
+        str:
+    timeout :
+        int:  (Default value = 10)
+    url :
+        str:
+    timeout :
+        int:  (Default value = 10)
+    url :
+        str:
+    timeout :
+        int:  (Default value = 10)
+    url: str :
+
+    timeout: int :
+         (Default value = 10)
+
+    Returns
+    -------
+    dict[str, Any] | None
+        The JSON response as a dictionary, or None if a timeout occurred.
 
     """
     if not url:

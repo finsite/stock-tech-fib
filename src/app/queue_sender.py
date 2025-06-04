@@ -16,11 +16,21 @@ logger = setup_logger(__name__)
 def publish_to_queue(payload: list[dict]) -> None:
     """Publishes processed candlestick analysis results to RabbitMQ or SQS.
 
-    :param payload: A list of message payloads to publish.
-    :type payload: list[dict]
-    :param payload: list[dict]:
-    :param payload: list[dict]:
-    :param payload: list[dict]: 
+    Parameters
+    ----------
+    payload : list[dict]
+        A list of message payloads to publish.
+    payload :
+        list[dict]:
+    payload :
+        list[dict]:
+    payload :
+        list[dict]:
+    payload: list[dict] :
+
+
+    Returns
+    -------
 
     """
     queue_type = config.get_queue_type()
@@ -37,11 +47,21 @@ def publish_to_queue(payload: list[dict]) -> None:
 def _send_to_rabbitmq(data: dict) -> None:
     """Sends a single message to RabbitMQ using config-based credentials.
 
-    :param data: The message payload to send.
-    :type data: dict
-    :param data: dict:
-    :param data: dict:
-    :param data: dict: 
+    Parameters
+    ----------
+    data : dict
+        The message payload to send.
+    data :
+        dict:
+    data :
+        dict:
+    data :
+        dict:
+    data: dict :
+
+
+    Returns
+    -------
 
     """
     try:
@@ -72,11 +92,21 @@ def _send_to_rabbitmq(data: dict) -> None:
 def _send_to_sqs(data: dict) -> None:
     """Sends a single message to AWS SQS using the configured queue.
 
-    :param data: The message payload to send.
-    :type data: dict
-    :param data: dict:
-    :param data: dict:
-    :param data: dict: 
+    Parameters
+    ----------
+    data : dict
+        The message payload to send.
+    data :
+        dict:
+    data :
+        dict:
+    data :
+        dict:
+    data: dict :
+
+
+    Returns
+    -------
 
     """
     sqs_url = config.get_sqs_queue_url()

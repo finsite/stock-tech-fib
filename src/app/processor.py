@@ -17,20 +17,32 @@ EXTENSION_LEVELS = [1.272, 1.618, 2.0, 2.618]
 
 def analyze(data: dict[str, Any]) -> dict[str, Any]:
     """Main processor entrypoint for Fibonacci analysis.
-    
+
     Args:
     ----
         data (dict): Message containing 'symbol', 'timestamp', and OHLC history.
-    
+
     Returns:
     -------
         dict: Analysis results including retracement and extension levels.
 
-    :param data: dict[str:
-    :param Any: param data: dict[str:
-    :param Any: 
-    :param data: dict[str: 
-    :param Any]: 
+    Parameters
+    ----------
+    data :
+        dict[str:
+    Any :
+        param data: dict[str:
+    Any :
+        param data: dict[str:
+    Any :
+
+    data: dict[str :
+
+    Any] :
+
+
+    Returns
+    -------
 
     """
     try:
@@ -81,27 +93,45 @@ def calculate_fibonacci_levels(
     swing_low: float | None = None,
 ) -> tuple[dict[str, float], float | None, float | None]:
     """Calculate Fibonacci retracement or extension levels.
-    
+
     Args:
     ----
         data (pd.DataFrame): Historical OHLC stock data.
         method (str): 'retracement' or 'extension'.
         swing_high (float, optional): Manual high override.
         swing_low (float, optional): Manual low override.
-    
+
     Returns:
     -------
         tuple: (level map, swing_high, swing_low)
 
-    :param data: pd.DataFrame:
-    :param method: Literal["retracement":
-    :param data: pd.DataFrame:
-    :param method: Literal["retracement":
-    :param data: pd.DataFrame: 
-    :param method: Literal["retracement": 
-    :param "extension"]:  (Default value = "retracement")
-    :param swing_high: float | None:  (Default value = None)
-    :param swing_low: float | None:  (Default value = None)
+    Parameters
+    ----------
+    data :
+        pd.DataFrame:
+    method :
+        Literal["retracement":
+    data :
+        pd.DataFrame:
+    method :
+        Literal["retracement":
+    data :
+        pd.DataFrame:
+    method :
+        Literal["retracement":
+    data: pd.DataFrame :
+
+    method: Literal["retracement" :
+
+    "extension"] :
+         (Default value = "retracement")
+    swing_high: float | None :
+         (Default value = None)
+    swing_low: float | None :
+         (Default value = None)
+
+    Returns
+    -------
 
     """
     try:
