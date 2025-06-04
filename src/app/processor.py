@@ -26,10 +26,11 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
     -------
         dict: Analysis results including retracement and extension levels.
 
+    :param data: dict[str:
+    :param Any: 
     :param data: dict[str: 
     :param Any]: 
 
-    
     """
     try:
         df = pd.DataFrame(data.get("history", []))
@@ -91,13 +92,14 @@ def calculate_fibonacci_levels(
     -------
         tuple: (level map, swing_high, swing_low)
 
+    :param data: pd.DataFrame:
+    :param method: Literal["retracement":
     :param data: pd.DataFrame: 
     :param method: Literal["retracement": 
     :param "extension"]:  (Default value = "retracement")
     :param swing_high: float | None:  (Default value = None)
     :param swing_low: float | None:  (Default value = None)
 
-    
     """
     try:
         if swing_high is None:

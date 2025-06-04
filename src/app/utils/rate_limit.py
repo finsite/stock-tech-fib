@@ -74,8 +74,8 @@ class RateLimiter:
             None
 
         :param context: str:  (Default value = "RateLimiter")
+        :param context: str:  (Default value = "RateLimiter")
 
-        
         """
         with self._lock:
             current_time: float = time.time()

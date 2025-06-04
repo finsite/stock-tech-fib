@@ -52,6 +52,7 @@ if QUEUE_TYPE == "sqs":
 def validate_dataframe(df: pd.DataFrame) -> bool:
     """Ensure the DataFrame includes necessary OHLC columns.
 
+    :param df: pd.DataFrame:
     :param df: pd.DataFrame: 
 
     """
@@ -95,9 +96,9 @@ def consume_rabbitmq() -> None:
     def callback(ch, method, properties, body: bytes) -> None:
         """
 
-        :param ch: 
+        :param ch: param method:
+        :param properties: param body: bytes:
         :param method: 
-        :param properties: 
         :param body: bytes: 
 
         """

@@ -18,6 +18,7 @@ def publish_to_queue(payload: list[dict]) -> None:
 
     :param payload: A list of message payloads to publish.
     :type payload: list[dict]
+    :param payload: list[dict]:
     :param payload: list[dict]: 
 
     """
@@ -37,6 +38,7 @@ def _send_to_rabbitmq(data: dict) -> None:
 
     :param data: The message payload to send.
     :type data: dict
+    :param data: dict:
     :param data: dict: 
 
     """
@@ -70,6 +72,7 @@ def _send_to_sqs(data: dict) -> None:
 
     :param data: The message payload to send.
     :type data: dict
+    :param data: dict:
     :param data: dict: 
 
     """

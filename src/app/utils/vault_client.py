@@ -122,10 +122,11 @@ class VaultClient:
         -------
             Optional[str]: The secret value if found, otherwise the default value.
 
+        :param key: str:
+        :param default: str | None:  (Default value = None)
         :param key: str: 
         :param default: str | None:  (Default value = None)
 
-        
         """
         # Retrieve the secret value from the dictionary, defaulting if not found
         return self.secrets.get(key, default)

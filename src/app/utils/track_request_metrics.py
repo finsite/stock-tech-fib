@@ -29,6 +29,10 @@ def track_request_metrics(
     :type time_window: float
     :param success: Whether the request was successful. Defaults to True.
     :type success: bool
+    :param symbol: str:
+    :param rate_limit: int:
+    :param time_window: float:
+    :param success: bool:  (Default value = True)
     :param symbol: str: 
     :param rate_limit: int: 
     :param time_window: float: 

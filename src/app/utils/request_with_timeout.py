@@ -21,6 +21,8 @@ def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
     :type url: str
     :param timeout: The timeout in seconds. Defaults to 10 seconds.
     :type timeout: int
+    :param url: str:
+    :param timeout: int:  (Default value = 10)
     :param url: str: 
     :param timeout: int:  (Default value = 10)
     :returns: The JSON response as a dictionary, or None if a timeout occurred.
