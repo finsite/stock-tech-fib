@@ -25,10 +25,6 @@ def get_config_value(key: str, default: str | None = None) -> str:
       key: str:
       default: str | None:  (Default value = None)
 
-    Returns:
-    -------
-      str: The resolved value.
-
     Parameters
     ----------
     key :
@@ -43,6 +39,10 @@ def get_config_value(key: str, default: str | None = None) -> str:
         str:
     default :
         str | None:  (Default value = None)
+    key : str :
+
+    default : str | None :
+        (Default value = None)
     key: str :
 
     default: str | None :
@@ -50,6 +50,7 @@ def get_config_value(key: str, default: str | None = None) -> str:
 
     Returns
     -------
+
 
     """
     val = _vault.get(key, os.getenv(key))

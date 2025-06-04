@@ -35,6 +35,10 @@ def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
         str:
     timeout :
         int:  (Default value = 10)
+    url : str :
+
+    timeout : int :
+        (Default value = 10)
     url: str :
 
     timeout: int :
@@ -42,8 +46,7 @@ def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
 
     Returns
     -------
-    dict[str, Any] | None
-        The JSON response as a dictionary, or None if a timeout occurred.
+
 
     """
     if not url:

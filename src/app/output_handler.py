@@ -33,13 +33,16 @@ def send_to_output(data: dict[str, Any]) -> None:
         param data: dict[str:
     Any :
 
-    data: dict[str :
+    data : dict[str :
 
     Any] :
+
+    data: dict[str :
 
 
     Returns
     -------
+
 
     """
     try:

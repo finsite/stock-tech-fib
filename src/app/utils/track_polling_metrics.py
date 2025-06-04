@@ -26,10 +26,6 @@ def track_polling_metrics(status: Literal["success", "failure"], source: str, sy
         source (str): The source of the polling data (e.g., 'yfinance', 'finnhub').
         symbol (str): The symbol for which polling was performed.
 
-    Raises:
-    ------
-        ValueError: If the status is not 'success' or 'failure'.
-
     Parameters
     ----------
     status :
@@ -38,9 +34,15 @@ def track_polling_metrics(status: Literal["success", "failure"], source: str, sy
         Literal["success":
     status :
         Literal["success":
-    status: Literal["success" :
+    status : Literal["success" :
 
     "failure"] :
+
+    source : str :
+
+    symbol : str :
+
+    status: Literal["success" :
 
     source: str :
 
@@ -49,6 +51,7 @@ def track_polling_metrics(status: Literal["success", "failure"], source: str, sy
 
     Returns
     -------
+
 
     """
     # Validate status

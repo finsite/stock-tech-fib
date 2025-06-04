@@ -24,6 +24,7 @@ class VaultClient:
     Returns
     -------
 
+
     """
 
     def __init__(self) -> None:
@@ -66,6 +67,7 @@ class VaultClient:
         Returns
         -------
 
+
         """
         if not self.role_id or not self.secret_id:
             logger.warning("🔐 VAULT_ROLE_ID or VAULT_SECRET_ID not set — skipping Vault load.")
@@ -102,6 +104,7 @@ class VaultClient:
         Returns
         -------
 
+
         """
         try:
             # Construct the path for the secrets in Vault
@@ -133,10 +136,6 @@ class VaultClient:
             key (str): The secret key to retrieve.
             default (Optional[str]): Default value to return if key not found.
 
-        Returns:
-        -------
-            Optional[str]: The secret value if found, otherwise the default value.
-
         Parameters
         ----------
         key :
@@ -151,6 +150,10 @@ class VaultClient:
             str:
         default :
             str | None:  (Default value = None)
+        key : str :
+
+        default : str | None :
+            (Default value = None)
         key: str :
 
         default: str | None :
@@ -158,6 +161,7 @@ class VaultClient:
 
         Returns
         -------
+
 
         """
         # Retrieve the secret value from the dictionary, defaulting if not found

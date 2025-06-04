@@ -26,11 +26,14 @@ def publish_to_queue(payload: list[dict]) -> None:
         list[dict]:
     payload :
         list[dict]:
+    payload : list[dict] :
+
     payload: list[dict] :
 
 
     Returns
     -------
+
 
     """
     queue_type = config.get_queue_type()
@@ -57,11 +60,14 @@ def _send_to_rabbitmq(data: dict) -> None:
         dict:
     data :
         dict:
+    data : dict :
+
     data: dict :
 
 
     Returns
     -------
+
 
     """
     try:
@@ -102,11 +108,14 @@ def _send_to_sqs(data: dict) -> None:
         dict:
     data :
         dict:
+    data : dict :
+
     data: dict :
 
 
     Returns
     -------
+
 
     """
     sqs_url = config.get_sqs_queue_url()

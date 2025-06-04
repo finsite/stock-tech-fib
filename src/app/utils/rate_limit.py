@@ -31,8 +31,7 @@ class RateLimiter:
 
     Returns
     -------
-    type
-        None
+
 
     """
 
@@ -75,10 +74,6 @@ class RateLimiter:
             context (str, optional): Optional context for logging (e.g., poller type).
                 Defaults to "RateLimiter".
 
-        Returns:
-        -------
-            None
-
         Parameters
         ----------
         context :
@@ -87,11 +82,14 @@ class RateLimiter:
             str:  (Default value = "RateLimiter")
         context :
             str:  (Default value = "RateLimiter")
+        context : str :
+            (Default value = "RateLimiter")
         context: str :
              (Default value = "RateLimiter")
 
         Returns
         -------
+
 
         """
         with self._lock:

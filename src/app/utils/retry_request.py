@@ -59,11 +59,17 @@ def retry_request(
         int:  (Default value = 3)
     delay_seconds :
         int:  (Default value = 5)
-    func: Callable[[] :
+    func : Callable[[] :
 
     Any] :
 
     * :
+
+    max_retries : int :
+        (Default value = 3)
+    delay_seconds : int :
+        (Default value = 5)
+    func: Callable[[] :
 
     max_retries: int :
          (Default value = 3)
@@ -75,12 +81,6 @@ def retry_request(
     type
         The result of the function if successful, or None if all retries fail.
 
-    Raises
-    ------
-    ValueError
-        If the function to be retried is None.
-    Exception
-        The last exception encountered if all retries fail.
 
     """
     # Validate the function to be retried

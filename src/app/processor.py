@@ -22,10 +22,6 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
     ----
         data (dict): Message containing 'symbol', 'timestamp', and OHLC history.
 
-    Returns:
-    -------
-        dict: Analysis results including retracement and extension levels.
-
     Parameters
     ----------
     data :
@@ -36,13 +32,16 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
         param data: dict[str:
     Any :
 
-    data: dict[str :
+    data : dict[str :
 
     Any] :
+
+    data: dict[str :
 
 
     Returns
     -------
+
 
     """
     try:
@@ -101,10 +100,6 @@ def calculate_fibonacci_levels(
         swing_high (float, optional): Manual high override.
         swing_low (float, optional): Manual low override.
 
-    Returns:
-    -------
-        tuple: (level map, swing_high, swing_low)
-
     Parameters
     ----------
     data :
@@ -119,12 +114,20 @@ def calculate_fibonacci_levels(
         pd.DataFrame:
     method :
         Literal["retracement":
+    data : pd.DataFrame :
+
+    method : Literal["retracement" :
+
+    "extension"] :
+        (Default value = "retracement")
+    swing_high : float | None :
+        (Default value = None)
+    swing_low : float | None :
+        (Default value = None)
     data: pd.DataFrame :
 
     method: Literal["retracement" :
 
-    "extension"] :
-         (Default value = "retracement")
     swing_high: float | None :
          (Default value = None)
     swing_low: float | None :
@@ -132,6 +135,7 @@ def calculate_fibonacci_levels(
 
     Returns
     -------
+
 
     """
     try:
