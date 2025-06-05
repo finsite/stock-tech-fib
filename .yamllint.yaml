@@ -8,7 +8,7 @@ rules:
     level: warning  # Warn if "---" is missing, but don’t fail
   comments-indentation: enable  # Enforce clean comment indentation
   truthy:
-    level: warning   # Warn about 'yes'/'no' instead of 'true'/'false'
+    level: warning # Warn about 'yes'/'no' instead of 'true'/'false'
   indentation:
     spaces: 2
     indent-sequences: consistent
