@@ -20,6 +20,11 @@ repos:
         entry: make preflight
         language: system
         pass_filenames: false
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.15.0  # or latest
+    hooks:
+      - id: pyupgrade
+        args: [--py310-plus]  # match your target Python version        
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
@@ -31,14 +36,12 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.11.8
     hooks:
       - id: ruff
         args: [check, --fix, --extend-select=D, ANN]  # <--- 'check' added here
       - id: ruff-format
-
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
     hooks:
@@ -194,5 +197,6 @@ repos:
         entry: .hooks/check-version-consistency.py
         language: python
         types: [python]
+        pass_filenames: false
         description: |-
-          Ensure that pyproject.toml and src/app/__init__.py have matching version numbers.
+          Ensure that pyproject.toml, src/app/__init__.py, and CHANGELOG.md all have matching version numbers.

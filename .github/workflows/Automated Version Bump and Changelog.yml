@@ -1,14 +1,11 @@
 ---
 name: Automated Version Bump and Changelog
-
 on:
   push:
     branches: [main]
     paths-ignore: [README.md, docs/**, .github/**]
-
 permissions:
   contents: write
-
 jobs:
   bump-version:
     runs-on: ubuntu-latest
@@ -17,34 +14,28 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-
       - name: Install Commitizen
         run: pip install commitizen
-
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
       - name: Ensure initial tag exists (if needed)
         run: |
           if ! git describe --tags --abbrev=0 >/dev/null 2>&1; then
             git tag v0.0.0
             git push --tags
           fi
-
       - name: Bump version and generate changelog
         run: |
           echo "🚀 Running Commitizen bump..."
           cz bump --yes --changelog || [ $? -eq 2 ]
-
       - name: Push tags and updated files
-        run: |
+        run: |-
           git push
           git push --tags

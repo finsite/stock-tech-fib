@@ -1,6 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-"""Check that the version in pyproject.toml matches the version in __init__.py."""
+"""Ensure version consistency across pyproject.toml, __init__.py, and CHANGELOG.md."""
 
 import re
 import sys
@@ -8,37 +9,57 @@ from pathlib import Path
 
 PYPROJECT = Path("pyproject.toml")
 INIT = Path("src/app/__init__.py")
+CHANGELOG = Path("CHANGELOG.md")
 
 
-def extract_version_from_pyproject(pyproject_path: Path) -> str | None:
-    content = pyproject_path.read_text(encoding="utf-8")
+def extract_version_from_pyproject(path: Path) -> str | None:
+    content = path.read_text(encoding="utf-8")
     match = re.search(r"^version\s*=\s*[\"'](.+?)[\"']", content, flags=re.MULTILINE)
     return match.group(1) if match else None
 
 
-def extract_version_from_init(init_path: Path) -> str | None:
-    content = init_path.read_text(encoding="utf-8")
-    match = re.search(r'^__version__\s*=\s*[\'"](.+?)[\'"]', content)
+def extract_version_from_init(path: Path) -> str | None:
+    content = path.read_text(encoding="utf-8")
+    match = re.search(r'^__version__\s*=\s*[\'"](.+?)[\'"]', content, flags=re.MULTILINE)
     return match.group(1) if match else None
 
 
-def main() -> int:
-    if not PYPROJECT.exists() or not INIT.exists():
-        print("Missing pyproject.toml or __init__.py")
-        return 1
+def extract_version_from_changelog(path: Path) -> str | None:
+    content = path.read_text(encoding="utf-8")
+    match = re.search(r"^##\s*\[(\d+\.\d+\.\d+)\]", content, flags=re.MULTILINE)
+    return match.group(1) if match else None
 
+
+def safe_print(message: str):
+    """Print message with fallback for non-UTF-8 terminals (e.g., Windows cmd)."""
+    try:
+        print(message)
+    except UnicodeEncodeError:
+        # Strip emojis or non-ASCII characters
+        ascii_message = message.encode("ascii", errors="ignore").decode("ascii")
+        print(ascii_message)
+
+
+def main() -> int:
     pyproject_version = extract_version_from_pyproject(PYPROJECT)
     init_version = extract_version_from_init(INIT)
+    changelog_version = extract_version_from_changelog(CHANGELOG)
 
-    if pyproject_version is None or init_version is None:
-        print("Could not extract version from one or both files.")
+    if not all([pyproject_version, init_version, changelog_version]):
+        safe_print("❌ Could not extract version from one or more files.")
+        safe_print(f"pyproject.toml: {pyproject_version}")
+        safe_print(f"__init__.py:     {init_version}")
+        safe_print(f"CHANGELOG.md:    {changelog_version}")
         return 1
 
-    if pyproject_version != init_version:
-        print(f"Version mismatch: pyproject.toml={pyproject_version}, __init__.py={init_version}")
+    if pyproject_version != init_version or pyproject_version != changelog_version:
+        safe_print("❌ Version mismatch:")
+        safe_print(f"pyproject.toml: {pyproject_version}")
+        safe_print(f"__init__.py:     {init_version}")
+        safe_print(f"CHANGELOG.md:    {changelog_version}")
         return 1
 
-    print(f"Version match: {pyproject_version}")
+    safe_print(f"✅ Version match: {pyproject_version}")
     return 0
 
 

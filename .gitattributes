@@ -1,0 +1,36 @@
+# Normalize all text files to LF line endings
+* text=auto eol=lf
+
+# Force LF for key project file types (redundant protection)
+*.py     text eol=lf
+*.sh     text eol=lf
+*.md     text eol=lf
+*.toml   text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.json   text eol=lf
+*.csv    text eol=lf
+
+# Treat documentation and configs as UTF-8
+*.md     text working-tree-encoding=UTF-8
+*.txt    text working-tree-encoding=UTF-8
+*.toml   text working-tree-encoding=UTF-8
+*.yml    text working-tree-encoding=UTF-8
+*.yaml   text working-tree-encoding=UTF-8
+
+# Binary files should be explicitly marked as binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.pdf    binary
+*.zip    binary
+
+# Shell scripts must have LF endings and executable bit
+*.sh     text eol=lf
+*.sh     diff=astextplain
+
+# Python-specific exclusions
+*.pyc    binary
+__pycache__/* binary

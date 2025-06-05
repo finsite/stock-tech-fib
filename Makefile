@@ -74,17 +74,33 @@ sync-apply:
 	@echo "🚀 Applying sync to all repositories..."
 	python sync_if_needed.py --apply && echo "✅ Sync complete. Changes logged in sync.log"	
 
-# 🟡 OPTIONAL: Enable if you use syft for SBOM generation
-# Requires: https://github.com/anchore/syft
-# sbom:
-# 	syft . -o spdx-json > sbom.spdx.json
+# -----------------------------------------------------------------------------
+# Attestation and SBOM Targets
+# -----------------------------------------------------------------------------
 
-# 🟡 OPTIONAL: Enable if you use cosign to sign Docker images
+# ✅ Generate CycloneDX SBOM for Python dependencies
+# Requires: pip install cyclonedx-bom
+sbom-py:
+	cyclonedx-py -o bom.json
+
+# ✅ Generate full SBOM from Docker image context using Syft
+# Requires: https://github.com/anchore/syft
+sbom-image:
+	syft . -o spdx-json > sbom.spdx.json
+
+# ✅ Run both SBOM generators + audit (pip check + pip-audit + deptry)
+attest: sbom-py sbom-image audit
+
+# -----------------------------------------------------------------------------
+# Optional Utilities (enable as needed)
+# -----------------------------------------------------------------------------
+
+# 🟡 OPTIONAL: Sign Docker image using cosign
 # Requires: https://github.com/sigstore/cosign
 # sign-image:
 # 	cosign sign $(shell basename $(PWD)):latest
 
-# 🟡 OPTIONAL: Enable if you use pytest-watch
+# 🟡 OPTIONAL: Pytest watch mode for test-driven development
 # Requires: pip install pytest-watch
 # watch:
 # 	ptw --onfail "notify-send 'Test failed!'"
