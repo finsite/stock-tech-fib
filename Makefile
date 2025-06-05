@@ -62,6 +62,18 @@ clean:
 clean-all: clean
 	rm -rf .mypy_cache .pytest_cache .coverage htmlcov dist build
 
+# -----------------------------------------------------------------------------
+# Repo Sync Utilities (from repo-utils-shared)
+# -----------------------------------------------------------------------------
+
+sync:
+	@echo "🔍 Running dry-run sync (no changes applied)..."
+	python sync_if_needed.py
+
+sync-apply:
+	@echo "🚀 Applying sync to all repositories..."
+	python sync_if_needed.py --apply && echo "✅ Sync complete. Changes logged in sync.log"	
+
 # 🟡 OPTIONAL: Enable if you use syft for SBOM generation
 # Requires: https://github.com/anchore/syft
 # sbom:
