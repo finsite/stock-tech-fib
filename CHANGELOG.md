@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ## v0.5.1 (2025-06-06)
+=======
+## v0.1.0 (2025-06-05)
+>>>>>>> Stashed changes
 
 ### Fix
 
@@ -31,26 +35,25 @@
 
 ## v0.4.1 (2025-06-03)
 
-### Fix
-
-- **files**: Cleanup redundant files and standardize
-
 ## v0.4.0 (2025-05-24)
 
 ### Feat
 
 - **versioning**: enforce version consistency across pyproject.toml, __init__.py, and changelog
+
+### Fix
+
+- **files**: Cleanup redundant files and standardize
+
+## v0.3.1 (2025-05-23)
+
+### Feat
+
 - **poller**: fix queue_sender to make sure it's standardized
 
 ### Fix
 
 - **poller**: integrate updates
-
-## v0.3.1 (2025-05-23)
-
-### Fix
-
-- **poller**: update processor.py to be pyright compliant
 
 ## v0.3.0 (2025-05-23)
 
