@@ -60,7 +60,7 @@ class VaultClient:
             self.secrets = response["data"]["data"]
             logger.info(f"📦 Loaded {len(self.secrets)} secrets from Vault.")
         except Exception as e:
-            logger.warning(f"❌ Failed to load secrets from Vault: %s", e)
+            logger.warning("❌ Failed to load secrets from Vault: %s", e)
             self.secrets = {}
 
     def get(self, key: str, default: str | None = None) -> str | None:
@@ -72,5 +72,6 @@ class VaultClient:
 
         Returns:
             The secret value or the default.
+
         """
         return self.secrets.get(key, default)

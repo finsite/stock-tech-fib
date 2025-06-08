@@ -1,4 +1,10 @@
-"""Module to publish processed data to RabbitMQ or AWS SQS."""
+"""Module to publish processed data to RabbitMQ or AWS SQS.
+
+This module provides a function to publish a list of processed
+data dictionaries to the appropriate queue type (RabbitMQ or SQS),
+based on shared configuration. Each message is retried with exponential
+backoff upon failure.
+"""
 
 import json
 from typing import Any
@@ -16,10 +22,13 @@ logger = setup_logger(__name__)
 
 
 def publish_to_queue(payload: list[dict[str, Any]]) -> None:
-    """Publishes processed results to RabbitMQ or SQS.
+    """Publish processed results to RabbitMQ or SQS.
 
-    Args:
-        payload: A list of message payloads to publish.
+    Parameters
+    ----------
+    payload : list[dict[str, Any]]
+        A list of message payloads to publish.
+
     """
     queue_type = config_shared.get_queue_type().lower()
 
@@ -34,7 +43,21 @@ def publish_to_queue(payload: list[dict[str, Any]]) -> None:
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _send_to_rabbitmq(data: dict[str, Any]) -> None:
-    """Send a single message to RabbitMQ."""
+    """Send a single message to RabbitMQ.
+
+    Parameters
+    ----------
+    data : dict[str, Any]
+        The message payload to publish.
+
+    Raises
+    ------
+    AMQPConnectionError
+        If connection to RabbitMQ fails.
+    Exception
+        If message publishing fails.
+
+    """
     try:
         credentials = pika.PlainCredentials(
             config_shared.get_rabbitmq_user(), config_shared.get_rabbitmq_password()
@@ -65,7 +88,23 @@ def _send_to_rabbitmq(data: dict[str, Any]) -> None:
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _send_to_sqs(data: dict[str, Any]) -> None:
-    """Send a single message to AWS SQS."""
+    """Send a single message to AWS SQS.
+
+    Parameters
+    ----------
+    data : dict[str, Any]
+        The message payload to publish.
+
+    Raises
+    ------
+    BotoCoreError
+        If the boto3 client fails to initialize.
+    NoCredentialsError
+        If credentials are not available.
+    Exception
+        If message publishing fails.
+
+    """
     sqs_url = config_shared.get_sqs_queue_url()
     region = config_shared.get_sqs_region()
 

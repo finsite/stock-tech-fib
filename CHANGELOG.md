@@ -1,9 +1,12 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ## v0.5.3 (2025-06-08)
 
 ### Fix
 
 - **types**: resolve all Pyright issues and sync output handler signature
+=======
+>>>>>>> Stashed changes
 
 ## v0.5.2 (2025-06-07)
 
@@ -12,9 +15,12 @@
 - **files**: verify pyproject.toml has all required fields
 
 ## v0.5.1 (2025-06-06)
+
 =======
+
 ## v0.1.0 (2025-06-05)
->>>>>>> Stashed changes
+
+> > > > > > > Stashed changes
 
 ### Fix
 
@@ -51,7 +57,7 @@
 
 ### Feat
 
-- **versioning**: enforce version consistency across pyproject.toml, __init__.py, and changelog
+- **versioning**: enforce version consistency across pyproject.toml, **init**.py, and changelog
 
 ### Fix
 

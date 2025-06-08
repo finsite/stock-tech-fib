@@ -1,24 +1,28 @@
 """Generic queue handler for RabbitMQ or SQS with batching and retries."""
 
 import json
-import time
 import signal
 import threading
+import time
+
 import boto3
 import pika
 from botocore.exceptions import BotoCoreError, NoCredentialsError
-from pika.exceptions import AMQPConnectionError
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 from app import config
 from app.utils.setup_logger import setup_logger
-from tenacity import retry, stop_after_attempt, wait_exponential
 
 logger = setup_logger(__name__)
 shutdown_event = threading.Event()
 
 
 def consume_messages(callback):
-    """Starts the queue listener for the configured queue type."""
+    """Start the queue listener for the configured queue type.
+
+    Registers signal handlers for graceful shutdown and delegates
+    to either RabbitMQ or SQS listener based on configuration.
+    """
     signal.signal(signal.SIGINT, _graceful_shutdown)
     signal.signal(signal.SIGTERM, _graceful_shutdown)
 
@@ -32,21 +36,28 @@ def consume_messages(callback):
 
 
 def _graceful_shutdown(signum, frame):
+    """Handle shutdown signals to terminate listeners cleanly."""
     logger.info("🛑 Shutdown signal received, stopping listener...")
     shutdown_event.set()
 
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=10))
 def _start_rabbitmq_listener(callback):
-    """Connects to RabbitMQ and starts consuming messages."""
-    connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host=config.get_rabbitmq_host(),
-        port=config.get_rabbitmq_port(),
-        virtual_host=config.get_rabbitmq_vhost(),
-        credentials=pika.PlainCredentials(
-            config.get_rabbitmq_user(), config.get_rabbitmq_password()
+    """Connect to RabbitMQ and start consuming messages.
+
+    Messages are passed to the callback in a consistent list format.
+    Acknowledge successful messages and reject failures.
+    """
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(
+            host=config.get_rabbitmq_host(),
+            port=config.get_rabbitmq_port(),
+            virtual_host=config.get_rabbitmq_vhost(),
+            credentials=pika.PlainCredentials(
+                config.get_rabbitmq_user(), config.get_rabbitmq_password()
+            ),
         )
-    ))
+    )
 
     channel = connection.channel()
     queue_name = config.get_rabbitmq_queue()
@@ -73,7 +84,10 @@ def _start_rabbitmq_listener(callback):
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=10))
 def _start_sqs_listener(callback):
-    """Connects to AWS SQS and starts polling messages."""
+    """Connect to AWS SQS and start polling messages.
+
+    Polls the configured SQS queue in batches and deletes messages after processing.
+    """
     sqs = boto3.client("sqs", region_name=config.get_sqs_region())
     queue_url = config.get_sqs_queue_url()
 
@@ -83,7 +97,7 @@ def _start_sqs_listener(callback):
             response = sqs.receive_message(
                 QueueUrl=queue_url,
                 MaxNumberOfMessages=config.get_batch_size(),
-                WaitTimeSeconds=10
+                WaitTimeSeconds=10,
             )
             messages = response.get("Messages", [])
             if not messages:
@@ -101,7 +115,6 @@ def _start_sqs_listener(callback):
 
             if payloads:
                 callback(payloads)
-
                 for handle in receipt_handles:
                     sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=handle)
 

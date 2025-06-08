@@ -12,40 +12,42 @@ CHANGELOG = Path("CHANGELOG.md")
 
 
 def extract_version_from_pyproject(path: Path) -> str | None:
+    """Extract the version string from pyproject.toml."""
     content = path.read_text(encoding="utf-8")
     match = re.search(r"^version\s*=\s*[\"'](.+?)[\"']", content, flags=re.MULTILINE)
     return match.group(1) if match else None
 
 
 def extract_version_from_init(path: Path) -> str | None:
+    """Extract the __version__ value from __init__.py."""
     content = path.read_text(encoding="utf-8")
     match = re.search(r'^__version__\s*=\s*[\'"](.+?)[\'"]', content, flags=re.MULTILINE)
     return match.group(1) if match else None
 
 
 def extract_version_from_changelog(path: Path) -> str | None:
+    """Extract the latest semantic version from the changelog headings."""
     content = path.read_text(encoding="utf-8")
     matches = re.findall(r"^##\s*v?(\d+\.\d+\.\d+)", content, flags=re.MULTILINE)
-    # Exclude early stubs like 0.0.0 or 0.1.0 if newer exist
     if matches:
         for version in matches:
             if version not in {"0.0.0", "0.1.0"}:
                 return version
-        return matches[0]  # fallback
+        return matches[0]
     return None
 
 
 def safe_print(message: str):
-    """Print message with fallback for non-UTF-8 terminals (e.g., Windows cmd)."""
+    """Print a message safely, even on limited encodings (e.g., Windows cmd)."""
     try:
         print(message)
     except UnicodeEncodeError:
-        # Strip emojis or non-ASCII characters
         ascii_message = message.encode("ascii", errors="ignore").decode("ascii")
         print(ascii_message)
 
 
 def main() -> int:
+    """Compare versions across pyproject, __init__, and changelog files."""
     pyproject_version = extract_version_from_pyproject(PYPROJECT)
     init_version = extract_version_from_init(INIT)
     changelog_version = extract_version_from_changelog(CHANGELOG)

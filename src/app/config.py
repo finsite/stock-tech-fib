@@ -5,7 +5,6 @@ Vault, environment variables, or defaults — in that order.
 """
 
 import os
-from typing import Optional
 
 from app.utils.vault_client import VaultClient
 
@@ -13,7 +12,7 @@ from app.utils.vault_client import VaultClient
 _vault = VaultClient()
 
 
-def get_config_value(key: str, default: Optional[str] = None) -> str:
+def get_config_value(key: str, default: str | None = None) -> str:
     """Retrieve a configuration value from Vault, environment variable, or default.
 
     Args:
@@ -25,6 +24,7 @@ def get_config_value(key: str, default: Optional[str] = None) -> str:
 
     Raises:
         ValueError: If the key is missing and no default is provided.
+
     """
     val = _vault.get(key, os.getenv(key))
     if val is None:
@@ -38,6 +38,7 @@ def get_config_value(key: str, default: Optional[str] = None) -> str:
 # 🌍 General Environment
 # ------------------------------------------------------------------------------
 
+
 def get_environment() -> str:
     """Return the current runtime environment (e.g., 'dev', 'prod')."""
     return get_config_value("ENVIRONMENT", "dev")
@@ -48,10 +49,10 @@ def get_poller_name() -> str:
     return get_config_value("POLLER_NAME", "stock_tech_fib")
 
 
-
 # ------------------------------------------------------------------------------
 # 🔁 Polling and Runtime Behavior
 # ------------------------------------------------------------------------------
+
 
 def get_polling_interval() -> int:
     """Polling interval in seconds between data fetch cycles."""
@@ -77,6 +78,7 @@ def get_output_mode() -> str:
 # 📬 Queue Type
 # ------------------------------------------------------------------------------
 
+
 def get_queue_type() -> str:
     """Queue system in use: 'rabbitmq' or 'sqs'."""
     return get_config_value("QUEUE_TYPE", "rabbitmq")
@@ -85,6 +87,7 @@ def get_queue_type() -> str:
 # ------------------------------------------------------------------------------
 # 🐇 RabbitMQ Configuration
 # ------------------------------------------------------------------------------
+
 
 def get_rabbitmq_host() -> str:
     """Hostname of the RabbitMQ broker."""
@@ -129,16 +132,15 @@ def get_rabbitmq_queue() -> str:
     return get_config_value("RABBITMQ_QUEUE", "stock_tech_fib_queue")
 
 
-
 def get_dlq_name() -> str:
     """Dead-letter queue name."""
     return get_config_value("DLQ_NAME", "stock_tech_fib_dlq")
 
 
-
 # ------------------------------------------------------------------------------
 # 📦 Amazon SQS Configuration
 # ------------------------------------------------------------------------------
+
 
 def get_sqs_queue_url() -> str:
     """Full URL of the SQS queue."""
