@@ -48,7 +48,9 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
                 "error": "Missing or invalid history data",
             }
 
-        retracement, swing_high, swing_low = calculate_fibonacci_levels(df, method="retracement")
+        retracement, swing_high, swing_low = calculate_fibonacci_levels(
+            df, method="retracement"
+        )
         extension, _, _ = calculate_fibonacci_levels(
             df, method="extension", swing_high=swing_high, swing_low=swing_low
         )
@@ -126,7 +128,9 @@ def calculate_fibonacci_levels(
                     swing_low = float(low_value)
 
         if swing_high is None or swing_low is None:
-            logger.error("Invalid swing points detected: High=%s, Low=%s", swing_high, swing_low)
+            logger.error(
+                "Invalid swing points detected: High=%s, Low=%s", swing_high, swing_low
+            )
             return {}, None, None
 
         levels: dict[str, float] = {}

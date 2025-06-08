@@ -14,13 +14,11 @@ assignees: ""
 2. Run the following command '...'
 3. Observe the output '...'
 
-**Expected behavior** A clear and concise description of what you expected to
-happen.
+**Expected behavior** A clear and concise description of what you expected to happen.
 
 **Actual behavior** What actually happens instead of the expected behavior.
 
-**Screenshots or Logs** If applicable, add screenshots or logs to help explain
-your problem.
+**Screenshots or Logs** If applicable, add screenshots or logs to help explain your problem.
 
 **Environment**
 

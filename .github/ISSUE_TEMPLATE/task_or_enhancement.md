@@ -6,11 +6,8 @@ labels: enhancement
 assignees: ""
 ---
 
-**Task Description** Provide a clear and concise description of the task or
-enhancement.
+**Task Description** Provide a clear and concise description of the task or enhancement.
 
-**Why is this needed?** Explain why this task is necessary or how it will
-improve the project.
+**Why is this needed?** Explain why this task is necessary or how it will improve the project.
 
-**Additional Information** Add any other details, mockups, or examples related
-to the task here.
+**Additional Information** Add any other details, mockups, or examples related to the task here.

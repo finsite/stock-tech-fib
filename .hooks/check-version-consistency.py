@@ -53,7 +53,11 @@ def update_changelog_version(path: Path, version: str) -> None:
     """Update the most recent version heading in the changelog."""
     content = path.read_text(encoding="utf-8")
     updated = re.sub(
-        r"^(##\s*)v?\d+\.\d+\.\d+", f"\\1v{version}", content, count=1, flags=re.MULTILINE
+        r"^(##\s*)v?\d+\.\d+\.\d+",
+        f"\\1v{version}",
+        content,
+        count=1,
+        flags=re.MULTILINE,
     )
     path.write_text(updated, encoding="utf-8")
 

@@ -2,7 +2,7 @@
 name: Cleanup Old Releases
 on:
   schedule:
-    - cron: 0 0 1 * *  # 1st of every month
+    - cron: 0 0 1 * * # 1st of every month
   workflow_dispatch:
 permissions:
   contents: write

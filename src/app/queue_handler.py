@@ -10,7 +10,7 @@ import pika
 from botocore.exceptions import BotoCoreError, NoCredentialsError
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from app import config
+import app.config_shared as config
 from app.utils.setup_logger import setup_logger
 
 logger = setup_logger(__name__)
