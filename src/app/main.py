@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import __version__
-from app.logger import setup_logger
+from app.utils.setup_logger import setup_logger
 from app.queue_handler import consume_messages
 
 logger = setup_logger(__name__)

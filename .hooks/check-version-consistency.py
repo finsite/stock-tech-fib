@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Ensure version consistency across pyproject.toml, __init__.py, and CHANGELOG.md."""
 
@@ -26,8 +25,14 @@ def extract_version_from_init(path: Path) -> str | None:
 
 def extract_version_from_changelog(path: Path) -> str | None:
     content = path.read_text(encoding="utf-8")
-    match = re.search(r"^##\s*\[(\d+\.\d+\.\d+)\]", content, flags=re.MULTILINE)
-    return match.group(1) if match else None
+    matches = re.findall(r"^##\s*v?(\d+\.\d+\.\d+)", content, flags=re.MULTILINE)
+    # Exclude early stubs like 0.0.0 or 0.1.0 if newer exist
+    if matches:
+        for version in matches:
+            if version not in {"0.0.0", "0.1.0"}:
+                return version
+        return matches[0]  # fallback
+    return None
 
 
 def safe_print(message: str):
