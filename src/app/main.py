@@ -10,12 +10,16 @@ import sys
 # Add 'src/' to Python's module search path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from app import config_shared
 from app.output_handler import send_to_output
 from app.queue_handler import consume_messages
 from app.utils.setup_logger import setup_logger
 
-# Initialize the module-level logger
-logger = setup_logger(__name__)
+# Initialize the module-level logger with optional structured logging
+logger = setup_logger(
+    __name__,
+    structured=config_shared.get_config_bool("STRUCTURED_LOGGING", False),
+)
 
 
 def main() -> None:
@@ -30,4 +34,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        logger.exception("❌ Unhandled exception in main: %s", e)
+        sys.exit(1)
