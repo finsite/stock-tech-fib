@@ -25,27 +25,24 @@ def send_to_output(data: list[dict[str, Any]]) -> None:
     'log', 'stdout', 'queue', 'rest', 's3', or 'database'.
 
     Args:
-        data: A list of enriched messages to route.
-
-    Raises:
-        Exception: Any exceptions during output handling are caught and logged.
+        data (list[dict[str, Any]]): A list of enriched messages to route.
     """
     try:
-        validate_list_of_dicts(data)
+        validate_list_of_dicts(data, required_keys=["text"])
 
         mode: OutputMode = cast(OutputMode, config_shared.get_output_mode())
 
-        if mode == "log":
+        if mode == OutputMode.LOG:
             _output_to_log(data)
-        elif mode == "stdout":
+        elif mode == OutputMode.STDOUT:
             _output_to_stdout(data)
-        elif mode == "queue":
+        elif mode == OutputMode.QUEUE:
             _output_to_queue(data)
-        elif mode == "rest":
+        elif mode == OutputMode.REST:
             _output_to_rest(data)
-        elif mode == "s3":
+        elif mode == OutputMode.S3:
             _output_to_s3(data)
-        elif mode == "database":
+        elif mode == OutputMode.DATABASE:
             _output_to_database(data)
         else:
             logger.warning("⚠️ Unknown output mode: %s — defaulting to log.", mode)
@@ -58,7 +55,7 @@ def _output_to_log(data: list[dict[str, Any]]) -> None:
     """Log data to application logs.
 
     Args:
-        data: List of dictionaries to log.
+        data (list[dict[str, Any]]): List of dictionaries to log.
     """
     for item in data:
         logger.info("📝 Processed message:\n%s", json.dumps(item, indent=4))
@@ -68,7 +65,7 @@ def _output_to_stdout(data: list[dict[str, Any]]) -> None:
     """Print data to stdout (e.g., console).
 
     Args:
-        data: List of dictionaries to print.
+        data (list[dict[str, Any]]): List of dictionaries to print.
     """
     for item in data:
         print(json.dumps(item, indent=4))
@@ -79,10 +76,7 @@ def _output_to_queue(data: list[dict[str, Any]]) -> None:
     """Publish processed data to RabbitMQ or SQS with retry logic.
 
     Args:
-        data: List of dictionaries to publish.
-
-    Raises:
-        Exception: Propagates publishing errors for retry handling.
+        data (list[dict[str, Any]]): List of dictionaries to publish.
     """
     publish_to_queue(data)
     logger.info("✅ Output published to queue: %d message(s)", len(data))
@@ -93,7 +87,7 @@ def _output_to_rest(data: list[dict[str, Any]]) -> None:
     """Send output to a REST endpoint (stub).
 
     Args:
-        data: List of dictionaries to send.
+        data (list[dict[str, Any]]): List of dictionaries to send.
     """
     logger.warning("⚠️ Output mode 'rest' not yet implemented.")
     record_metric("output_rest_skipped", len(data))
@@ -103,7 +97,7 @@ def _output_to_s3(data: list[dict[str, Any]]) -> None:
     """Send output to S3 (stub).
 
     Args:
-        data: List of dictionaries to upload.
+        data (list[dict[str, Any]]): List of dictionaries to upload.
     """
     logger.warning("⚠️ Output mode 's3' not yet implemented.")
     record_metric("output_s3_skipped", len(data))
@@ -113,7 +107,7 @@ def _output_to_database(data: list[dict[str, Any]]) -> None:
     """Write output to a database (stub).
 
     Args:
-        data: List of dictionaries to write.
+        data (list[dict[str, Any]]): List of dictionaries to write.
     """
     logger.warning("⚠️ Output mode 'database' not yet implemented.")
     record_metric("output_db_skipped", len(data))
@@ -123,7 +117,7 @@ def record_metric(name: str, value: int) -> None:
     """Record a named metric (placeholder for Prometheus or CloudWatch integration).
 
     Args:
-        name: Metric name.
-        value: Metric value.
+        name (str): Metric name.
+        value (int): Metric value.
     """
     logger.debug("📊 Metric: %s = %d", name, value)

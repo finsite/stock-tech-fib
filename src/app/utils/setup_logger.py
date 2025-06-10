@@ -1,49 +1,61 @@
 """Configure and return a logger for the application.
 
-This module provides a function to configure and return a logger
-instance with a specified name and logging level.
+Supports optional structured (JSON-style) logging for production environments.
 """
 
 import logging
+import json
+from typing import Any, Optional
 
 
-def setup_logger(name: str | None = None, level: int = logging.INFO) -> logging.Logger:
-    """Configure and return a logger for the application.
+class StructuredFormatter(logging.Formatter):
+    """Structured log formatter that outputs logs as JSON strings."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        log_record = {
+            "timestamp": self.formatTime(record, self.datefmt),
+            "level": record.levelname,
+            "logger": record.name,
+            "message": record.getMessage(),
+        }
+        return json.dumps(log_record)
+
+
+def setup_logger(
+    name: Optional[str] = None,
+    level: int = logging.INFO,
+    structured: bool = False,
+) -> logging.Logger:
+    """
+    Configure and return a logger for the application.
 
     Args:
-        name: Optional name of the logger.
-        level: Logging level (e.g., logging.INFO, logging.DEBUG).
+        name (Optional[str]): Name of the logger.
+        level (int): Logging level (e.g., logging.INFO).
+        structured (bool): Whether to use structured (JSON) logging.
 
     Returns:
-        A configured logger instance.
-
+        logging.Logger: A configured logger instance.
     """
-    # Default logger name if not provided
     logger_name = name or "poller"
-
-    # Get the logger instance
     logger = logging.getLogger(logger_name)
 
-    # Check if logger already has handlers to avoid duplicate logs
     if not logger.hasHandlers():
-        # Set the logging level
         logger.setLevel(level)
-
-        # Create a StreamHandler to output logs to the console
         handler = logging.StreamHandler()
 
-        # Define the log message format
-        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        if structured:
+            formatter = StructuredFormatter()
+        else:
+            formatter = logging.Formatter(
+                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            )
 
-        # Set the formatter for the handler
         handler.setFormatter(formatter)
-
-        # Add the handler to the logger
         logger.addHandler(handler)
 
-    # Return the configured logger
     return logger
 
 
-# Module-level logger
+# Default module-level logger (non-structured)
 logger = setup_logger(level=logging.DEBUG)

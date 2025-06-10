@@ -31,14 +31,35 @@ def validate_dict(data: dict[str, Any], required_keys: list[str]) -> bool:
     ----------
     data : dict[str, Any]
         The dictionary to validate.
+
     required_keys : list[str]
-        A list of keys that must be present in the dictionary.
+        Keys that must exist in the dictionary.
 
     Returns
     -------
     bool
         True if all required keys are present, False otherwise.
     """
-    if not isinstance(data, dict):
-        return False
     return all(k in data for k in required_keys)
+
+
+def validate_list_of_dicts(data: Any, required_keys: list[str]) -> bool:
+    """
+    Validate that the input is a list of dicts, each containing the required keys.
+
+    Parameters
+    ----------
+    data : Any
+        The object to validate.
+
+    required_keys : list[str]
+        Keys that must exist in each dictionary.
+
+    Returns
+    -------
+    bool
+        True if input is a list of valid dicts, False otherwise.
+    """
+    if not isinstance(data, list):
+        return False
+    return all(isinstance(item, dict) and validate_dict(item, required_keys) for item in data)
