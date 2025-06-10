@@ -3,9 +3,8 @@
 Supports optional structured (JSON-style) logging for production environments.
 """
 
-import logging
 import json
-from typing import Any, Optional
+import logging
 
 
 class StructuredFormatter(logging.Formatter):
@@ -22,12 +21,11 @@ class StructuredFormatter(logging.Formatter):
 
 
 def setup_logger(
-    name: Optional[str] = None,
+    name: str | None = None,
     level: int = logging.INFO,
     structured: bool = False,
 ) -> logging.Logger:
-    """
-    Configure and return a logger for the application.
+    """Configure and return a logger for the application.
 
     Args:
         name (Optional[str]): Name of the logger.
@@ -36,6 +34,7 @@ def setup_logger(
 
     Returns:
         logging.Logger: A configured logger instance.
+
     """
     logger_name = name or "poller"
     logger = logging.getLogger(logger_name)
@@ -47,9 +46,7 @@ def setup_logger(
         if structured:
             formatter = StructuredFormatter()
         else:
-            formatter = logging.Formatter(
-                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-            )
+            formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
         handler.setFormatter(formatter)
         logger.addHandler(handler)

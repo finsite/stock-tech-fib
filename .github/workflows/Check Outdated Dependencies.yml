@@ -2,7 +2,7 @@
 name: Check Outdated Dependencies
 on:
   schedule:
-    - cron: 0 0 * * 1 # Runs every Monday
+    - cron: 0 0 * * 1  # Runs every Monday
 jobs:
   check-outdated-dependencies:
     runs-on: ubuntu-latest

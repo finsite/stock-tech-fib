@@ -28,6 +28,7 @@ def publish_to_queue(payload: list[dict[str, Any]]) -> None:
     ----------
     payload : list[dict[str, Any]]
         A list of message payloads to publish.
+
     """
     queue_type = config_shared.get_queue_type().lower()
 
@@ -55,6 +56,7 @@ def _send_to_rabbitmq(data: dict[str, Any]) -> None:
         If connection to RabbitMQ fails.
     Exception
         If message publishing fails.
+
     """
     try:
         credentials = pika.PlainCredentials(
@@ -101,6 +103,7 @@ def _send_to_sqs(data: dict[str, Any]) -> None:
         If credentials are not available.
     Exception
         If message publishing fails.
+
     """
     sqs_url = config_shared.get_sqs_queue_url()
     region = config_shared.get_sqs_region()

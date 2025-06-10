@@ -4,10 +4,10 @@ name: 🔐 SLSA Provenance
 on:
   push:
     tags:
-      - v*.*.* # Trigger only on version tags like v0.1.0
+      - v*.*.*  # Trigger only on version tags like v0.1.0
 permissions:
-  id-token: write # Required for Sigstore/OIDC signing
-  contents: read # Required to read repo content (default, but explicit here)
+  id-token: write  # Required for Sigstore/OIDC signing
+  contents: read  # Required to read repo content (default, but explicit here)
 jobs:
   provenance:
     name: Generate SLSA Provenance
@@ -18,6 +18,5 @@ jobs:
       - name: Generate provenance attestation
         uses: slsa-framework/slsa-github-generator/actions/provenance@v1
         with:
-          builder-id:
-            https://github.com/${{ github.repository }}/.github/workflows/slsa-provenance.yml@refs/tags/${{
+          builder-id: https://github.com/${{ github.repository }}/.github/workflows/slsa-provenance.yml@refs/tags/${{
             github.ref_name }}

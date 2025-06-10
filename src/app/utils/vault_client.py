@@ -74,6 +74,7 @@ class VaultClient:
 
         Returns:
             The secret value or the default.
+
         """
         return self.secrets.get(key, default)
 
@@ -90,6 +91,7 @@ def get_secret_or_env(key: str, default: str = "") -> str:
 
     Returns:
         The secret value or the fallback/default.
+
     """
     global _vault_client
     if _vault_client is None:

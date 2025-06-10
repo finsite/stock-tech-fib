@@ -13,14 +13,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
       - name: Install CycloneDX + pip-audit
         run: |
           pip install cyclonedx-bom pip-audit
       - name: Generate SBOM (CycloneDX)
         run: cyclonedx-py requirements -i requirements.txt -o bom.json
       - name: Run pip-audit
-        run: pip-audit || true # Don't fail pipeline, log for now
+        run: pip-audit || true  # Don't fail pipeline, log for now
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v4
         with:

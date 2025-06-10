@@ -3,7 +3,7 @@ version: 2
 updates:
   # Docker dependencies (base image updates)
   - package-ecosystem: docker
-    directory: / # Root path where your Dockerfile lives
+    directory: /  # Root path where your Dockerfile lives
     schedule:
       interval: weekly
 

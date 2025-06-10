@@ -21,17 +21,17 @@ repos:
         language: system
         pass_filenames: false
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0 # or latest
+    rev: v3.15.0  # or latest
     hooks:
       - id: pyupgrade
-        args: [--py310-plus] # match your target Python version
+        args: [--py310-plus]  # match your target Python version
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
       - id: codespell
         # Updated to valid regex
         exclude: package-lock\.json
-        args: ["--ignore-words-list=hte,astroid"]
+        args: ['--ignore-words-list=hte,astroid']
   - repo: https://github.com/psf/black
     rev: 25.1.0
     hooks:
@@ -40,7 +40,7 @@ repos:
     rev: v0.11.8
     hooks:
       - id: ruff
-        args: [check, --fix, --extend-select=D, ANN] # <--- 'check' added here
+        args: [check, --fix, --extend-select=D, ANN]  # <--- 'check' added here
       - id: ruff-format
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
@@ -124,8 +124,8 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        files: \.(json|md|html|css)$ # YAML intentionally excluded due to Helm
-        args: [--print-width, "80"]
+        files: \.(json|md|html|css)$  # YAML intentionally excluded due to Helm
+        args: [--print-width, '80']
         additional_dependencies: [prettier@latest]
   - repo: https://github.com/lyz-code/yamlfix
     rev: 1.17.0
@@ -168,7 +168,7 @@ repos:
     rev: 0.23.0
     hooks:
       - id: deptry
-        args: [--ignore, "DEP001,DEP002,DEP003"]
+        args: [--ignore, 'DEP001,DEP002,DEP003']
   - repo: local
     hooks:
       - id: pip-compile-prod

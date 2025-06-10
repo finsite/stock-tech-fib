@@ -24,8 +24,7 @@ class PollerType(str, Enum):
 
 
 def validate_dict(data: dict[str, Any], required_keys: list[str]) -> bool:
-    """
-    Check that all required keys are present in the dictionary.
+    """Check that all required keys are present in the dictionary.
 
     Parameters
     ----------
@@ -39,13 +38,13 @@ def validate_dict(data: dict[str, Any], required_keys: list[str]) -> bool:
     -------
     bool
         True if all required keys are present, False otherwise.
+
     """
     return all(k in data for k in required_keys)
 
 
 def validate_list_of_dicts(data: Any, required_keys: list[str]) -> bool:
-    """
-    Validate that the input is a list of dicts, each containing the required keys.
+    """Validate that the input is a list of dicts, each containing the required keys.
 
     Parameters
     ----------
@@ -59,6 +58,7 @@ def validate_list_of_dicts(data: Any, required_keys: list[str]) -> bool:
     -------
     bool
         True if input is a list of valid dicts, False otherwise.
+
     """
     if not isinstance(data, list):
         return False
