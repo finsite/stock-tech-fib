@@ -1,7 +1,7 @@
 """Main entry point for the service.
 
-This script initializes logging, loads the queue consumer,
-and begins consuming data using the configured processing callback.
+This script initializes logging, loads the queue consumer, and begins
+consuming data using the configured processing callback.
 """
 
 import os

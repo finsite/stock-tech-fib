@@ -20,11 +20,6 @@ repos:
         entry: make preflight
         language: system
         pass_filenames: false
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0  # or latest
-    hooks:
-      - id: pyupgrade
-        args: [--py310-plus]  # match your target Python version
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
@@ -91,6 +86,13 @@ repos:
         args: [-r, src, tests]
         pass_filenames: false
         language: python
+
+  - repo: https://github.com/returntocorp/semgrep
+    rev: v1.66.0
+    hooks:
+      - id: semgrep
+        args: ["--config=p/security-audit"]
+        pass_filenames: false
   - repo: local
     hooks:
       - id: pip-audit

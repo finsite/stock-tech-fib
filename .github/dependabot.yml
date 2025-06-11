@@ -12,3 +12,13 @@ updates:
     directory: .github/workflows
     schedule:
       interval: weekly
+
+  # Python (pip-based)
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: pip
+        versions: ["*"]  # Prevent pip itself from being flagged
+    insecure-external-code-execution: warn

@@ -1,7 +1,7 @@
 # Stock Analysis Engine
 
-This repository processes raw market data and produces actionable insights or computed indicators
-using technical, quantitative, or alternative methods.
+This repository processes raw market data and produces actionable insights or
+computed indicators using technical, quantitative, or alternative methods.
 
 ## Features
 

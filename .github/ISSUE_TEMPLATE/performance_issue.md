@@ -6,7 +6,8 @@ labels: performance
 assignees: ""
 ---
 
-**Describe the performance issue** What part of the project is performing poorly? Provide details.
+**Describe the performance issue** What part of the project is performing
+poorly? Provide details.
 
 ## Steps to Reproduce
 
@@ -15,8 +16,8 @@ assignees: ""
 
 **Expected behavior** What performance improvement are you expecting?
 
-**Actual performance** Describe the current performance. Include benchmarks, logs, or metrics, if
-available.
+**Actual performance** Describe the current performance. Include benchmarks,
+logs, or metrics, if available.
 
 ## Environment
 

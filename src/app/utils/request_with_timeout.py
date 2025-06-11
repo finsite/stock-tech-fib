@@ -1,8 +1,8 @@
 """Perform a GET request with timeout and JSON validation.
 
 This module provides a function to safely request JSON data from a URL
-with a configurable timeout. It handles exceptions, validates the response
-content type, and logs errors appropriately.
+with a configurable timeout. It handles exceptions, validates the
+response content type, and logs errors appropriately.
 """
 
 from typing import Any, cast

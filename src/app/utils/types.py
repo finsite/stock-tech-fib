@@ -44,7 +44,8 @@ def validate_dict(data: dict[str, Any], required_keys: list[str]) -> bool:
 
 
 def validate_list_of_dicts(data: Any, required_keys: list[str]) -> bool:
-    """Validate that the input is a list of dicts, each containing the required keys.
+    """Validate that the input is a list of dicts, each containing the required
+    keys.
 
     Parameters
     ----------

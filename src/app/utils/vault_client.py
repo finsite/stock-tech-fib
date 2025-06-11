@@ -1,6 +1,7 @@
 """Vault client for secure secret retrieval using AppRole authentication.
 
-Supports KV v2 secrets engine and includes environment-aware namespace handling.
+Supports KV v2 secrets engine and includes environment-aware namespace
+handling.
 """
 
 import os
@@ -16,10 +17,14 @@ logger = setup_logger(__name__)
 
 
 class VaultClient:
-    """Handles interaction with HashiCorp Vault using AppRole authentication."""
+    """Handles interaction with HashiCorp Vault using AppRole
+    authentication.
+    """
 
     def __init__(self) -> None:
-        """Initialize the VaultClient with environment variables and authenticate."""
+        """Initialize the VaultClient with environment variables and
+        authenticate.
+        """
         self.vault_addr = os.getenv("VAULT_ADDR", "http://127.0.0.1:8200")
         self.role_id = os.getenv("VAULT_ROLE_ID")
         self.secret_id = os.getenv("VAULT_SECRET_ID")
@@ -32,7 +37,9 @@ class VaultClient:
         self._load_secrets()
 
     def _authenticate(self) -> None:
-        """Authenticate to Vault using AppRole credentials from the environment."""
+        """Authenticate to Vault using AppRole credentials from the
+        environment.
+        """
         if not self.role_id or not self.secret_id:
             logger.warning("🔐 VAULT_ROLE_ID or VAULT_SECRET_ID not set — skipping Vault load.")
             return

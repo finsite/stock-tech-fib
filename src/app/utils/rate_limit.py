@@ -1,45 +1,42 @@
-"""The module implements a rate limiter for API requests.
-
-The `RateLimiter` class uses the token bucket algorithm to manage the request rate.
-It is thread-safe and can be used to limit the request rate for a single API or
-multiple APIs.
-"""
+"""Thread-safe rate limiter using the token bucket algorithm."""
 
 import threading
 import time
+import re
+
+from prometheus_client import Counter, Gauge
 
 from app.utils.setup_logger import setup_logger
 
 logger = setup_logger(__name__)
 
+# Prometheus metrics
+rate_limiter_blocked_total = Counter(
+    "rate_limiter_blocked_total",
+    "Total number of times the rate limiter blocked",
+    ["context"],
+)
+rate_limiter_tokens_remaining = Gauge(
+    "rate_limiter_tokens_remaining",
+    "Current number of available tokens in the rate limiter",
+    ["context"],
+)
+
+
+def _sanitize_context(context: str) -> str:
+    """Sanitize context string for safe logging."""
+    return re.sub(r"[^\w\-:.]", "_", context)[:64]
+
 
 class RateLimiter:
-    """A rate limiter based on the token bucket algorithm.
-
-    Allows a specified number of requests within a time window.
-
-    Parameters
-    ----------
-    max_requests : int
-        Maximum allowed requests in the time window.
-    time_window : float
-        Duration of the window in seconds.
-
-    """
+    """Token bucket rate limiter with Prometheus support."""
 
     def __init__(self, max_requests: int, time_window: float) -> None:
-        """Initialize the RateLimiter.
+        if max_requests <= 0:
+            raise ValueError("max_requests must be greater than 0")
+        if time_window <= 0:
+            raise ValueError("time_window must be greater than 0")
 
-        This sets up a token bucket to control the number of allowed requests.
-
-        Parameters
-        ----------
-        max_requests : int
-            Maximum number of requests allowed in the time window.
-        time_window : float
-            Duration of the time window in seconds.
-
-        """
         self._max_requests = max_requests
         self._time_window = time_window
         self._tokens: float = float(max_requests)
@@ -47,16 +44,8 @@ class RateLimiter:
         self._last_check = time.time()
 
     def acquire(self, context: str = "RateLimiter") -> None:
-        """Acquire permission to proceed with a request.
+        context = _sanitize_context(context)
 
-        Blocks the caller if the rate limit is exceeded until a token is available.
-
-        Parameters
-        ----------
-        context : str, optional
-            Optional context for logging (e.g., poller type). Defaults to "RateLimiter".
-
-        """
         with self._lock:
             current_time: float = time.time()
             elapsed: float = current_time - self._last_check
@@ -65,6 +54,8 @@ class RateLimiter:
             self._tokens = min(self._max_requests, self._tokens + tokens_to_add)
             self._last_check = current_time
 
+            rate_limiter_tokens_remaining.labels(context=context).set(self._tokens)
+
             logger.debug(
                 f"[{context}] Replenished {tokens_to_add:.2f} tokens. "
                 f"Available tokens: {self._tokens:.2f}"
@@ -72,11 +63,15 @@ class RateLimiter:
 
             if self._tokens < 1:
                 sleep_time: float = (1 - self._tokens) * (self._time_window / self._max_requests)
+                sleep_time = min(sleep_time, self._time_window)
+
                 logger.info(
                     f"[{context}] Rate limit reached. Sleeping for {sleep_time:.2f} seconds."
                 )
+                rate_limiter_blocked_total.labels(context=context).inc()
                 time.sleep(sleep_time)
                 self._tokens = 1
 
             self._tokens -= 1
-            logger.debug(f"[{context}] Consumed a token. Remaining tokens: {self._tokens:.2f}")
+            rate_limiter_tokens_remaining.labels(context=context).set(self._tokens)
+            logger.debug(f"[{context}] Consumed a token. Remaining: {self._tokens:.2f}")

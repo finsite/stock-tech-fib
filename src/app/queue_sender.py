@@ -1,9 +1,9 @@
 """Module to publish processed data to RabbitMQ or AWS SQS.
 
-This module provides a function to publish a list of processed
-data dictionaries to the appropriate queue type (RabbitMQ or SQS),
-based on shared configuration. Each message is retried with exponential
-backoff upon failure.
+This module provides a function to publish a list of processed data
+dictionaries to the appropriate queue type (RabbitMQ or SQS), based on
+shared configuration. Each message is retried with exponential backoff
+upon failure.
 """
 
 import json

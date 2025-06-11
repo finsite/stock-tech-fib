@@ -1,8 +1,8 @@
 """Module to handle output of analysis results to the configured target.
 
-Supports logging, stdout, queue publishing, and future extensibility
-to REST, S3, or database sinks. Includes retry logic, validation,
-and optional metrics integration.
+Supports logging, stdout, queue publishing, and future extensibility to
+REST, S3, or database sinks. Includes retry logic, validation, and
+optional metrics integration.
 """
 
 import json
@@ -121,7 +121,8 @@ def _output_to_database(data: list[dict[str, Any]]) -> None:
 
 
 def record_metric(name: str, value: int) -> None:
-    """Record a named metric (placeholder for Prometheus or CloudWatch integration).
+    """Record a named metric (placeholder for Prometheus or CloudWatch
+    integration).
 
     Args:
         name (str): Metric name.

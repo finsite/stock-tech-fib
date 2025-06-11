@@ -71,7 +71,6 @@ def track_request_metrics(
     :param rate_limit: int:
     :param time_window: float:
     :param success: bool:  (Default value = True)
-
     """
     status = "success" if success else "failure"
     message = (

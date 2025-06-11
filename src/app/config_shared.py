@@ -1,7 +1,7 @@
 """Shared configuration module for all polling services.
 
-Provides typed, cached getter functions to retrieve configuration values from
-Vault, environment variables, or defaults — in that order.
+Provides typed, cached getter functions to retrieve configuration values
+from Vault, environment variables, or defaults — in that order.
 """
 
 import os
@@ -38,7 +38,8 @@ def get_config_value(key: str, default: str | None = None) -> str:
 
 @lru_cache
 def get_config_bool(key: str, default: bool = False) -> bool:
-    """Retrieve a boolean config value with support for various true/false strings.
+    """Retrieve a boolean config value with support for various true/false
+    strings.
 
     Args:
         key: The configuration key.
@@ -201,11 +202,13 @@ def get_symbols() -> list[str]:
 
 @lru_cache
 def get_newsapi_key() -> str:
+    """Return the NewsAPI key from config."""
     return get_config_value("NEWSAPI_KEY")
 
 
 @lru_cache
 def get_newsapi_rate_limit() -> tuple[int, int]:
+    """Return NewsAPI rate limit as (rate, capacity)."""
     return (
         int(get_config_value("NEWSAPI_RATE", "5")),
         int(get_config_value("NEWSAPI_CAPACITY", "10")),
@@ -214,104 +217,125 @@ def get_newsapi_rate_limit() -> tuple[int, int]:
 
 @lru_cache
 def get_newsapi_timeout() -> int:
+    """Return the timeout value in seconds for NewsAPI requests."""
     return int(get_config_value("NEWSAPI_TIMEOUT", "10"))
 
 
 @lru_cache
 def get_youtube_api_key() -> str:
+    """Return the YouTube API key from config."""
     return get_config_value("YOUTUBE_API_KEY")
 
 
 @lru_cache
 def get_reddit_client_id() -> str:
+    """Return the Reddit client ID from config."""
     return get_config_value("REDDIT_CLIENT_ID")
 
 
 @lru_cache
 def get_reddit_client_secret() -> str:
+    """Return the Reddit client secret from config."""
     return get_config_value("REDDIT_CLIENT_SECRET")
 
 
 @lru_cache
 def get_alpha_vantage_api_key() -> str:
+    """Return the Alpha Vantage API key from secrets or environment."""
     return get_secret_or_env("ALPHA_VANTAGE_API_KEY")
 
 
 @lru_cache
 def get_alpha_vantage_fill_rate_limit() -> int:
+    """Return the fill rate limit for Alpha Vantage polling."""
     return int(get_secret_or_env("ALPHA_VANTAGE_FILL_RATE_LIMIT", default="60"))
 
 
 @lru_cache
 def get_finnhub_api_key() -> str:
+    """Return the Finnhub API key from secrets or environment."""
     return get_secret_or_env("FINNHUB_API_KEY")
 
 
 @lru_cache
 def get_finnhub_fill_rate_limit() -> int:
+    """Return the fill rate limit for Finnhub polling."""
     return int(get_secret_or_env("FINNHUB_FILL_RATE_LIMIT", default="60"))
 
 
 @lru_cache
 def get_polygon_api_key() -> str:
+    """Return the Polygon API key from secrets or environment."""
     return get_secret_or_env("POLYGON_API_KEY")
 
 
 @lru_cache
 def get_polygon_fill_rate_limit() -> int:
+    """Return the fill rate limit for Polygon polling."""
     return int(get_secret_or_env("POLYGON_FILL_RATE_LIMIT", default="60"))
 
 
 @lru_cache
 def get_rapidapi_key() -> str:
+    """Return the RapidAPI key from secrets or environment."""
     return get_secret_or_env("RAPIDAPI_KEY")
 
 
 @lru_cache
 def get_rapidapi_host() -> str:
+    """Return the RapidAPI host for Yahoo Finance access."""
     return get_secret_or_env("RAPIDAPI_HOST", default="yahoo-finance15.p.rapidapi.com")
 
 
 @lru_cache
 def get_yfinance_fill_rate_limit() -> int:
+    """Return the fill rate limit for yFinance polling."""
     return int(get_secret_or_env("YFINANCE_FILL_RATE_LIMIT", default="60"))
 
 
 @lru_cache
 def get_intrinio_key() -> str:
+    """Return the Intrinio API key from secrets or environment."""
     return get_secret_or_env("INTRINIO_API_KEY")
 
 
 @lru_cache
 def get_intrinio_fill_rate_limit() -> int:
+    """Return the fill rate limit for Intrinio polling."""
     return int(get_secret_or_env("INTRINIO_FILL_RATE_LIMIT", default="60"))
 
 
 @lru_cache
 def get_quandl_api_key() -> str:
+    """Return the Quandl API key from secrets or environment."""
     return get_secret_or_env("QUANDL_API_KEY")
 
 
 @lru_cache
 def get_quandl_fill_rate_limit() -> int:
+    """Return the fill rate limit for Quandl polling."""
     return int(get_secret_or_env("QUANDL_FILL_RATE_LIMIT", default="60"))
 
 
 @lru_cache
 def get_iex_api_key() -> str:
+    """Return the IEX Cloud API key from secrets or environment."""
     return get_secret_or_env("IEX_API_KEY")
 
 
 @lru_cache
 def get_iex_fill_rate_limit() -> int:
+    """Return the fill rate limit for IEX polling."""
     return int(get_secret_or_env("IEX_FILL_RATE_LIMIT", default="60"))
 
 
 @lru_cache
 def get_finnazon_key() -> str:
+    """Return the Finnazon API key from secrets or environment."""
     return get_secret_or_env("FINNAZON_API_KEY")
 
 
 @lru_cache
 def get_finnazon_fill_rate_limit() -> int:
+    """Return the fill rate limit for Finnazon polling."""
     return int(get_secret_or_env("FINNAZON_FILL_RATE_LIMIT", default="60"))
