@@ -23,12 +23,7 @@ logger = setup_logger(
 
 
 def main() -> None:
-    """Start the data processing service.
-
-    This function initializes the service by calling the queue consumer,
-    which begins listening to RabbitMQ or SQS and processes data using
-    the `send_to_output` callback.
-    """
+    """Start the data processing service."""
     logger.info("🚀 Starting processing service...")
     consume_messages(send_to_output)
 

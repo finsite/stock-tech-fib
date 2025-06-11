@@ -3,25 +3,26 @@ Unit tests for output_handler.py
 """
 
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
-from app.output_handler import send_to_postgres
+from app.output_handler import send_to_output
 
 
-class TestSendToPostgres(unittest.TestCase):
-    @patch("app.output_handler.psycopg2.connect")
-    def test_send_to_postgres(self, mock_connect):
-        """Test that send_to_postgres calls execute on the database cursor."""
-        mock_conn = mock_connect.return_value
-        mock_cursor = mock_conn.cursor.return_value
-
+class TestSendToOutput(unittest.TestCase):
+    @patch("app.output_handler.send_to_postgres")
+    def test_send_to_output_default(self, mock_send_to_postgres):
+        """Test that send_to_output delegates to send_to_postgres by default."""
         test_data = [{"symbol": "AAPL", "price": 123.45}]
-        send_to_postgres(test_data)
+        send_to_output(test_data)
+        mock_send_to_postgres.assert_called_once_with(test_data)
 
-        self.assertTrue(
-            mock_cursor.execute.called,
-            "Expected cursor.execute to be called, but it wasn't.",
-        )
+    @patch("app.output_handler.send_to_sqs")
+    @patch("app.output_handler.get_config_value", return_value="sqs")
+    def test_send_to_output_sqs(self, mock_config, mock_send_to_sqs):
+        """Test that send_to_output delegates to send_to_sqs if configured."""
+        test_data = [{"symbol": "MSFT", "price": 321.00}]
+        send_to_output(test_data)
+        mock_send_to_sqs.assert_called_once_with(test_data)
 
 
 if __name__ == "__main__":
