@@ -1,8 +1,8 @@
 """Thread-safe rate limiter using the token bucket algorithm."""
 
+import re
 import threading
 import time
-import re
 
 from prometheus_client import Counter, Gauge
 

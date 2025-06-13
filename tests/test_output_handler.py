@@ -3,7 +3,7 @@ Unit tests for output_handler.py
 """
 
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from app.output_handler import send_to_output
 

@@ -20,5 +20,5 @@ updates:
       interval: weekly
     ignore:
       - dependency-name: pip
-        versions: ["*"]  # Prevent pip itself from being flagged
+        versions: ['*']  # Prevent pip itself from being flagged
     insecure-external-code-execution: warn

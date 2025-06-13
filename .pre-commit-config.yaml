@@ -15,6 +15,11 @@ repos:
         args: [--fix=lf]
   - repo: local
     hooks:
+      - id: check-compiled-requirements
+        name: Check pip-compile output
+        entry: python .hooks/check-compiled-requirements.py
+        language: system
+        pass_filenames: false
       - id: preflight-check
         name: Preflight Checks
         entry: make preflight
@@ -86,12 +91,12 @@ repos:
         args: [-r, src, tests]
         pass_filenames: false
         language: python
-
   - repo: https://github.com/returntocorp/semgrep
     rev: v1.66.0
     hooks:
       - id: semgrep
-        args: ["--config=p/security-audit"]
+        language: system  # 👈 forces Semgrep to use your system Python install
+        args: [--config=p/security-audit]
         pass_filenames: false
   - repo: local
     hooks:

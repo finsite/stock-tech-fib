@@ -3,8 +3,9 @@ Unit tests for vault_client.py
 """
 
 import os
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 from app.utils.vault_client import get_secret_or_env
 
@@ -12,7 +13,7 @@ from app.utils.vault_client import get_secret_or_env
 @patch.dict(os.environ, {"API_KEY": "env_value"})
 def test_get_secret_or_env_env_var():
     """Returns value from environment if present."""
-    assert get_secret_or_env("API_KEY") == "env_value"
+    assert get_secret_or_env("API_KEY") == "env_value"  # nosec
 
 
 @patch.dict(os.environ, {}, clear=True)
@@ -25,7 +26,7 @@ def test_get_secret_or_env_vault_value(mock_get):
         mock_instance.get.return_value = "vault_value"
 
         result = get_secret_or_env("API_KEY")
-        assert result == "vault_value"
+        assert result == "vault_value"  # nosec
         mock_instance.get.assert_called_once_with("API_KEY", "")
 
 
@@ -39,4 +40,4 @@ def test_get_secret_or_env_default(mock_get):
         mock_instance.get.return_value = None
 
         result = get_secret_or_env("MISSING_KEY", default="fallback")
-        assert result == "fallback"
+        assert result == "fallback"  # nosec
