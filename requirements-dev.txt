@@ -29,7 +29,7 @@ cffi==1.17.1
     # via cryptography
 charset-normalizer==3.4.2
     # via requests
-click==8.1.8
+click==8.2.1
     # via
     #   black
     #   deptry
@@ -58,7 +58,7 @@ dparse==0.6.4
     # via
     #   safety
     #   safety-schemas
-filelock==3.16.1
+filelock==3.18.0
     # via safety
 flake8==7.2.0
     # via -r requirements-dev.in
@@ -152,11 +152,11 @@ pycodestyle==2.13.0
     # via flake8
 pycparser==2.22
     # via cffi
-pydantic==2.9.2
+pydantic==2.11.7
     # via
     #   safety
     #   safety-schemas
-pydantic-core==2.23.4
+pydantic-core==2.35.1
     # via pydantic
 pyflakes==3.3.2
     # via flake8
@@ -224,7 +224,7 @@ stevedore==5.4.1
     # via bandit
 tenacity==9.1.2
     # via safety
-termcolor==2.3.0
+termcolor==2.5.0
     # via -r requirements-dev.in
 tomlkit==0.13.3
     # via safety
