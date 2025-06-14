@@ -3,11 +3,10 @@
 if they are out of sync with requirements.in and requirements-dev.in.
 """
 
-import sys
-from shutil import which
-from pathlib import Path
 import subprocess  # nosec B404
-
+import sys
+from pathlib import Path
+from shutil import which
 
 PIP_COMPILE = which("pip-compile")
 if not PIP_COMPILE:
