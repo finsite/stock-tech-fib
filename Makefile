@@ -1,3 +1,4 @@
+
 .PHONY: help install test lint audit format clean clean-all compile preflight precommit security bump docker-build sbom sign-image watch
 
 help:
@@ -72,35 +73,26 @@ sync:
 
 sync-apply:
 	@echo "🚀 Applying sync to all repositories..."
-	python sync_if_needed.py --apply && echo "✅ Sync complete. Changes logged in sync.log"	
+	python sync_if_needed.py --apply && echo "✅ Sync complete. Changes logged in sync.log"
 
 # -----------------------------------------------------------------------------
 # Attestation and SBOM Targets
 # -----------------------------------------------------------------------------
 
-# ✅ Generate CycloneDX SBOM for Python dependencies
-# Requires: pip install cyclonedx-bom
 sbom-py:
 	cyclonedx-py -o bom.json
 
-# ✅ Generate full SBOM from Docker image context using Syft
-# Requires: https://github.com/anchore/syft
 sbom-image:
 	syft . -o spdx-json > sbom.spdx.json
 
-# ✅ Run both SBOM generators + audit (pip check + pip-audit + deptry)
 attest: sbom-py sbom-image audit
 
 # -----------------------------------------------------------------------------
 # Optional Utilities (enable as needed)
 # -----------------------------------------------------------------------------
 
-# 🟡 OPTIONAL: Sign Docker image using cosign
-# Requires: https://github.com/sigstore/cosign
 # sign-image:
 # 	cosign sign $(shell basename $(PWD)):latest
 
-# 🟡 OPTIONAL: Pytest watch mode for test-driven development
-# Requires: pip install pytest-watch
 # watch:
 # 	ptw --onfail "notify-send 'Test failed!'"

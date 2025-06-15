@@ -8,6 +8,8 @@ jobs:
   sbom:
     name: Generate SBOM & License Report
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
