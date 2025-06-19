@@ -20,5 +20,6 @@ jobs:
             echo "✅ Full dependency audit succeeded."
           else
             echo "⚠️ Full audit failed due to dependency resolution. Falling back to direct-only audit..."
-            pip-audit --no-deps --requirement requirements.txt --requirement requirements-dev.txt
+            pip-audit --no-deps --requirement requirements.txt
+            pip-audit --no-deps --requirement requirements-dev.txt
           fi
