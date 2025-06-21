@@ -2,11 +2,22 @@
 if they are out of sync with requirements.in and requirements-dev.in.
 """
 
-import subprocess  # nosec B404
+import subprocess  # nosec B404 - subprocess is used safely with controlled arguments
 import sys
 from pathlib import Path
 from shutil import which
-from typing import Optional
+
+
+def get_pip_compile_path() -> str:
+    """Resolve the full path to pip-compile."""
+    pip_compile = which("pip-compile")
+    if not pip_compile:
+        print("[Error] pip-compile not found in PATH.")
+        sys.exit(1)
+    return pip_compile
+
+
+PIP_COMPILE = get_pip_compile_path()
 
 
 def recompile(in_file: str, out_file: str) -> bool:
@@ -21,8 +32,8 @@ def recompile(in_file: str, out_file: str) -> bool:
     """
     print(f"[Fix] Recompiling {in_file} -> {out_file}")
     try:
-        subprocess.run(  # nosec B603
-            ["pip-compile", in_file, "--resolver=backtracking", "--output-file", out_file],
+        subprocess.run(  # nosec B603 - fully qualified pip-compile path and safe args
+            [PIP_COMPILE, in_file, "--resolver=backtracking", "--output-file", out_file],
             check=True,
         )
         return True
@@ -49,8 +60,8 @@ def check_file(in_file: str, out_file: str, autofix: bool = True) -> bool:
     tmp_out = Path(out_file + ".tmp")
 
     try:
-        subprocess.run(  # nosec B603
-            ["pip-compile", in_file, "--resolver=backtracking", "--output-file", str(tmp_out)],
+        subprocess.run(  # nosec B603 - safe, static argument list
+            [PIP_COMPILE, in_file, "--resolver=backtracking", "--output-file", str(tmp_out)],
             check=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -73,10 +84,6 @@ def check_file(in_file: str, out_file: str, autofix: bool = True) -> bool:
 
 def main() -> int:
     """Main entry point for the hook."""
-    if not which("pip-compile"):
-        print("[Error] pip-compile not found in PATH.")
-        return 1
-
     ok1 = check_file("requirements.in", "requirements.txt", autofix=True)
     ok2 = check_file("requirements-dev.in", "requirements-dev.txt", autofix=True)
 

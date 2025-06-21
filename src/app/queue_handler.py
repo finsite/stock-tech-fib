@@ -18,13 +18,19 @@ from app.utils.setup_logger import setup_logger
 logger = setup_logger(__name__)
 shutdown_event = threading.Event()
 
+REDACT_SENSITIVE_LOGS = config.get_config_value("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
+
+
+def safe_log(msg: str) -> str:
+    """Standardized redacted log message."""
+    return f"{msg}: [REDACTED]" if REDACT_SENSITIVE_LOGS else msg
+
 
 def consume_messages(callback: Callable[[list[dict]], None]) -> None:
     """Start the queue listener for the configured queue type.
 
     Args:
         callback: A function that takes a list of messages and processes them.
-
     """
     signal.signal(signal.SIGINT, _graceful_shutdown)
     signal.signal(signal.SIGTERM, _graceful_shutdown)
@@ -35,7 +41,7 @@ def consume_messages(callback: Callable[[list[dict]], None]) -> None:
     elif queue_type == "sqs":
         _start_sqs_listener(callback)
     else:
-        raise ValueError(f"Unsupported QUEUE_TYPE: {queue_type}")
+        raise ValueError("Unsupported QUEUE_TYPE: [REDACTED]")
 
 
 def _graceful_shutdown(signum, frame) -> None:
@@ -50,7 +56,6 @@ def _start_rabbitmq_listener(callback: Callable[[list[dict]], None]) -> None:
 
     Args:
         callback: Function to process received messages.
-
     """
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
@@ -76,11 +81,11 @@ def _start_rabbitmq_listener(callback: Callable[[list[dict]], None]) -> None:
             callback([message])
             ch.basic_ack(delivery_tag=method.delivery_tag)
             logger.debug("✅ RabbitMQ message processed and acknowledged.")
-        except Exception as e:
-            logger.error(f"❌ Error processing RabbitMQ message: {e}")
+        except Exception:
+            logger.error("❌ RabbitMQ message processing failed (details redacted)")
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
 
-    logger.info("🚀 Consuming RabbitMQ messages from queue: %s", queue_name)
+    logger.info(safe_log("🚀 Consuming RabbitMQ messages from queue"))
 
     try:
         channel.basic_qos(prefetch_count=config.get_batch_size())
@@ -99,12 +104,11 @@ def _start_sqs_listener(callback: Callable[[list[dict]], None]) -> None:
 
     Args:
         callback: Function to process a batch of messages.
-
     """
     sqs = boto3.client("sqs", region_name=config.get_sqs_region())
     queue_url = config.get_sqs_queue_url()
 
-    logger.info("🚀 Polling SQS queue: %s", queue_url)
+    logger.info(safe_log("🚀 Polling SQS queue"))
 
     while not shutdown_event.is_set():
         try:
@@ -125,8 +129,8 @@ def _start_sqs_listener(callback: Callable[[list[dict]], None]) -> None:
                     payload = json.loads(msg["Body"])
                     payloads.append(payload)
                     receipt_handles.append(msg["ReceiptHandle"])
-                except Exception as e:
-                    logger.warning(f"⚠️ Failed to parse SQS message: {e}")
+                except Exception:
+                    logger.warning("⚠️ Failed to parse SQS message body (redacted)")
 
             if payloads:
                 callback(payloads)
@@ -134,8 +138,8 @@ def _start_sqs_listener(callback: Callable[[list[dict]], None]) -> None:
                     sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=handle)
                 logger.debug("✅ SQS: Processed and deleted %d message(s)", len(payloads))
 
-        except (BotoCoreError, NoCredentialsError) as e:
-            logger.error("❌ SQS error: %s", e)
+        except (BotoCoreError, NoCredentialsError):
+            logger.error("❌ SQS error encountered (details redacted)")
             time.sleep(5)
 
     logger.info("🛑 SQS polling stopped.")

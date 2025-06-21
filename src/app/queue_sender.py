@@ -20,6 +20,13 @@ from app.utils.setup_logger import setup_logger
 
 logger = setup_logger(__name__)
 
+REDACT_SENSITIVE_LOGS = config_shared.get_config_value("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
+
+
+def safe_log_message(data: dict[str, Any]) -> str:
+    """Return redacted or full string for logging."""
+    return "[REDACTED]" if REDACT_SENSITIVE_LOGS else json.dumps(data, ensure_ascii=False)
+
 
 def publish_to_queue(payload: list[dict[str, Any]]) -> None:
     """Publish processed results to RabbitMQ or SQS.
@@ -28,8 +35,11 @@ def publish_to_queue(payload: list[dict[str, Any]]) -> None:
     ----------
     payload : list[dict[str, Any]]
         A list of message payloads to publish.
-
     """
+    if not isinstance(payload, list):
+        logger.error("❌ Invalid payload type: expected list, got %s", type(payload).__name__)
+        return
+
     queue_type = config_shared.get_queue_type().lower()
 
     for message in payload:
@@ -38,7 +48,8 @@ def publish_to_queue(payload: list[dict[str, Any]]) -> None:
         elif queue_type == "sqs":
             _send_to_sqs(message)
         else:
-            logger.error("❌ Invalid QUEUE_TYPE specified: %s", queue_type)
+            redacted_type = "[REDACTED]" if REDACT_SENSITIVE_LOGS else queue_type
+            logger.error("❌ Invalid QUEUE_TYPE specified. Value may be misconfigured or missing.")
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
@@ -56,7 +67,6 @@ def _send_to_rabbitmq(data: dict[str, Any]) -> None:
         If connection to RabbitMQ fails.
     Exception
         If message publishing fails.
-
     """
     try:
         credentials = pika.PlainCredentials(
@@ -77,7 +87,9 @@ def _send_to_rabbitmq(data: dict[str, Any]) -> None:
                 routing_key=config_shared.get_rabbitmq_routing_key(),
                 body=json.dumps(data, ensure_ascii=False),
             )
-        logger.info("✅ Published message to RabbitMQ.")
+
+        logger.info("✅ Published message to RabbitMQ: %s", safe_log_message(data))  # nosec
+
     except AMQPConnectionError as e:
         logger.exception("❌ RabbitMQ publish connection error: %s", e)
         raise
@@ -103,7 +115,6 @@ def _send_to_sqs(data: dict[str, Any]) -> None:
         If credentials are not available.
     Exception
         If message publishing fails.
-
     """
     sqs_url = config_shared.get_sqs_queue_url()
     region = config_shared.get_sqs_region()
@@ -114,7 +125,8 @@ def _send_to_sqs(data: dict[str, Any]) -> None:
             QueueUrl=sqs_url,
             MessageBody=json.dumps(data, ensure_ascii=False),
         )
-        logger.info("✅ Published message to SQS (MessageId: %s)", response.get("MessageId"))
+        logger.info("✅ Published message to SQS: %s", safe_log_message(data))  # nosec
+
     except (BotoCoreError, NoCredentialsError) as e:
         logger.exception("❌ Failed to initialize SQS client: %s", e)
         raise
