@@ -16,3 +16,7 @@ matplotlib>=3.6.0,<4.0
 #vault integration
 hvac>=1.2.1,<2.0.0
 prometheus_client>=0.17.1
+
+# Security: Fix pip-audit vulnerabilities
+requests>=2.32.4
+urllib3>=2.5.0

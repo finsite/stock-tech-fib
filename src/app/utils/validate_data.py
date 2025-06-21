@@ -61,6 +61,30 @@ def validate_data(data: dict[str, Any]) -> bool:
     return True
 
 
+def validate_message_schema(message: Any) -> bool:
+    """Validate a generic message for required fields: 'symbol', 'timestamp', and 'data' (dict).
+
+    Used for verifying incoming message format before processing.
+
+    Parameters
+    ----------
+    message : Any
+        The input message to validate.
+
+    Returns
+    -------
+    bool
+        True if message contains required fields and structure.
+    """
+    if not isinstance(message, dict):
+        return False
+    if not all(k in message for k in ("symbol", "timestamp", "data")):
+        return False
+    if not isinstance(message["data"], dict):
+        return False
+    return True
+
+
 def _validate_symbol(symbol: str) -> bool:
     """Validate that the 'symbol' field is a string of alphabetical characters.
 

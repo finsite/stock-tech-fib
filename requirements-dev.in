@@ -26,3 +26,7 @@ safety>=3.0,<4.0
 # ======================
 deptry>=0.12.0,<1.0
 termcolor==2.3.0
+
+# Security: Fix pip-audit vulnerabilities
+requests>=2.32.4
+urllib3>=2.5.0
