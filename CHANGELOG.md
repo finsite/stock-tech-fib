@@ -1,6 +1,12 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
+## v0.6.0 (2025-06-22)
+
+### Feat
+
+- **utils**: finalize shared utility modules and tests
+
 ## v0.5.7 (2025-06-15)
 
 ### Refactor
