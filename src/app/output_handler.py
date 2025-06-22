@@ -6,7 +6,7 @@ optional metrics integration.
 """
 
 import json
-from typing import Any, cast
+from typing import Any
 
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -19,35 +19,41 @@ logger = setup_logger(__name__)
 
 
 def send_to_output(data: list[dict[str, Any]]) -> None:
-    """Route processed output to the configured destination.
+    """
+    Route processed output to one or more configured destinations.
 
-    Validates and dispatches messages to the configured output mode:
-    'log', 'stdout', 'queue', 'rest', 's3', or 'database'.
+    Validates and dispatches messages to each enabled output mode.
 
     Args:
         data (list[dict[str, Any]]): A list of enriched messages to route.
-
     """
     try:
         validate_list_of_dicts(data, required_keys=["text"])
 
-        mode: OutputMode = cast(OutputMode, config_shared.get_output_mode())
+        # Use OUTPUT_MODES if defined, fallback to single OUTPUT_MODE
+        modes = config_shared.get_output_modes()
+        for mode_str in modes:
+            try:
+                mode = OutputMode(mode_str)
+            except ValueError:
+                logger.warning("⚠️ Unknown output mode: %s — skipping.", mode_str)
+                continue
 
-        if mode == OutputMode.LOG:
-            _output_to_log(data)
-        elif mode == OutputMode.STDOUT:
-            _output_to_stdout(data)
-        elif mode == OutputMode.QUEUE:
-            _output_to_queue(data)
-        elif mode == OutputMode.REST:
-            _output_to_rest(data)
-        elif mode == OutputMode.S3:
-            _output_to_s3(data)
-        elif mode == OutputMode.DATABASE:
-            _output_to_database(data)
-        else:
-            logger.warning("⚠️ Unknown output mode: %s — defaulting to log.", mode)
-            _output_to_log(data)
+            if mode == OutputMode.LOG:
+                _output_to_log(data)
+            elif mode == OutputMode.STDOUT:
+                _output_to_stdout(data)
+            elif mode == OutputMode.QUEUE:
+                _output_to_queue(data)
+            elif mode == OutputMode.REST:
+                _output_to_rest(data)
+            elif mode == OutputMode.S3:
+                _output_to_s3(data)
+            elif mode == OutputMode.DATABASE:
+                _output_to_database(data)
+            else:
+                logger.warning("⚠️ Unhandled output mode: %s", mode)
+
     except Exception as e:
         logger.error("❌ Failed to send output: %s", e)
 

@@ -20,7 +20,9 @@ from app.utils.setup_logger import setup_logger
 
 logger = setup_logger(__name__)
 
-REDACT_SENSITIVE_LOGS = config_shared.get_config_value("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
+REDACT_SENSITIVE_LOGS = (
+    config_shared.get_config_value("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
+)
 
 
 def safe_log_message(data: dict[str, Any]) -> str:

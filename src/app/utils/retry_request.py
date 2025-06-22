@@ -1,9 +1,6 @@
-"""Retry a function if it raises an exception.
+"""Generic retry mechanism for transient operations.
 
-The `retry_request` function retries a given function if it raises an exception.
-It waits for a specified delay in seconds between retries and attempts up to
-a maximum number of times. If the function still raises an exception after the
-maximum number of retries, it raises that exception.
+Retries a function call on failure with configurable retry count and delay.
 """
 
 import time
@@ -12,61 +9,45 @@ from typing import Any
 
 from app.utils.setup_logger import setup_logger
 
-# Set up logger for this module
 logger = setup_logger(__name__)
 
 
-def retry_request(
-    func: Callable[[], Any], *, max_retries: int = 3, delay_seconds: int = 5
-) -> Any | None:
-    """Retry a function if it raises an exception.
+def retry_request(func: Callable[[], Any], *, max_retries: int = 3, delay_seconds: int = 5) -> Any:
+    """
+    Retry a function if it raises an exception.
 
-    This function retries a callable up to a specified number of times, with a delay
-    between attempts. If all attempts fail, the last exception is raised.
+    Retries a callable up to `max_retries` times, sleeping `delay_seconds`
+    between attempts. Raises the last encountered exception if all retries fail.
 
-    Parameters
-    ----------
-    func : Callable[[], Any]
-        The function to be retried.
-    max_retries : int, optional
-        The maximum number of retry attempts (default is 3).
-    delay_seconds : int, optional
-        Delay in seconds between retries (default is 5).
+    Args:
+        func (Callable[[], Any]): The function to retry.
+        max_retries (int, optional): Maximum number of attempts (default is 3).
+        delay_seconds (int, optional): Seconds to wait between retries (default is 5).
 
-    Returns
-    -------
-    Any | None
-        The return value of the function if successful, or raises the last exception.
+    Returns:
+        Any: The return value of the callable if successful.
 
-    Raises
-    ------
-    ValueError
-        If the function passed is None.
-    Exception
-        If all retry attempts fail, the last exception is re-raised.
-
+    Raises:
+        ValueError: If `func` is None.
+        Exception: The last raised exception from the callable.
     """
     if func is None:
-        raise ValueError("The function to be retried cannot be None")
+        raise ValueError("The function to be retried cannot be None.")
 
-    last_exception = None
+    last_exception: Exception | None = None
 
     for attempt in range(1, max_retries + 1):
         try:
-            logger.debug(f"Attempt {attempt} of {max_retries}.")
+            logger.debug(f"🔁 Attempt {attempt} of {max_retries}")
             return func()
-        except Exception as exception:
-            last_exception = exception
+        except Exception as exc:
+            last_exception = exc
             logger.warning(
-                f"Attempt {attempt} failed with error: {exception}. "
+                f"⚠️ Attempt {attempt} failed: {exc}. "
                 f"{'Retrying...' if attempt < max_retries else 'No more retries.'}"
             )
             if attempt < max_retries:
                 time.sleep(delay_seconds)
 
-    logger.error(f"All {max_retries} attempts failed. Last error: {last_exception}")
-    raise (
-        last_exception
-        if last_exception
-        else RuntimeError("All retries failed but no exception was captured.")
-    )
+    logger.error(f"❌ All {max_retries} attempts failed. Last error: {last_exception}")
+    raise last_exception or RuntimeError("All retries failed but no exception was captured.")

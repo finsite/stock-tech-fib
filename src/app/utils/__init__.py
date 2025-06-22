@@ -1,13 +1,13 @@
-"""The module initializes the utilities package for the application.
+"""Initialize the `utils` package for shared application utilities.
 
-Utilities included:
-- retry_request: Function for retrying operations with exponential backoff.
-- validate_data: Validates the structure and content of data.
-- track_polling_metrics: Tracks polling metrics for success and failure.
-- track_request_metrics: Tracks metrics for individual API requests.
-- request_with_timeout: Makes HTTP requests with a timeout.
-- validate_environment_variables: Validates required environment variables.
-- setup_logger: Configures logging for the application.
+Included Utilities:
+- setup_logger: Configures logging with structured output.
+- retry_request: Retries a function with optional delay on failure.
+- request_with_timeout: Makes HTTP GET requests with timeout and validation.
+- validate_data: Validates schema and batch structure of data.
+- validate_environment_variables: Ensures required environment variables are set.
+- track_polling_metrics: Logs success/failure of polling operations.
+- track_request_metrics: Logs request-level metrics (rate limits, success, etc.).
 """
 
 from .request_with_timeout import request_with_timeout
@@ -19,14 +19,14 @@ from .validate_data import validate_data
 from .validate_environment_variables import validate_environment_variables
 
 __all__ = [
+    "setup_logger",
     "retry_request",
+    "request_with_timeout",
     "validate_data",
+    "validate_environment_variables",
     "track_polling_metrics",
     "track_request_metrics",
-    "request_with_timeout",
-    "validate_environment_variables",
-    "setup_logger",
 ]
 
-# Initialize package-level logger
+# Initialize package-level logger for utilities
 logger = setup_logger(name="utils")

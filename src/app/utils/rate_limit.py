@@ -1,4 +1,7 @@
-"""Thread-safe rate limiter using the token bucket algorithm."""
+"""Thread-safe rate limiter using the token bucket algorithm.
+
+Includes Prometheus metrics and context hashing for structured logs.
+"""
 
 import hashlib
 import re
@@ -17,6 +20,7 @@ rate_limiter_blocked_total = Counter(
     "Total number of times the rate limiter blocked",
     ["context"],
 )
+
 rate_limiter_tokens_remaining = Gauge(
     "rate_limiter_tokens_remaining",
     "Current number of available tokens in the rate limiter",
@@ -25,39 +29,46 @@ rate_limiter_tokens_remaining = Gauge(
 
 
 def _sanitize_context(context: str) -> str:
-    """Sanitize context string for safe metric labeling.
+    """
+    Sanitize a context string for use in Prometheus metric labels.
 
-    Replaces unsafe characters and truncates the string for Prometheus label compatibility.
+    Replaces unsafe characters and truncates the string.
 
     Args:
         context (str): Original context string.
 
     Returns:
-        str: Sanitized and truncated context label.
+        str: Sanitized context label.
     """
     return re.sub(r"[^\w\-:.]", "_", context)[:64]
 
 
 def _hash_context(context: str) -> str:
-    """Hash the context string to produce a short, opaque identifier for logs.
+    """
+    Hash the context string to produce a short identifier for logs.
 
     Args:
-        context (str): The original context string.
+        context (str): Original context string.
 
     Returns:
-        str: SHA-256-based short hash of the context.
+        str: Short SHA-256 hash.
     """
     return hashlib.sha256(context.encode()).hexdigest()[:8]
 
 
 class RateLimiter:
-    """Token bucket rate limiter with Prometheus support."""
+    """
+    Thread-safe token bucket rate limiter with Prometheus integration.
+
+    Allows a maximum number of requests in a defined time window.
+    """
 
     def __init__(self, max_requests: int, time_window: float) -> None:
-        """Initialize a new RateLimiter instance.
+        """
+        Initialize a new RateLimiter instance.
 
         Args:
-            max_requests (int): Maximum number of allowed requests in the time window.
+            max_requests (int): Maximum number of requests allowed.
             time_window (float): Time window in seconds.
 
         Raises:
@@ -71,50 +82,54 @@ class RateLimiter:
         self._max_requests = max_requests
         self._time_window = time_window
         self._tokens: float = float(max_requests)
+        self._last_check: float = time.time()
         self._lock = threading.Lock()
-        self._last_check = time.time()
 
     def acquire(self, context: str = "RateLimiter") -> None:
-        """Acquire a token, blocking if needed to respect rate limits.
+        """
+        Acquire a token, blocking if rate limit is exceeded.
 
-        Replenishes tokens based on elapsed time and sleeps if tokens are unavailable.
-        Also updates Prometheus metrics and logs token state.
+        Replenishes tokens based on elapsed time. Updates Prometheus metrics
+        and logs token state per context.
 
         Args:
-            context (str): An identifier for the caller (e.g., service name).
+            context (str): Label for Prometheus/logging context.
 
         Returns:
             None
         """
-        context = _sanitize_context(context)
+        context_label = _sanitize_context(context)
         context_id = _hash_context(context)
 
         with self._lock:
-            current_time: float = time.time()
-            elapsed: float = current_time - self._last_check
-
-            tokens_to_add: float = elapsed * (self._max_requests / self._time_window)
-            self._tokens = min(self._max_requests, self._tokens + tokens_to_add)
+            current_time = time.time()
+            elapsed = current_time - self._last_check
             self._last_check = current_time
 
-            rate_limiter_tokens_remaining.labels(context=context).set(self._tokens)
+            # Replenish tokens based on elapsed time
+            refill_rate = self._max_requests / self._time_window
+            tokens_to_add = elapsed * refill_rate
+            self._tokens = min(self._max_requests, self._tokens + tokens_to_add)
 
+            rate_limiter_tokens_remaining.labels(context=context_label).set(self._tokens)
             logger.debug(
                 f"[ctx:{context_id}] Replenished {tokens_to_add:.2f} tokens. "
                 f"Available: {self._tokens:.2f}"
             )
 
+            # If no tokens available, sleep and refill one
             if self._tokens < 1:
-                sleep_time: float = (1 - self._tokens) * (self._time_window / self._max_requests)
+                sleep_time = (1 - self._tokens) / refill_rate
                 sleep_time = min(sleep_time, self._time_window)
 
                 logger.info(
                     f"[ctx:{context_id}] Rate limit hit. Sleeping for {sleep_time:.2f} seconds."
                 )
-                rate_limiter_blocked_total.labels(context=context).inc()
+                rate_limiter_blocked_total.labels(context=context_label).inc()
                 time.sleep(sleep_time)
-                self._tokens = 1
+                self._tokens = 1.0  # Ensure 1 token is available after sleep
 
+            # Consume a token
             self._tokens -= 1
-            rate_limiter_tokens_remaining.labels(context=context).set(self._tokens)
+            rate_limiter_tokens_remaining.labels(context=context_label).set(self._tokens)
             logger.debug(f"[ctx:{context_id}] Token consumed. Remaining: {self._tokens:.2f}")

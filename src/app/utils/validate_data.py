@@ -1,133 +1,145 @@
 """Validate stock data to ensure it conforms to the required schema.
 
-This module provides a function to validate stock data dictionaries
-containing the following required keys: 'symbol', 'price', 'volume',
-and 'timestamp'. It also provides helper functions to validate the
-individual fields.
+This module provides validation utilities for stock-related data.
+It ensures dictionaries contain the required fields and valid formats
+for 'symbol', 'price', 'volume', and 'timestamp'.
 """
 
 from typing import Any
 
 from app.utils.setup_logger import setup_logger
 
-# Set up logger for this module
 logger = setup_logger(__name__)
 
 
 def validate_data(data: dict[str, Any]) -> bool:
-    """Validate input data to ensure it conforms to the required schema.
+    """
+    Validate input stock data against expected schema.
 
-    This function checks that the input data is a dictionary containing
-    the required keys: 'symbol', 'price', 'volume', and 'timestamp'.
-    It also validates the individual fields using helper functions.
+    Checks presence of required keys and validates each field.
 
-    :param data: The data to validate.
-    :returns: True if data is valid, False otherwise.
-    :raises TypeError: If the data is not a dictionary.
+    Args:
+        data (dict[str, Any]): The stock data dictionary to validate.
+
+    Returns:
+        bool: True if data is valid, False otherwise.
+
+    Raises:
+        TypeError: If the input is not a dictionary.
     """
     required_keys: set[str] = {"symbol", "price", "volume", "timestamp"}
 
     if not isinstance(data, dict):
-        logger.error("Invalid data type. Expected a dictionary.")
+        logger.error("❌ Expected data to be a dictionary.")
         raise TypeError("Data must be a dictionary.")
 
-    missing_keys: set[str] = required_keys - data.keys()
+    missing_keys = required_keys - data.keys()
     if missing_keys:
-        logger.error(f"Missing required keys in data: {missing_keys}")
+        logger.error("❌ Missing required keys: %s", missing_keys)
         return False
 
     for key in required_keys:
         if data.get(key) is None:
-            logger.error(f"Null value for required key: {key}")
+            logger.error("❌ Null value for required key: %s", key)
             return False
 
     try:
         if not _validate_symbol(data["symbol"]):
-            logger.error("Symbol validation failed.")
             return False
         if not _validate_price(data["price"]):
-            logger.error("Price validation failed.")
             return False
         if not _validate_volume(data["volume"]):
-            logger.error("Volume validation failed.")
             return False
         if not _validate_timestamp(data["timestamp"]):
-            logger.error("Timestamp validation failed.")
             return False
     except Exception as e:
-        logger.error(f"Validation failed with exception: {e}")
+        logger.exception("❌ Exception during validation: %s", e)
         return False
 
     return True
 
 
 def validate_message_schema(message: Any) -> bool:
-    """Validate a generic message for required fields: 'symbol', 'timestamp', and 'data' (dict).
+    """
+    Validate a message for required structure: 'symbol', 'timestamp', and 'data' (dict).
 
-    Used for verifying incoming message format before processing.
+    Args:
+        message (Any): The message to validate.
 
-    Parameters
-    ----------
-    message : Any
-        The input message to validate.
-
-    Returns
-    -------
-    bool
-        True if message contains required fields and structure.
+    Returns:
+        bool: True if valid structure, False otherwise.
     """
     if not isinstance(message, dict):
+        logger.debug("Invalid message type: expected dict.")
         return False
     if not all(k in message for k in ("symbol", "timestamp", "data")):
+        logger.debug("Message missing required keys.")
         return False
     if not isinstance(message["data"], dict):
+        logger.debug("Message 'data' field is not a dict.")
         return False
     return True
 
 
-def _validate_symbol(symbol: str) -> bool:
-    """Validate that the 'symbol' field is a string of alphabetical characters.
+def _validate_symbol(symbol: Any) -> bool:
+    """
+    Validate that the 'symbol' is a non-empty alphabetic string.
 
-    :param symbol: The value of the 'symbol' field.
-    :returns: True if valid, False otherwise.
+    Args:
+        symbol (Any): The symbol value to validate.
+
+    Returns:
+        bool: True if valid, False otherwise.
     """
     if not isinstance(symbol, str) or not symbol.isalpha():
-        logger.error(f"Invalid symbol format: {symbol}")
+        logger.error("❌ Invalid symbol format: %s", symbol)
         return False
     return True
 
 
 def _validate_price(price: Any) -> bool:
-    """Validate that the 'price' field is a non-negative number.
+    """
+    Validate that the 'price' is a non-negative number.
 
-    :param price: The value of the 'price' field.
-    :returns: True if valid, False otherwise.
+    Args:
+        price (Any): The price value to validate.
+
+    Returns:
+        bool: True if valid, False otherwise.
     """
     if not isinstance(price, (int, float)) or price < 0:
-        logger.error(f"Invalid price: {price}")
+        logger.error("❌ Invalid price: %s", price)
         return False
     return True
 
 
 def _validate_volume(volume: Any) -> bool:
-    """Validate that the 'volume' field is a non-negative integer.
+    """
+    Validate that the 'volume' is a non-negative integer.
 
-    :param volume: The value of the 'volume' field.
-    :returns: True if valid, False otherwise.
+    Args:
+        volume (Any): The volume value to validate.
+
+    Returns:
+        bool: True if valid, False otherwise.
     """
     if not isinstance(volume, int) or volume < 0:
-        logger.error(f"Invalid volume format: {volume}")
+        logger.error("❌ Invalid volume: %s", volume)
         return False
     return True
 
 
 def _validate_timestamp(timestamp: Any) -> bool:
-    """Validate that the 'timestamp' field is a string.
+    """
+    Validate that the 'timestamp' is a string.
 
-    :param timestamp: The value of the 'timestamp' field.
-    :returns: True if valid, False otherwise.
+    Args:
+        timestamp (Any): The timestamp value to validate.
+
+    Returns:
+        bool: True if valid, False otherwise.
     """
     if not isinstance(timestamp, str):
-        logger.error(f"Invalid timestamp format: {timestamp}")
+        logger.error("❌ Invalid timestamp: %s", timestamp)
         return False
     return True

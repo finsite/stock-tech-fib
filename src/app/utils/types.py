@@ -10,7 +10,7 @@ from typing import Any, TypedDict
 
 
 class OutputMode(str, Enum):
-    """Available output modes for processed data."""
+    """Available output destinations for processed data."""
 
     QUEUE = "queue"
     LOG = "log"
@@ -21,7 +21,7 @@ class OutputMode(str, Enum):
 
 
 class PollerType(str, Enum):
-    """Defines the domain of the poller for routing and behavior."""
+    """Available poller domains for routing and specialized behavior."""
 
     STOCK = "stock"
     SENTIMENT = "sentiment"
@@ -34,7 +34,7 @@ class PollerType(str, Enum):
 
 
 class ValidatedMessage(TypedDict):
-    """Validated and enriched message with required structure."""
+    """A validated message containing required fields."""
 
     symbol: str
     timestamp: str
@@ -42,27 +42,27 @@ class ValidatedMessage(TypedDict):
 
 
 def validate_dict(data: dict[str, Any], required_keys: list[str]) -> bool:
-    """Check that all required keys are present in the dictionary.
+    """Check that all required keys exist in a dictionary.
 
     Args:
-        data: The dictionary to validate.
-        required_keys: Keys that must exist in the dictionary.
+        data (dict[str, Any]): Dictionary to validate.
+        required_keys (list[str]): Required keys to check.
 
     Returns:
-        True if all required keys are present, False otherwise.
+        bool: True if all required keys are present.
     """
-    return all(k in data for k in required_keys)
+    return all(key in data for key in required_keys)
 
 
 def validate_list_of_dicts(data: Any, required_keys: list[str]) -> bool:
-    """Validate that the input is a list of dicts, each with required keys.
+    """Validate that input is a list of dicts, each with required keys.
 
     Args:
-        data: The object to validate.
-        required_keys: Keys that must exist in each dictionary.
+        data (Any): Data to validate.
+        required_keys (list[str]): Required keys for each dict.
 
     Returns:
-        True if input is a list of valid dicts, False otherwise.
+        bool: True if input is valid list of valid dicts.
     """
     if not isinstance(data, list):
         return False
@@ -70,13 +70,13 @@ def validate_list_of_dicts(data: Any, required_keys: list[str]) -> bool:
 
 
 def is_valid_payload(data: Any) -> bool:
-    """Perform basic schema validation for a generic payload.
+    """Perform basic validation for a single payload.
 
     Args:
-        data: The input data to validate.
+        data (Any): Input data to check.
 
     Returns:
-        True if the input is a dict with minimum expected structure.
+        bool: True if input is a dict with 'symbol' and 'timestamp'.
     """
     return isinstance(data, dict) and "symbol" in data and "timestamp" in data
 
@@ -85,9 +85,9 @@ def is_valid_batch(data: Any) -> bool:
     """Validate a batch of payloads.
 
     Args:
-        data: The input to validate.
+        data (Any): Input to validate.
 
     Returns:
-        True if input is a list of valid payload dictionaries.
+        bool: True if input is a valid list of payloads.
     """
     return validate_list_of_dicts(data, ["symbol", "timestamp"])
