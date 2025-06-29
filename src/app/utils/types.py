@@ -6,7 +6,7 @@ Do not modify it directly in individual repositories.
 """
 
 from enum import Enum
-from typing import Any, TypedDict
+from typing import Any, Literal, TypedDict
 
 
 class OutputMode(str, Enum):
@@ -41,6 +41,35 @@ class ValidatedMessage(TypedDict):
     data: dict[str, Any]
 
 
+class TradeEvent(TypedDict, total=False):
+    """Represents a simulated trade for paper trading output."""
+
+    symbol: str
+    action: Literal["BUY", "SELL"]
+    quantity: float
+    price: float
+    timestamp: str
+    strategy_id: str
+    notes: str
+
+
+class DatabaseRow(TypedDict):
+    """Represents a row for database insertion output."""
+
+    id: str
+    payload: str
+
+
+class S3ObjectMetadata(TypedDict, total=False):
+    """Metadata for writing to S3 (optional)."""
+
+    bucket: str
+    key: str
+    region: str
+    content_type: str
+    tags: dict[str, str]
+
+
 def validate_dict(data: dict[str, Any], required_keys: list[str]) -> bool:
     """Check that all required keys exist in a dictionary.
 
@@ -50,6 +79,7 @@ def validate_dict(data: dict[str, Any], required_keys: list[str]) -> bool:
 
     Returns:
         bool: True if all required keys are present.
+
     """
     return all(key in data for key in required_keys)
 
@@ -63,6 +93,7 @@ def validate_list_of_dicts(data: Any, required_keys: list[str]) -> bool:
 
     Returns:
         bool: True if input is valid list of valid dicts.
+
     """
     if not isinstance(data, list):
         return False
@@ -77,6 +108,7 @@ def is_valid_payload(data: Any) -> bool:
 
     Returns:
         bool: True if input is a dict with 'symbol' and 'timestamp'.
+
     """
     return isinstance(data, dict) and "symbol" in data and "timestamp" in data
 
@@ -89,5 +121,35 @@ def is_valid_batch(data: Any) -> bool:
 
     Returns:
         bool: True if input is a valid list of payloads.
+
     """
     return validate_list_of_dicts(data, ["symbol", "timestamp"])
+
+
+def is_valid_trade_event(data: Any) -> bool:
+    """Validate that input is a well-formed TradeEvent.
+
+    Args:
+        data (Any): Input data to check.
+
+    Returns:
+        bool: True if input is a valid trade event with required fields.
+
+    """
+    if not isinstance(data, dict):
+        return False
+
+    required_fields = ["symbol", "action", "quantity", "price", "timestamp"]
+    if not all(field in data for field in required_fields):
+        return False
+
+    if data["action"] not in ("BUY", "SELL"):
+        return False
+
+    if not isinstance(data["quantity"], (int, float)):
+        return False
+
+    if not isinstance(data["price"], (int, float)):
+        return False
+
+    return True

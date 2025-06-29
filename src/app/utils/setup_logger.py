@@ -7,25 +7,22 @@ environments and redaction of sensitive fields.
 import json
 import logging
 import re
-from typing import Optional
 
 from app import config_shared
 
 
 class StructuredFormatter(logging.Formatter):
-    """
-    Structured log formatter that outputs logs as JSON strings.
-    """
+    """Structured log formatter that outputs logs as JSON strings."""
 
     def format(self, record: logging.LogRecord) -> str:
-        """
-        Format a log record as a JSON string.
+        """Format a log record as a JSON string.
 
         Args:
             record (logging.LogRecord): The log record.
 
         Returns:
             str: A JSON-formatted string of log fields.
+
         """
         log_record = {
             "timestamp": self.formatTime(record, self.datefmt),
@@ -41,21 +38,19 @@ class StructuredFormatter(logging.Formatter):
 
 
 class RedactFilter(logging.Filter):
-    """
-    Logging filter that redacts sensitive information from log messages.
-    """
+    """Logging filter that redacts sensitive information from log messages."""
 
     SENSITIVE_KEYS = {"api_key", "apikey", "token", "secret", "password", "auth"}
 
     def filter(self, record: logging.LogRecord) -> bool:
-        """
-        Filter the log record, redacting sensitive values in the message.
+        """Filter the log record, redacting sensitive values in the message.
 
         Args:
             record (logging.LogRecord): The log record.
 
         Returns:
             bool: Always True to allow the record after modification.
+
         """
         message = record.getMessage()
 
@@ -76,13 +71,12 @@ class RedactFilter(logging.Filter):
 
 
 def setup_logger(
-    name: Optional[str] = None,
+    name: str | None = None,
     level: int = logging.INFO,
     structured: bool = False,
-    redact_sensitive: Optional[bool] = None,
+    redact_sensitive: bool | None = None,
 ) -> logging.Logger:
-    """
-    Configure and return a logger for the application.
+    """Configure and return a logger for the application.
 
     Args:
         name (Optional[str]): Name of the logger.
@@ -92,6 +86,7 @@ def setup_logger(
 
     Returns:
         logging.Logger: A configured logger instance.
+
     """
     logger_name = name or "poller"
     logger = logging.getLogger(logger_name)

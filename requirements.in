@@ -20,3 +20,6 @@ prometheus_client>=0.17.1
 # Security: Fix pip-audit vulnerabilities
 requests>=2.32.4
 urllib3>=2.5.0
+
+# Retry logic
+tenacity>=8.2.2,<9.0.0

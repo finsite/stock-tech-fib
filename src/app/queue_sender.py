@@ -30,13 +30,22 @@ def safe_log_message(data: dict[str, Any]) -> str:
     return "[REDACTED]" if REDACT_SENSITIVE_LOGS else json.dumps(data, ensure_ascii=False)
 
 
-def publish_to_queue(payload: list[dict[str, Any]]) -> None:
+def publish_to_queue(
+    payload: list[dict[str, Any]],
+    queue: str | None = None,
+    exchange: str | None = None,
+) -> None:
     """Publish processed results to RabbitMQ or SQS.
 
     Parameters
     ----------
     payload : list[dict[str, Any]]
         A list of message payloads to publish.
+    queue : str | None
+        Optional override for the queue or routing key.
+    exchange : str | None
+        Optional override for the RabbitMQ exchange.
+
     """
     if not isinstance(payload, list):
         logger.error("❌ Invalid payload type: expected list, got %s", type(payload).__name__)
@@ -46,22 +55,30 @@ def publish_to_queue(payload: list[dict[str, Any]]) -> None:
 
     for message in payload:
         if queue_type == "rabbitmq":
-            _send_to_rabbitmq(message)
+            _send_to_rabbitmq(message, queue, exchange)
         elif queue_type == "sqs":
-            _send_to_sqs(message)
+            _send_to_sqs(message, queue)
         else:
             redacted_type = "[REDACTED]" if REDACT_SENSITIVE_LOGS else queue_type
             logger.error("❌ Invalid QUEUE_TYPE specified. Value may be misconfigured or missing.")
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _send_to_rabbitmq(data: dict[str, Any]) -> None:
+def _send_to_rabbitmq(
+    data: dict[str, Any],
+    routing_key: str | None = None,
+    exchange: str | None = None,
+) -> None:
     """Send a single message to RabbitMQ.
 
     Parameters
     ----------
     data : dict[str, Any]
         The message payload to publish.
+    routing_key : str | None
+        Optional routing key override.
+    exchange : str | None
+        Optional exchange override.
 
     Raises
     ------
@@ -69,6 +86,7 @@ def _send_to_rabbitmq(data: dict[str, Any]) -> None:
         If connection to RabbitMQ fails.
     Exception
         If message publishing fails.
+
     """
     try:
         credentials = pika.PlainCredentials(
@@ -84,9 +102,11 @@ def _send_to_rabbitmq(data: dict[str, Any]) -> None:
 
         with pika.BlockingConnection(parameters) as connection:
             channel = connection.channel()
+            resolved_exchange = exchange or config_shared.get_rabbitmq_exchange()
+            resolved_routing_key = routing_key or config_shared.get_rabbitmq_routing_key()
             channel.basic_publish(
-                exchange=config_shared.get_rabbitmq_exchange(),
-                routing_key=config_shared.get_rabbitmq_routing_key(),
+                exchange=resolved_exchange,
+                routing_key=resolved_routing_key,
                 body=json.dumps(data, ensure_ascii=False),
             )
 
@@ -101,13 +121,18 @@ def _send_to_rabbitmq(data: dict[str, Any]) -> None:
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _send_to_sqs(data: dict[str, Any]) -> None:
+def _send_to_sqs(
+    data: dict[str, Any],
+    queue_name: str | None = None,
+) -> None:
     """Send a single message to AWS SQS.
 
     Parameters
     ----------
     data : dict[str, Any]
         The message payload to publish.
+    queue_name : str | None
+        Optional override of the SQS queue URL.
 
     Raises
     ------
@@ -117,8 +142,9 @@ def _send_to_sqs(data: dict[str, Any]) -> None:
         If credentials are not available.
     Exception
         If message publishing fails.
+
     """
-    sqs_url = config_shared.get_sqs_queue_url()
+    sqs_url = queue_name or config_shared.get_sqs_queue_url()
     region = config_shared.get_sqs_region()
 
     try:

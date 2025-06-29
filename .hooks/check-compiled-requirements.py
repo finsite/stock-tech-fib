@@ -29,6 +29,7 @@ def recompile(in_file: str, out_file: str) -> bool:
 
     Returns:
         True if successful, False otherwise.
+
     """
     print(f"[Fix] Recompiling {in_file} -> {out_file}")
     try:
@@ -52,6 +53,7 @@ def check_file(in_file: str, out_file: str, autofix: bool = True) -> bool:
 
     Returns:
         True if up to date or successfully fixed, False otherwise.
+
     """
     if not Path(in_file).exists():
         return True  # Skip if input file does not exist

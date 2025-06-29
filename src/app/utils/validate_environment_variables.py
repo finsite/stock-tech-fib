@@ -25,6 +25,7 @@ def validate_environment_variables(required_variables: list[str]) -> None:
     Raises:
         TypeError: If the input is not a list of strings.
         OSError: If any required variables are missing.
+
     """
     if not isinstance(required_variables, list) or not all(
         isinstance(var, str) for var in required_variables

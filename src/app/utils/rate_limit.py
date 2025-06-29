@@ -29,8 +29,7 @@ rate_limiter_tokens_remaining = Gauge(
 
 
 def _sanitize_context(context: str) -> str:
-    """
-    Sanitize a context string for use in Prometheus metric labels.
+    """Sanitize a context string for use in Prometheus metric labels.
 
     Replaces unsafe characters and truncates the string.
 
@@ -39,33 +38,32 @@ def _sanitize_context(context: str) -> str:
 
     Returns:
         str: Sanitized context label.
+
     """
     return re.sub(r"[^\w\-:.]", "_", context)[:64]
 
 
 def _hash_context(context: str) -> str:
-    """
-    Hash the context string to produce a short identifier for logs.
+    """Hash the context string to produce a short identifier for logs.
 
     Args:
         context (str): Original context string.
 
     Returns:
         str: Short SHA-256 hash.
+
     """
     return hashlib.sha256(context.encode()).hexdigest()[:8]
 
 
 class RateLimiter:
-    """
-    Thread-safe token bucket rate limiter with Prometheus integration.
+    """Thread-safe token bucket rate limiter with Prometheus integration.
 
     Allows a maximum number of requests in a defined time window.
     """
 
     def __init__(self, max_requests: int, time_window: float) -> None:
-        """
-        Initialize a new RateLimiter instance.
+        """Initialize a new RateLimiter instance.
 
         Args:
             max_requests (int): Maximum number of requests allowed.
@@ -73,6 +71,7 @@ class RateLimiter:
 
         Raises:
             ValueError: If max_requests or time_window is non-positive.
+
         """
         if max_requests <= 0:
             raise ValueError("max_requests must be greater than 0")
@@ -86,8 +85,7 @@ class RateLimiter:
         self._lock = threading.Lock()
 
     def acquire(self, context: str = "RateLimiter") -> None:
-        """
-        Acquire a token, blocking if rate limit is exceeded.
+        """Acquire a token, blocking if rate limit is exceeded.
 
         Replenishes tokens based on elapsed time. Updates Prometheus metrics
         and logs token state per context.
@@ -97,6 +95,7 @@ class RateLimiter:
 
         Returns:
             None
+
         """
         context_label = _sanitize_context(context)
         context_id = _hash_context(context)

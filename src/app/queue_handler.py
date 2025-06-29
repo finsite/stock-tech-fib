@@ -31,6 +31,7 @@ def consume_messages(callback: Callable[[list[dict]], None]) -> None:
 
     Args:
         callback: A function that takes a list of messages and processes them.
+
     """
     signal.signal(signal.SIGINT, _graceful_shutdown)
     signal.signal(signal.SIGTERM, _graceful_shutdown)
@@ -56,6 +57,7 @@ def _start_rabbitmq_listener(callback: Callable[[list[dict]], None]) -> None:
 
     Args:
         callback: Function to process received messages.
+
     """
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
@@ -104,6 +106,7 @@ def _start_sqs_listener(callback: Callable[[list[dict]], None]) -> None:
 
     Args:
         callback: Function to process a batch of messages.
+
     """
     sqs = boto3.client("sqs", region_name=config.get_sqs_region())
     queue_url = config.get_sqs_queue_url()

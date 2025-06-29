@@ -1,11 +1,9 @@
-"""
-Unit tests for config.py
-"""
+"""Unit tests for config.py."""
 
 import unittest
 from unittest.mock import patch
 
-from app import config
+from app import config_shared as config
 
 
 class TestConfig(unittest.TestCase):

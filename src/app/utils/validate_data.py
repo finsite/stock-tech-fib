@@ -13,8 +13,7 @@ logger = setup_logger(__name__)
 
 
 def validate_data(data: dict[str, Any]) -> bool:
-    """
-    Validate input stock data against expected schema.
+    """Validate input stock data against expected schema.
 
     Checks presence of required keys and validates each field.
 
@@ -26,6 +25,7 @@ def validate_data(data: dict[str, Any]) -> bool:
 
     Raises:
         TypeError: If the input is not a dictionary.
+
     """
     required_keys: set[str] = {"symbol", "price", "volume", "timestamp"}
 
@@ -60,14 +60,14 @@ def validate_data(data: dict[str, Any]) -> bool:
 
 
 def validate_message_schema(message: Any) -> bool:
-    """
-    Validate a message for required structure: 'symbol', 'timestamp', and 'data' (dict).
+    """Validate a message for required structure: 'symbol', 'timestamp', and 'data' (dict).
 
     Args:
         message (Any): The message to validate.
 
     Returns:
         bool: True if valid structure, False otherwise.
+
     """
     if not isinstance(message, dict):
         logger.debug("Invalid message type: expected dict.")
@@ -82,14 +82,14 @@ def validate_message_schema(message: Any) -> bool:
 
 
 def _validate_symbol(symbol: Any) -> bool:
-    """
-    Validate that the 'symbol' is a non-empty alphabetic string.
+    """Validate that the 'symbol' is a non-empty alphabetic string.
 
     Args:
         symbol (Any): The symbol value to validate.
 
     Returns:
         bool: True if valid, False otherwise.
+
     """
     if not isinstance(symbol, str) or not symbol.isalpha():
         logger.error("❌ Invalid symbol format: %s", symbol)
@@ -98,14 +98,14 @@ def _validate_symbol(symbol: Any) -> bool:
 
 
 def _validate_price(price: Any) -> bool:
-    """
-    Validate that the 'price' is a non-negative number.
+    """Validate that the 'price' is a non-negative number.
 
     Args:
         price (Any): The price value to validate.
 
     Returns:
         bool: True if valid, False otherwise.
+
     """
     if not isinstance(price, (int, float)) or price < 0:
         logger.error("❌ Invalid price: %s", price)
@@ -114,14 +114,14 @@ def _validate_price(price: Any) -> bool:
 
 
 def _validate_volume(volume: Any) -> bool:
-    """
-    Validate that the 'volume' is a non-negative integer.
+    """Validate that the 'volume' is a non-negative integer.
 
     Args:
         volume (Any): The volume value to validate.
 
     Returns:
         bool: True if valid, False otherwise.
+
     """
     if not isinstance(volume, int) or volume < 0:
         logger.error("❌ Invalid volume: %s", volume)
@@ -130,16 +130,52 @@ def _validate_volume(volume: Any) -> bool:
 
 
 def _validate_timestamp(timestamp: Any) -> bool:
-    """
-    Validate that the 'timestamp' is a string.
+    """Validate that the 'timestamp' is a string.
 
     Args:
         timestamp (Any): The timestamp value to validate.
 
     Returns:
         bool: True if valid, False otherwise.
+
     """
     if not isinstance(timestamp, str):
         logger.error("❌ Invalid timestamp: %s", timestamp)
         return False
+    return True
+
+
+def validate_trade_event(data: dict[str, Any]) -> bool:
+    """Validate that a trade event dictionary contains essential fields.
+
+    Args:
+        data (dict[str, Any]): The trade event to validate.
+
+    Returns:
+        bool: True if trade event is valid, False otherwise.
+
+    """
+    if not isinstance(data, dict):
+        logger.debug("Trade event is not a dictionary.")
+        return False
+
+    required_keys = {"symbol", "action", "quantity", "price", "timestamp"}
+    missing_keys = required_keys - data.keys()
+    if missing_keys:
+        logger.warning("⚠️ Trade event missing required keys: %s", missing_keys)
+        return False
+
+    if not _validate_symbol(data["symbol"]):
+        return False
+    if data["action"] not in {"BUY", "SELL"}:
+        logger.warning("⚠️ Invalid trade action: %s", data["action"])
+        return False
+    if not isinstance(data["quantity"], (int, float)) or data["quantity"] <= 0:
+        logger.warning("⚠️ Invalid quantity: %s", data["quantity"])
+        return False
+    if not _validate_price(data["price"]):
+        return False
+    if not _validate_timestamp(data["timestamp"]):
+        return False
+
     return True

@@ -1,6 +1,4 @@
-"""
-Unit tests for queue_handler.py
-"""
+"""Unit tests for queue_handler.py."""
 
 import unittest
 from unittest.mock import MagicMock, patch

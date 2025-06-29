@@ -14,8 +14,7 @@ logger = setup_logger(__name__)
 
 
 def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
-    """
-    Perform a GET request to the specified URL with a timeout.
+    """Perform a GET request to the specified URL with a timeout.
 
     Args:
         url (str): The URL to request.
@@ -26,6 +25,7 @@ def request_with_timeout(url: str, timeout: int = 10) -> dict[str, Any] | None:
 
     Raises:
         ValueError: If the URL is empty.
+
     """
     if not url:
         logger.error("❌ URL cannot be empty.")

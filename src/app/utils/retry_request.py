@@ -13,8 +13,7 @@ logger = setup_logger(__name__)
 
 
 def retry_request(func: Callable[[], Any], *, max_retries: int = 3, delay_seconds: int = 5) -> Any:
-    """
-    Retry a function if it raises an exception.
+    """Retry a function if it raises an exception.
 
     Retries a callable up to `max_retries` times, sleeping `delay_seconds`
     between attempts. Raises the last encountered exception if all retries fail.
@@ -30,6 +29,7 @@ def retry_request(func: Callable[[], Any], *, max_retries: int = 3, delay_second
     Raises:
         ValueError: If `func` is None.
         Exception: The last raised exception from the callable.
+
     """
     if func is None:
         raise ValueError("The function to be retried cannot be None.")
