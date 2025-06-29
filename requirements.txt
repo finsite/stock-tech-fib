@@ -4,13 +4,13 @@
 #
 #    pip-compile 'D:\git\stock-tech-fib\requirements.in'
 #
-boto3==1.38.36
+boto3==1.38.46
     # via -r D:\git\stock-tech-fib\requirements.in
-botocore==1.38.36
+botocore==1.38.46
     # via
     #   boto3
     #   s3transfer
-certifi==2025.4.26
+certifi==2025.6.15
     # via requests
 charset-normalizer==3.4.2
     # via requests
@@ -62,7 +62,7 @@ python-dateutil==2.9.0.post0
     #   botocore
     #   matplotlib
     #   pandas
-python-dotenv==1.1.0
+python-dotenv==1.1.1
     # via -r D:\git\stock-tech-fib\requirements.in
 pytz==2025.2
     # via pandas
@@ -72,7 +72,7 @@ requests==2.32.4
     #   hvac
 s3transfer==0.13.0
     # via boto3
-scipy==1.15.3
+scipy==1.16.0
     # via -r D:\git\stock-tech-fib\requirements.in
 six==1.17.0
     # via python-dateutil
