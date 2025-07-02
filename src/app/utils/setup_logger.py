@@ -5,12 +5,11 @@ from typing import Optional
 
 
 def setup_logger(
-    name: Optional[str] = None,
+    name: str | None = None,
     level: int = logging.INFO,
     structured: bool = False,
 ) -> Logger:
-    """
-    Configure and return a logger with optional redaction and structured logging.
+    """Configure and return a logger with optional redaction and structured logging.
 
     Args:
         name (Optional[str]): Logger name.
@@ -19,6 +18,7 @@ def setup_logger(
 
     Returns:
         Logger: Configured logger instance.
+
     """
     logger = logging.getLogger(name)
     if logger.handlers:
@@ -27,13 +27,13 @@ def setup_logger(
     # Delay import to avoid circular dependency
     try:
         from app import config_shared
+
         redact = config_shared.get_redact_sensitive_logs()
     except Exception:
         redact = False
 
     formatter = logging.Formatter(
-        fmt="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"
+        fmt="%(asctime)s [%(levelname)s] %(name)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
     )
 
     handler = logging.StreamHandler(sys.stdout)

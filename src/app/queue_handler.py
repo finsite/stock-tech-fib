@@ -1,4 +1,9 @@
-"""Generic queue handler for RabbitMQ or SQS with batching and retries."""
+"""Generic queue handler for RabbitMQ or SQS with batching and retries.
+
+This module supports consuming messages from either RabbitMQ or Amazon SQS.
+It provides batching, retry logic, graceful shutdown handling, and clean logging
+with optional redaction of sensitive values.
+"""
 
 import json
 import signal
@@ -22,15 +27,29 @@ REDACT_SENSITIVE_LOGS = config.get_config_value("REDACT_SENSITIVE_LOGS", "true")
 
 
 def safe_log(msg: str) -> str:
-    """Standardized redacted log message."""
+    """Standardized redacted log message helper.
+
+    Args:
+        msg (str): Message to redact if sensitive logging is enabled.
+
+    Returns:
+        str: Either the original message or a redacted form.
+
+    """
     return f"{msg}: [REDACTED]" if REDACT_SENSITIVE_LOGS else msg
 
 
 def consume_messages(callback: Callable[[list[dict]], None]) -> None:
-    """Start the queue listener for the configured queue type.
+    """Start the message consumer using the configured QUEUE_TYPE.
+
+    This method determines whether to use RabbitMQ or SQS and invokes the
+    appropriate listener. It also registers signal handlers for graceful shutdown.
 
     Args:
-        callback: A function that takes a list of messages and processes them.
+        callback (Callable[[list[dict]], None]): Processing function for a batch of messages.
+
+    Raises:
+        ValueError: If QUEUE_TYPE is not supported.
 
     """
     signal.signal(signal.SIGINT, _graceful_shutdown)
@@ -46,17 +65,23 @@ def consume_messages(callback: Callable[[list[dict]], None]) -> None:
 
 
 def _graceful_shutdown(signum, frame) -> None:
-    """Handle shutdown signals to terminate listeners cleanly."""
+    """Gracefully signal shutdown of the consumer loop.
+
+    Args:
+        signum: Signal number.
+        frame: Current stack frame.
+
+    """
     logger.info("🛑 Shutdown signal received, stopping listener...")
     shutdown_event.set()
 
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=10))
 def _start_rabbitmq_listener(callback: Callable[[list[dict]], None]) -> None:
-    """Connect to RabbitMQ and start consuming messages.
+    """Connect to RabbitMQ and start consuming messages from the configured queue.
 
     Args:
-        callback: Function to process received messages.
+        callback (Callable[[list[dict]], None]): Handler function for batches of messages.
 
     """
     connection = pika.BlockingConnection(
@@ -74,6 +99,15 @@ def _start_rabbitmq_listener(callback: Callable[[list[dict]], None]) -> None:
     channel.queue_declare(queue=queue_name, durable=True)
 
     def on_message(ch: BlockingChannel, method, properties, body: bytes) -> None:
+        """Callback invoked for each incoming RabbitMQ message.
+
+        Args:
+            ch (BlockingChannel): The channel object.
+            method: Delivery method.
+            properties: Message properties.
+            body (bytes): Raw message body.
+
+        """
         if shutdown_event.is_set():
             ch.stop_consuming()
             return
@@ -105,7 +139,7 @@ def _start_sqs_listener(callback: Callable[[list[dict]], None]) -> None:
     """Connect to AWS SQS and start polling messages.
 
     Args:
-        callback: Function to process a batch of messages.
+        callback (Callable[[list[dict]], None]): Handler function for a batch of messages.
 
     """
     sqs = boto3.client("sqs", region_name=config.get_sqs_region())

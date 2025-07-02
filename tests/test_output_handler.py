@@ -1,18 +1,16 @@
 """Unit tests for output_handler.py"""
 
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from app.output_handler import send_to_output, output_handler
+from app.output_handler import output_handler, send_to_output
 
 
 class TestSendToOutput(unittest.TestCase):
     @patch("app.output_handler.publish_to_queue")
     @patch("app.output_handler.get_config_value", return_value="queue")
     @patch("app.output_handler.config_shared.get_output_modes", return_value=["queue"])
-    def test_send_to_output_queue(
-        self, mock_modes, mock_get_config_value, mock_publish
-    ):
+    def test_send_to_output_queue(self, mock_modes, mock_get_config_value, mock_publish):
         data = [{"text": "test message"}]
         send_to_output(data)
         mock_publish.assert_called_once_with(data)
@@ -48,8 +46,12 @@ class TestSendToOutput(unittest.TestCase):
 
 
 class TestPaperTradeMethods(unittest.TestCase):
-    @patch("app.output_handler.config_shared.get_paper_trading_queue_name", return_value="paper-queue")
-    @patch("app.output_handler.config_shared.get_paper_trading_exchange", return_value="paper-exchange")
+    @patch(
+        "app.output_handler.config_shared.get_paper_trading_queue_name", return_value="paper-queue"
+    )
+    @patch(
+        "app.output_handler.config_shared.get_paper_trading_exchange", return_value="paper-exchange"
+    )
     @patch("app.output_handler.publish_to_queue")
     def test_output_paper_trade_to_queue(self, mock_publish, *_):
         data = {"symbol": "AAPL", "price": 123.45}
@@ -60,7 +62,9 @@ class TestPaperTradeMethods(unittest.TestCase):
         data = {"symbol": "AAPL"}
         with patch("app.output_handler.logger") as mock_logger:
             output_handler._output_paper_trade_to_database(data)
-            mock_logger.warning.assert_called_with("⚠️ Paper trading database integration not implemented.")
+            mock_logger.warning.assert_called_with(
+                "⚠️ Paper trading database integration not implemented."
+            )
 
 
 if __name__ == "__main__":

@@ -37,6 +37,8 @@ ENV PYTHONPATH="/app"
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
+EXPOSE 8000
+
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
     CMD pgrep -f "app.main" > /dev/null || exit 1
 
