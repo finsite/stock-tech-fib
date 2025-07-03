@@ -8,47 +8,9 @@ from functools import lru_cache
 
 from app.utils.config_utils import get_config_bool, get_config_value
 from app.utils.types import OutputMode
-from app.utils.vault_client import VaultClient, get_secret_or_env
+from app.utils.vault_client import get_secret_or_env
 
-_vault = VaultClient()
-
-# @lru_cache
-# def get_config_value(key: str, default: Optional[str] = None) -> str:
-#     """
-#     Retrieve a configuration value from Vault, environment variable, or fallback.
-
-#     Args:
-#         key (str): The configuration key to retrieve.
-#         default (Optional[str]): Fallback value if the key is not found.
-
-#     Returns:
-#         str: The resolved configuration value.
-
-#     Raises:
-#         ValueError: If no value is found and no default is provided.
-#     """
-#     val = _vault.get(key, os.getenv(key))
-#     if val is None:
-#         if default is not None:
-#             return str(default)
-#         raise ValueError(f"❌ Missing required config for key: {key}")
-#     return str(val)
-
-
-# @lru_cache
-# def get_config_bool(key: str, default: bool = False) -> bool:
-#     """
-#     Retrieve a boolean configuration value with support for multiple true-like values.
-
-#     Args:
-#         key (str): The configuration key to retrieve.
-#         default (bool): Default value if the key is not found.
-
-#     Returns:
-#         bool: The resolved boolean configuration value.
-#     """
-#     val = get_config_value(key, str(default)).strip().lower()
-#     return val in {"1", "true", "yes", "on"}
+# _vault = VaultClient()
 
 
 @lru_cache
@@ -1371,3 +1333,136 @@ def get_healthcheck_port() -> int:
 
     """
     return int(get_config_value("HEALTHCHECK_PORT", "8081"))
+
+
+@lru_cache
+def get_metrics_enabled() -> bool:
+    """Determine whether the Prometheus metrics server should be started.
+
+    This checks the value of METRICS_ENABLED from Vault or the environment.
+    Accepts truthy values: "1", "true", "yes" (case-insensitive).
+
+    Returns:
+        bool: True if metrics are enabled, otherwise False.
+
+    """
+    val = get_config_value("METRICS_ENABLED", "true").lower()
+    return val in ("1", "true", "yes")
+
+
+@lru_cache
+def get_metrics_port() -> int:
+    """Retrieve the TCP port number on which the Prometheus metrics server should listen.
+
+    Returns:
+        int: Port number (default: 8000).
+
+    Raises:
+        ValueError: If METRICS_PORT is not a valid integer.
+
+    """
+    port_str = get_config_value("METRICS_PORT", "8000")
+    try:
+        return int(port_str)
+    except ValueError:
+        raise ValueError(f"❌ Invalid METRICS_PORT value: '{port_str}' must be an integer.")
+
+
+@lru_cache
+def get_metrics_bind_address() -> str:
+    """Get the network address to bind the metrics server.
+
+    Returns:
+        str: Bind address (default: "0.0.0.0").
+
+    """
+    return get_config_value("METRICS_BIND_ADDRESS", "0.0.0.0")
+
+
+@lru_cache
+def get_config_bool(key: str, default: bool = False) -> bool:
+    """Retrieve a boolean configuration value from Vault or environment.
+
+    Interprets common truthy values ("1", "true", "yes", "on") as True.
+    Uses a string fallback if the key is not found.
+
+    Args:
+        key (str): The configuration key to retrieve.
+        default (bool): The fallback value if key is missing or invalid.
+
+    Returns:
+        bool: Boolean value for the requested configuration key.
+
+    """
+    val: str = get_config_value(key, str(default)).lower()
+    return val in ("1", "true", "yes", "on")
+
+
+@lru_cache
+def get_output_modes() -> List[str]:
+    """Retrieve a list of enabled output modes.
+
+    This reads the OUTPUT_MODES config key, splits it by commas, and returns
+    a lowercase list of modes like "s3", "rest", or "database".
+
+    Returns:
+        List[str]: Enabled output modes.
+
+    """
+    modes: str = get_config_value("OUTPUT_MODES", "")
+    return [m.strip().lower() for m in modes.split(",") if m.strip()]
+
+
+@lru_cache
+def get_rest_output_url() -> str:
+    """Get the REST endpoint URL for output dispatch.
+
+    Returns:
+        str: Fully qualified REST API URL.
+
+    """
+    return get_config_value("REST_OUTPUT_URL")
+
+
+@lru_cache
+def get_s3_output_bucket() -> str:
+    """Get the name of the S3 bucket used for output dispatch.
+
+    Returns:
+        str: S3 bucket name.
+
+    """
+    return get_config_value("S3_OUTPUT_BUCKET")
+
+
+@lru_cache
+def get_s3_output_prefix() -> str:
+    """Get the object key prefix used for S3 output files.
+
+    Returns:
+        str: S3 key prefix (can be empty).
+
+    """
+    return get_config_value("S3_OUTPUT_PREFIX", "")
+
+
+@lru_cache
+def get_database_output_url() -> str:
+    """Get the SQLAlchemy-compatible connection string for output database.
+
+    Returns:
+        str: Database URL (e.g., postgresql://user:pass@host/db).
+
+    """
+    return get_config_value("DATABASE_OUTPUT_URL")
+
+
+@lru_cache
+def get_database_insert_sql() -> str:
+    """Get the raw SQL INSERT statement template for database output.
+
+    Returns:
+        str: SQL insert statement.
+
+    """
+    return get_config_value("DATABASE_INSERT_SQL")

@@ -10,12 +10,12 @@ The port and enablement flag are controlled via environment variables:
 """
 
 import os
+
 from prometheus_client import start_http_server
 
 
 def start_metrics_server() -> None:
-    """
-    Conditionally start the Prometheus metrics HTTP server.
+    """Conditionally start the Prometheus metrics HTTP server.
 
     This starts a simple HTTP server to expose metrics from the global
     Prometheus client registry on the given port. If the environment
@@ -31,6 +31,7 @@ def start_metrics_server() -> None:
 
     Example:
         start_metrics_server()  # Will start if METRICS_ENABLED is true
+
     """
     enabled = os.getenv("METRICS_ENABLED", "true").lower()
     if enabled not in ("1", "true", "yes"):
