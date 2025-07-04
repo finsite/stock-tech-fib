@@ -4,98 +4,100 @@ Supports KV v2 secrets engine and includes environment-aware namespace handling.
 """
 
 import os
-import time
+from functools import lru_cache
+from typing import Any, Optional
 
 import hvac
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 from app.utils.setup_logger import setup_logger
 
-__all__ = ["VaultClient", "get_secret_or_env"]
-
 logger = setup_logger(__name__)
+
+VAULT_ADDR: str = os.getenv("VAULT_ADDR", "http://127.0.0.1:8200")
+VAULT_ROLE_ID: str | None = os.getenv("VAULT_ROLE_ID")
+VAULT_SECRET_ID: str | None = os.getenv("VAULT_SECRET_ID")
+POLLER_NAME: str | None = os.getenv("POLLER_NAME")
+ENVIRONMENT: str = os.getenv("ENVIRONMENT", "dev")
 
 
 class VaultClient:
-    """Handles interaction with HashiCorp Vault using AppRole authentication."""
+    """VaultClient handles authentication and secret retrieval from HashiCorp Vault using AppRole."""
 
     def __init__(self) -> None:
-        """Initialize the VaultClient using environment variables and authenticate."""
-        self.vault_addr: str = os.getenv("VAULT_ADDR", "http://127.0.0.1:8200")
-        self.role_id: str | None = os.getenv("VAULT_ROLE_ID")
-        self.secret_id: str | None = os.getenv("VAULT_SECRET_ID")
-        self.poller: str = os.getenv("POLLER_NAME", "stock_data_poller")
-        self.environment: str = os.getenv("ENVIRONMENT", "dev")
-        self.client: hvac.Client = hvac.Client(url=self.vault_addr)
-        self.secrets: dict[str, str] = {}
+        """Initialize the Vault client and authenticate using AppRole.
 
-        self._authenticate()
-        self._load_secrets()
-
-    def _authenticate(self) -> None:
-        """Authenticate to Vault using AppRole credentials from the environment."""
-        if not self.role_id or not self.secret_id:
-            logger.warning("🔐 VAULT_ROLE_ID or VAULT_SECRET_ID not set — skipping Vault load.")
-            return
-
-        for attempt in range(1, 4):
-            try:
-                login = self.client.auth.approle.login(
-                    role_id=self.role_id,
-                    secret_id=self.secret_id,
-                )
-                if login and login.get("auth"):
-                    self.client.token = login["auth"]["client_token"]
-                    logger.info(f"🔓 Authenticated to Vault as {self.poller}.")
-                    return
-                logger.warning("⚠️ Vault login response missing 'auth'.")
-            except Exception as e:
-                logger.warning(f"⚠️ Vault login attempt {attempt} failed: %s", e)
-                time.sleep(2)
-
-        logger.error("❌ Failed to authenticate to Vault after 3 attempts.")
-
-    def _load_secrets(self) -> None:
-        """Load secrets from Vault's KV v2 engine using the configured path."""
-        try:
-            path = f"{self.poller}/{self.environment}"
-            response = self.client.secrets.kv.v2.read_secret_version(path=path)
-            self.secrets = response["data"]["data"]
-            logger.info(f"📦 Loaded {len(self.secrets)} secrets from Vault.")
-        except Exception as e:
-            logger.warning("❌ Failed to load secrets from Vault: %s", e)
-            self.secrets = {}
-
-    def get(self, key: str, default: str | None = None) -> str | None:
-        """Retrieve a secret by key.
-
-        Args:
-            key (str): The secret key to retrieve.
-            default (str | None): The fallback value if key is not found.
-
-        Returns:
-            str | None: The secret value or the default.
+        Raises:
+            RuntimeError: If authentication fails or no token is returned.
 
         """
-        return self.secrets.get(key, default)
+        self.client: hvac.Client = hvac.Client(url=VAULT_ADDR)
+        self._authenticate()
+
+    @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+    def _authenticate(self) -> None:
+        """Authenticate to Vault using AppRole credentials.
+
+        Raises:
+            RuntimeError: If authentication response is missing a token.
+
+        """
+        if VAULT_ROLE_ID and VAULT_SECRET_ID:
+            try:
+                response: dict[str, Any] = self.client.auth_approle(VAULT_ROLE_ID, VAULT_SECRET_ID)
+                if not response["auth"].get("client_token"):
+                    raise RuntimeError("❌ Failed to retrieve Vault token from response.")
+                logger.info("🔐 Vault AppRole authentication successful.")
+            except Exception as e:
+                logger.warning("⚠️ Vault authentication failed: %s", str(e))
+                raise
+        else:
+            logger.warning("⚠️ VAULT_ROLE_ID or VAULT_SECRET_ID not provided. Vault auth skipped.")
+
+    @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+    def get(self, key: str, fallback: str | None = None) -> str | None:
+        """Retrieve a value from Vault for the given key.
+
+        Args:
+            key (str): The key to retrieve from Vault.
+            fallback (Optional[str]): Value to return if Vault lookup fails.
+
+        Returns:
+            Optional[str]: The retrieved value or fallback if not found.
+
+        """
+        if not POLLER_NAME:
+            logger.warning("⚠️ POLLER_NAME not set. Skipping Vault lookup for key: %s", key)
+            return fallback
+
+        secret_path: str = f"secret/data/{POLLER_NAME}/{ENVIRONMENT}"
+
+        try:
+            secret: dict[str, Any] = self.client.secrets.kv.v2.read_secret_version(
+                path=f"{POLLER_NAME}/{ENVIRONMENT}"
+            )
+            value: Any | None = secret["data"]["data"].get(key)
+            if value is not None:
+                logger.debug("🔑 Vault value retrieved for key: %s", key)
+                return str(value)
+            logger.warning("⚠️ Key '%s' not found in Vault path '%s'.", key, secret_path)
+        except Exception as e:
+            logger.warning("⚠️ Failed to retrieve key '%s' from Vault: %s", key, str(e))
+
+        return fallback
 
 
-# Singleton Vault client
-_vault_client: VaultClient | None = None
-
-
-def get_secret_or_env(key: str, default: str = "") -> str:
-    """Return the secret from Vault or fall back to environment variable.
+@lru_cache
+def get_secret_or_env(key: str, default: str | None = None) -> str | None:
+    """Retrieve a secret value from Vault or fallback to environment variable or default.
 
     Args:
-        key (str): The secret key or environment variable name.
-        default (str): Fallback value if not found.
+        key (str): The secret key to retrieve.
+        default (Optional[str]): Default value to return if key not found in Vault or env.
 
     Returns:
-        str: The resolved value.
+        Optional[str]: Retrieved value or fallback.
 
     """
-    global _vault_client
-    if _vault_client is None:
-        _vault_client = VaultClient()
-
-    return _vault_client.get(key, os.getenv(key, default)) or default
+    vault_client: VaultClient = VaultClient()
+    return vault_client.get(key, fallback=os.getenv(key, default))
