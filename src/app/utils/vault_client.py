@@ -5,7 +5,7 @@ Supports KV v2 secrets engine and includes environment-aware namespace handling.
 
 import os
 from functools import lru_cache
-from typing import Any, Optional
+from typing import Any
 
 import hvac
 from tenacity import retry, stop_after_attempt, wait_fixed
@@ -88,16 +88,22 @@ class VaultClient:
 
 
 @lru_cache
-def get_secret_or_env(key: str, default: str | None = None) -> str | None:
-    """Retrieve a secret value from Vault or fallback to environment variable or default.
+def get_config_value_cached(key: str, default: str | None = None) -> str:
+    """Retrieve a configuration value from Vault, environment variable, or fallback,
+    with caching.
 
     Args:
-        key (str): The secret key to retrieve.
-        default (Optional[str]): Default value to return if key not found in Vault or env.
+        key (str): The config key to look up.
+        default (Optional[str]): Fallback if not found.
 
     Returns:
-        Optional[str]: Retrieved value or fallback.
+        str: The resolved config value.
+
+    Raises:
+        ValueError: If no value is found and no default is provided.
 
     """
-    vault_client: VaultClient = VaultClient()
-    return vault_client.get(key, fallback=os.getenv(key, default))
+    val = VaultClient().get(key, fallback=os.getenv(key, default))
+    if val is None:
+        raise ValueError(f"❌ Missing required config value for key: {key}")
+    return str(val)

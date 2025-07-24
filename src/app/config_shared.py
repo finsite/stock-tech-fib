@@ -5,83 +5,81 @@ from Vault, environment variables, or defaults — in that order.
 """
 
 from functools import lru_cache
+from typing import List, Tuple
 
-from app.utils.config_utils import get_config_bool, get_config_value
+from app.utils.config_utils import get_config_bool
 from app.utils.types import OutputMode
-from app.utils.vault_client import get_secret_or_env
-
-# _vault = VaultClient()
-
-
-@lru_cache
-def get_dry_run_mode() -> bool:
-    """Return whether the application is running in dry-run mode.
-
-    Returns:
-        bool: True if DRY_RUN is set to a truthy value.
-
-    """
-    return get_config_bool("DRY_RUN", False)
+from app.utils.vault_client import get_config_value_cached
 
 
 @lru_cache
 def get_environment() -> str:
-    """Return the runtime environment.
+    """Retrieve the runtime environment.
 
     Returns:
-        str: The environment name, e.g., 'dev', 'staging', or 'prod'.
+        str: The environment name (e.g., 'dev', 'staging', 'prod').
+
+    Defaults to 'dev' if not set.
 
     """
-    return get_config_value("ENVIRONMENT", "dev")
+    return get_config_value_cached("ENVIRONMENT", "dev")
 
 
 @lru_cache
 def get_poller_name() -> str:
-    """Return the unique name identifying this poller.
+    """Retrieve the unique name identifying this poller.
 
     Returns:
         str: Poller name used in logs and queue bindings.
 
+    Defaults to 'replace_me_poller_name' if not set.
+
     """
-    return get_config_value("POLLER_NAME", "replace_me_poller_name")
+    return get_config_value_cached("POLLER_NAME", "replace_me_poller_name")
 
 
 @lru_cache
 def get_polling_interval() -> int:
-    """Return the interval in seconds between polling operations.
+    """Retrieve the interval in seconds between polling operations.
 
     Returns:
         int: Number of seconds between poll cycles.
 
+    Defaults to 60 if not set.
+
     """
-    return int(get_config_value("POLLING_INTERVAL", "60"))
+    return int(get_config_value_cached("POLLING_INTERVAL", "60"))
 
 
 @lru_cache
 def get_batch_size() -> int:
-    """Return the number of items to process in a single batch.
+    """Retrieve the number of items to process in a single batch.
 
     Returns:
         int: Batch size for processing messages.
 
+    Defaults to 10 if not set.
+
     """
-    return int(get_config_value("BATCH_SIZE", "10"))
+    return int(get_config_value_cached("BATCH_SIZE", "10"))
 
 
 @lru_cache
 def get_rate_limit() -> int:
-    """Return the rate limit in requests per second.
+    """Retrieve the rate limit in requests per second.
 
     Returns:
         int: Requests per second (0 = unlimited).
 
+    Defaults to 0 if not set.
+
     """
-    return int(get_config_value("RATE_LIMIT", "0"))
+    return int(get_config_value_cached("RATE_LIMIT", "0"))
 
 
 @lru_cache
 def get_output_mode() -> OutputMode:
-    """Return the configured output mode (e.g., 'queue', 'db', 's3').
+    """Retrieve the configured output mode (e.g., 'queue', 'db', 's3').
 
     Returns:
         OutputMode: Enum representing the output mode.
@@ -89,649 +87,1011 @@ def get_output_mode() -> OutputMode:
     Raises:
         ValueError: If the mode is not a valid OutputMode.
 
+    Defaults to 'queue' if not set.
+
     """
-    raw_value = get_config_value("OUTPUT_MODE", "queue").lower()
+    raw_value = get_config_value_cached("OUTPUT_MODE", "queue").lower()
     try:
         return OutputMode(raw_value)
     except ValueError:
         raise ValueError(
-            f"❌ Invalid OUTPUT_MODE: '{raw_value}'. Must be one of: {[m.value for m in OutputMode]}"
+            f"Invalid OUTPUT_MODE: '{raw_value}'. Must be one of: {[m.value for m in OutputMode]}"
         )
 
 
 @lru_cache
-def get_output_modes() -> list[OutputMode]:
-    """Return a list of enabled output modes (e.g., [OutputMode.QUEUE, OutputMode.LOG]).
-
-    Returns:
-        list[OutputMode]: Enum values parsed from comma-separated config.
-
-    """
-    raw = get_config_value("OUTPUT_MODES", get_output_mode().value)
-    return [OutputMode(m.strip().lower()) for m in raw.split(",") if m.strip()]
-
-
-@lru_cache
 def get_queue_type() -> str:
-    """Return the type of message queue in use.
+    """Retrieve the type of message queue in use.
 
     Returns:
         str: Queue type (e.g., 'rabbitmq', 'sqs').
 
+    Defaults to 'rabbitmq' if not set.
+
     """
-    return get_config_value("QUEUE_TYPE", "rabbitmq")
+    return get_config_value_cached("QUEUE_TYPE", "rabbitmq")
 
 
 @lru_cache
 def get_rabbitmq_host() -> str:
-    """Return the hostname of the RabbitMQ broker.
+    """Retrieve the hostname of the RabbitMQ broker.
 
     Returns:
         str: Hostname of the RabbitMQ server.
 
+    Defaults to 'localhost' if not set.
+
     """
-    return get_config_value("RABBITMQ_HOST", "localhost")
+    return get_config_value_cached("RABBITMQ_HOST", "localhost")
 
 
 @lru_cache
 def get_rabbitmq_port() -> int:
-    """Return the port number for RabbitMQ.
+    """Retrieve the port number for RabbitMQ.
 
     Returns:
         int: Port used to connect to RabbitMQ.
 
+    Defaults to 5672 if not set.
+
     """
-    return int(get_config_value("RABBITMQ_PORT", "5672"))
+    return int(get_config_value_cached("RABBITMQ_PORT", "5672"))
 
 
 @lru_cache
 def get_rabbitmq_vhost() -> str:
-    """Return the RabbitMQ virtual host.
+    """Retrieve the RabbitMQ virtual host.
 
     Returns:
         str: Virtual host name.
 
     Raises:
-        ValueError: If the virtual host is not configured.
+        ValueError: If RABBITMQ_VHOST is not configured.
 
     """
-    vhost = get_config_value("RABBITMQ_VHOST")
+    vhost = get_config_value_cached("RABBITMQ_VHOST")
     if not vhost:
-        raise ValueError("❌ Missing required config: RABBITMQ_VHOST must be set.")
+        raise ValueError("Missing required config: RABBITMQ_VHOST must be set.")
     return vhost
 
 
 @lru_cache
 def get_rabbitmq_user() -> str:
-    """Return the RabbitMQ username.
+    """Retrieve the RabbitMQ username.
 
     Returns:
         str: Username for authenticating to RabbitMQ.
 
+    Defaults to empty string if not set.
+
     """
-    return get_config_value("RABBITMQ_USER", "")
+    return get_config_value_cached("RABBITMQ_USER", "")
 
 
 @lru_cache
 def get_rabbitmq_password() -> str:
-    """Return the RabbitMQ password.
+    """Retrieve the RabbitMQ password.
 
     Returns:
         str: Password for authenticating to RabbitMQ.
 
+    Defaults to empty string if not set.
+
     """
-    return get_config_value("RABBITMQ_PASS", "")
+    return get_config_value_cached("RABBITMQ_PASS", "")
 
 
 @lru_cache
 def get_rabbitmq_exchange() -> str:
-    """Return the RabbitMQ exchange name.
+    """Retrieve the RabbitMQ exchange name.
 
     Returns:
         str: Exchange name to publish/subscribe to.
 
+    Defaults to 'stock_data_exchange' if not set.
+
     """
-    return get_config_value("RABBITMQ_EXCHANGE", "stock_data_exchange")
+    return get_config_value_cached("RABBITMQ_EXCHANGE", "stock_data_exchange")
 
 
 @lru_cache
 def get_rabbitmq_routing_key() -> str:
-    """Return the RabbitMQ routing key.
+    """Retrieve the RabbitMQ routing key.
 
     Returns:
         str: Routing key for message publishing.
 
+    Defaults to 'stock_data' if not set.
+
     """
-    return get_config_value("RABBITMQ_ROUTING_KEY", "stock_data")
+    return get_config_value_cached("RABBITMQ_ROUTING_KEY", "stock_data")
 
 
 @lru_cache
 def get_rabbitmq_queue() -> str:
-    """Return the name of the RabbitMQ queue to consume from.
+    """Retrieve the name of the RabbitMQ queue to consume from.
 
     Returns:
         str: Queue name.
 
+    Defaults to 'default_queue' if not set.
+
     """
-    return get_config_value("RABBITMQ_QUEUE", "default_queue")
+    return get_config_value_cached("RABBITMQ_QUEUE", "default_queue")
 
 
 @lru_cache
 def get_dlq_name() -> str:
-    """Return the name of the Dead Letter Queue (DLQ) for failed messages.
+    """Retrieve the name of the Dead Letter Queue (DLQ) for failed messages.
 
     Returns:
         str: DLQ queue name.
 
+    Defaults to 'default_dlq' if not set.
+
     """
-    return get_config_value("DLQ_NAME", "default_dlq")
+    return get_config_value_cached("DLQ_NAME", "default_dlq")
 
 
 @lru_cache
 def get_sqs_queue_url() -> str:
-    """Return the AWS SQS queue URL.
+    """Retrieve the AWS SQS queue URL.
 
     Returns:
         str: Full SQS queue URL.
 
+    Defaults to empty string if not set.
+
     """
-    return get_config_value("SQS_QUEUE_URL", "")
+    return get_config_value_cached("SQS_QUEUE_URL", "")
 
 
 @lru_cache
 def get_sqs_region() -> str:
-    """Return the AWS region for SQS operations.
+    """Retrieve the AWS region for SQS operations.
 
     Returns:
         str: AWS region name.
 
+    Defaults to 'us-east-1' if not set.
+
     """
-    return get_config_value("SQS_REGION", "us-east-1")
+    return get_config_value_cached("SQS_REGION", "us-east-1")
 
 
 @lru_cache
 def get_log_level() -> str:
-    """Return the application log level.
+    """Retrieve the application log level.
 
     Returns:
         str: Logging level (e.g., 'INFO', 'DEBUG').
 
+    Defaults to 'INFO' if not set.
+
     """
-    return get_config_value("LOG_LEVEL", "INFO")
+    return get_config_value_cached("LOG_LEVEL", "INFO")
 
 
 @lru_cache
 def get_poller_type() -> str:
-    """Return the type/category of this poller.
+    """Retrieve the type/category of this poller.
 
     Returns:
         str: Label identifying the poller type (e.g., 'stock', 'sentiment').
 
+    Defaults to 'stock' if not set.
+
     """
-    return get_config_value("POLLER_TYPE", "stock")
+    return get_config_value_cached("POLLER_TYPE", "stock")
 
 
 @lru_cache
 def get_retry_delay() -> int:
-    """Return the number of seconds to wait before retrying failed operations.
+    """Retrieve the number of seconds to wait before retrying failed operations.
 
     Returns:
         int: Retry delay in seconds.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_config_value("RETRY_DELAY", "5"))
+    return int(get_config_value_cached("RETRY_DELAY", "5"))
 
 
 @lru_cache
 def get_symbols() -> list[str]:
-    """Return a list of stock symbols to process.
+    """Retrieve a list of stock symbols to process.
 
     Returns:
         List[str]: Symbols parsed from comma-separated config.
 
+    Defaults to empty list if not set.
+
     """
-    symbols = get_config_value("SYMBOLS", "")
+    symbols = get_config_value_cached("SYMBOLS", "")
     return [s.strip() for s in symbols.split(",") if s.strip()]
 
 
 @lru_cache
-def get_newsapi_key() -> str:
-    """Return the NewsAPI key used for fetching news articles.
-
-    Returns:
-        str: NewsAPI key.
-
-    """
-    return get_config_value("NEWSAPI_KEY")
-
-
-@lru_cache
 def get_newsapi_rate_limit() -> tuple[int, int]:
-    """Return the NewsAPI rate limit settings.
+    """Retrieve the NewsAPI rate limit settings.
 
     Returns:
         Tuple[int, int]: (requests per second, burst capacity).
 
+    Defaults to (5, 10) if not set.
+
     """
     return (
-        int(get_config_value("NEWSAPI_RATE", "5")),
-        int(get_config_value("NEWSAPI_CAPACITY", "10")),
+        int(get_config_value_cached("NEWSAPI_RATE", "5")),
+        int(get_config_value_cached("NEWSAPI_CAPACITY", "10")),
     )
 
 
 @lru_cache
 def get_newsapi_timeout() -> int:
-    """Return the timeout in seconds for NewsAPI requests.
+    """Retrieve the timeout in seconds for NewsAPI requests.
 
     Returns:
         int: Timeout duration.
 
-    """
-    return int(get_config_value("NEWSAPI_TIMEOUT", "10"))
-
-
-@lru_cache
-def get_youtube_api_key() -> str:
-    """Return the YouTube Data API key.
-
-    Returns:
-        str: YouTube API key.
+    Defaults to 10 if not set.
 
     """
-    return get_config_value("YOUTUBE_API_KEY")
+    return int(get_config_value_cached("NEWSAPI_TIMEOUT", "10"))
 
 
-@lru_cache
-def get_reddit_client_id() -> str:
-    """Return the Reddit client ID for OAuth.
-
-    Returns:
-        str: Reddit client ID.
-
-    """
-    return get_config_value("REDDIT_CLIENT_ID")
-
-
-@lru_cache
-def get_reddit_client_secret() -> str:
-    """Return the Reddit client secret for OAuth.
-
-    Returns:
-        str: Reddit client secret.
-
-    """
-    return get_config_value("REDDIT_CLIENT_SECRET")
+# --- API Keys & Rate Limits ---
 
 
 @lru_cache
 def get_alpha_vantage_api_key() -> str:
-    """Return the Alpha Vantage API key.
+    """Retrieve the Alpha Vantage API key.
 
     Returns:
-        str: Alpha Vantage API key.
+        str: API key string.
+
+    Raises:
+        ValueError: If ALPHA_VANTAGE_API_KEY is not found.
 
     """
-    return get_secret_or_env("ALPHA_VANTAGE_API_KEY")
+    return get_config_value_cached("ALPHA_VANTAGE_API_KEY")
 
 
 @lru_cache
 def get_alpha_vantage_fill_rate_limit() -> int:
-    """Return the fill rate limit for Alpha Vantage.
+    """Retrieve the fill rate limit for Alpha Vantage.
 
     Returns:
         int: Requests per minute.
 
-    """
-    return int(get_secret_or_env("ALPHA_VANTAGE_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_finnhub_api_key() -> str:
-    """Return the Finnhub API key.
-
-    Returns:
-        str: Finnhub API key.
+    Defaults to 60 if not set.
 
     """
-    return get_secret_or_env("FINNHUB_API_KEY")
-
-
-@lru_cache
-def get_finnhub_fill_rate_limit() -> int:
-    """Return the fill rate limit for Finnhub.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("FINNHUB_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_polygon_api_key() -> str:
-    """Return the Polygon.io API key.
-
-    Returns:
-        str: Polygon API key.
-
-    """
-    return get_secret_or_env("POLYGON_API_KEY")
-
-
-@lru_cache
-def get_polygon_fill_rate_limit() -> int:
-    """Return the fill rate limit for Polygon.io.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("POLYGON_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_iex_api_key() -> str:
-    """Return the IEX Cloud API key.
-
-    Returns:
-        str: IEX Cloud API key.
-
-    """
-    return get_secret_or_env("IEX_API_KEY")
-
-
-@lru_cache
-def get_iex_fill_rate_limit() -> int:
-    """Return the fill rate limit for IEX.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("IEX_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_intrinio_key() -> str:
-    """Return the Intrinio API key.
-
-    Returns:
-        str: Intrinio API key.
-
-    """
-    return get_secret_or_env("INTRINIO_API_KEY")
-
-
-@lru_cache
-def get_intrinio_fill_rate_limit() -> int:
-    """Return the fill rate limit for Intrinio.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("INTRINIO_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_quandl_api_key() -> str:
-    """Return the Quandl API key.
-
-    Returns:
-        str: Quandl API key.
-
-    """
-    return get_secret_or_env("QUANDL_API_KEY")
-
-
-@lru_cache
-def get_quandl_fill_rate_limit() -> int:
-    """Return the fill rate limit for Quandl.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("QUANDL_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_yfinance_fill_rate_limit() -> int:
-    """Return the fill rate limit for yFinance.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("YFINANCE_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_finnazon_key() -> str:
-    """Return the Finnazon API key.
-
-    Returns:
-        str: Finnazon API key.
-
-    """
-    return get_secret_or_env("FINNAZON_API_KEY")
-
-
-@lru_cache
-def get_finnazon_fill_rate_limit() -> int:
-    """Return the fill rate limit for Finnazon.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("FINNAZON_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_rapidapi_key() -> str:
-    """Return the RapidAPI key for Yahoo Finance.
-
-    Returns:
-        str: RapidAPI key.
-
-    """
-    return get_secret_or_env("RAPIDAPI_KEY")
-
-
-@lru_cache
-def get_rapidapi_host() -> str:
-    """Return the RapidAPI host for Yahoo Finance.
-
-    Returns:
-        str: RapidAPI host string.
-
-    """
-    return get_secret_or_env("RAPIDAPI_HOST", default="yahoo-finance15.p.rapidapi.com")
-
-
-@lru_cache
-def get_benzinga_api_key() -> str:
-    """Return the Benzinga API key from secrets or environment.
-
-    Returns:
-        str: Benzinga API key.
-
-    """
-    return get_secret_or_env("BENZINGA_API_KEY")
-
-
-@lru_cache
-def get_benzinga_fill_rate_limit() -> int:
-    """Return the fill rate limit for Benzinga polling.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("BENZINGA_FILL_RATE_LIMIT", default="60"))
+    return int(get_config_value_cached("ALPHA_VANTAGE_FILL_RATE_LIMIT", "60"))
 
 
 @lru_cache
 def get_barchart_api_key() -> str:
-    """Return the Barchart API key from secrets or environment.
+    """Retrieve the API key for Barchart.
 
     Returns:
-        str: Barchart API key.
+        str: API key string.
+
+    Raises:
+        ValueError: If BARCHART_API_KEY is not found.
 
     """
-    return get_secret_or_env("BARCHART_API_KEY")
+    return get_config_value_cached("BARCHART_API_KEY")
 
 
 @lru_cache
 def get_barchart_fill_rate_limit() -> int:
-    """Return the fill rate limit for Barchart polling.
+    """Retrieve the fill rate limit for Barchart.
 
     Returns:
         int: Requests per minute.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_secret_or_env("BARCHART_FILL_RATE_LIMIT", default="60"))
+    return int(get_config_value_cached("BARCHART_FILL_RATE_LIMIT", "5"))
 
 
 @lru_cache
-def get_twelvedata_api_key() -> str:
-    """Return the Twelve Data API key from secrets or environment.
+def get_benzinga_api_key() -> str:
+    """Retrieve the API key for Benzinga.
 
     Returns:
-        str: Twelve Data API key.
+        str: API key string.
+
+    Raises:
+        ValueError: If BENZINGA_API_KEY is not found.
 
     """
-    return get_secret_or_env("TWELVEDATA_API_KEY")
+    return get_config_value_cached("BENZINGA_API_KEY")
 
 
 @lru_cache
-def get_twelvedata_fill_rate_limit() -> int:
-    """Return the fill rate limit for Twelve Data polling.
-
-    Returns:
-        int: Requests per minute.
-
-    """
-    return int(get_secret_or_env("TWELVEDATA_FILL_RATE_LIMIT", default="60"))
-
-
-@lru_cache
-def get_coinmarketcap_api_key() -> str:
-    """Return the CoinMarketCap API key from secrets or environment.
-
-    Returns:
-        str: CoinMarketCap API key.
-
-    """
-    return get_secret_or_env("COINMARKETCAP_API_KEY")
-
-
-@lru_cache
-def get_coinmarketcap_fill_rate_limit() -> int:
-    """Return the fill rate limit for CoinMarketCap polling.
+def get_benzinga_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for Benzinga.
 
     Returns:
         int: Requests per minute.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_secret_or_env("COINMARKETCAP_FILL_RATE_LIMIT", default="60"))
+    return int(get_config_value_cached("BENZINGA_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_binance_api_key() -> str:
+    """Retrieve the API key for Binance.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If BINANCE_API_KEY is not found.
+
+    """
+    return get_config_value_cached("BINANCE_API_KEY")
+
+
+@lru_cache
+def get_binance_api_secret() -> str:
+    """Retrieve the API secret for Binance.
+
+    Returns:
+        str: API secret string.
+
+    Raises:
+        ValueError: If BINANCE_API_SECRET is not found.
+
+    """
+    return get_config_value_cached("BINANCE_API_SECRET")
 
 
 @lru_cache
 def get_coinapi_key() -> str:
-    """Return the CoinAPI key from secrets or environment.
+    """Retrieve the API key for CoinAPI.
 
     Returns:
-        str: CoinAPI key.
+        str: API key string.
+
+    Raises:
+        ValueError: If COINAPI_KEY is not found.
 
     """
-    return get_secret_or_env("COINAPI_KEY")
+    return get_config_value_cached("COINAPI_KEY")
 
 
 @lru_cache
 def get_coinapi_fill_rate_limit() -> int:
-    """Return the fill rate limit for CoinAPI polling.
+    """Retrieve the fill rate limit for CoinAPI.
 
     Returns:
         int: Requests per minute.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_secret_or_env("COINAPI_FILL_RATE_LIMIT", default="60"))
+    return int(get_config_value_cached("COINAPI_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_coingecko_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for CoinGecko.
+
+    Returns:
+        int: Requests per second.
+
+    Defaults to 20 if not set.
+
+    """
+    return int(get_config_value_cached("COINGECKO_FILL_RATE_LIMIT", "20"))
+
+
+@lru_cache
+def get_coinmarketcap_api_key() -> str:
+    """Retrieve the API key for CoinMarketCap.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If COINMARKETCAP_API_KEY is not found.
+
+    """
+    return get_config_value_cached("COINMARKETCAP_API_KEY")
+
+
+@lru_cache
+def get_coinmarketcap_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for CoinMarketCap.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("COINMARKETCAP_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_cryptocompare_api_key() -> str:
+    """Retrieve the API key for CryptoCompare.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If CRYPTOCOMPARE_API_KEY is not found.
+
+    """
+    return get_config_value_cached("CRYPTOCOMPARE_API_KEY")
+
+
+@lru_cache
+def get_cryptocompare_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for CryptoCompare.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("CRYPTOCOMPARE_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_finnazon_api_key() -> str:
+    """Retrieve the API key for Finnazon.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If FINNAZON_API_KEY is not found.
+
+    """
+    return get_config_value_cached("FINNAZON_API_KEY")
+
+
+@lru_cache
+def get_finnazon_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for Finnazon.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("FINNAZON_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_finnhub_api_key() -> str:
+    """Retrieve the API key for Finnhub.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If FINNHUB_API_KEY is not found.
+
+    """
+    return get_config_value_cached("FINNHUB_API_KEY")
+
+
+@lru_cache
+def get_finnhub_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for Finnhub.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("FINNHUB_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_glassnode_api_key() -> str:
+    """Retrieve the API key for Glassnode.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If GLASSNODE_API_KEY is not found.
+
+    """
+    return get_config_value_cached("GLASSNODE_API_KEY")
+
+
+@lru_cache
+def get_huobi_api_key() -> str:
+    """Retrieve the API key for Huobi.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If HUOBI_API_KEY is not found.
+
+    """
+    return get_config_value_cached("HUOBI_API_KEY")
+
+
+@lru_cache
+def get_huobi_api_secret() -> str:
+    """Retrieve the API secret for Huobi.
+
+    Returns:
+        str: API secret string.
+
+    Raises:
+        ValueError: If HUOBI_API_SECRET is not found.
+
+    """
+    return get_config_value_cached("HUOBI_API_SECRET")
+
+
+@lru_cache
+def get_iex_api_key() -> str:
+    """Retrieve the API key for IEX Cloud.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If IEX_API_KEY is not found.
+
+    """
+    return get_config_value_cached("IEX_API_KEY")
+
+
+@lru_cache
+def get_iex_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for IEX.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 60 if not set.
+
+    """
+    return int(get_config_value_cached("IEX_FILL_RATE_LIMIT", "60"))
+
+
+@lru_cache
+def get_intotheblock_api_key() -> str:
+    """Retrieve the API key for IntoTheBlock.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If INTOTHEBLOCK_API_KEY is not found.
+
+    """
+    return get_config_value_cached("INTOTHEBLOCK_API_KEY")
+
+
+@lru_cache
+def get_intrinio_api_key() -> str:
+    """Retrieve the API key for Intrinio.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If INTRINIO_API_KEY is not found.
+
+    """
+    return get_config_value_cached("INTRINIO_API_KEY")
+
+
+@lru_cache
+def get_intrinio_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for Intrinio.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("INTRINIO_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_kaiko_api_key() -> str:
+    """Retrieve the API key for Kaiko.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If KAIKO_API_KEY is not found.
+
+    """
+    return get_config_value_cached("KAIKO_API_KEY")
+
+
+@lru_cache
+def get_kraken_api_key() -> str:
+    """Retrieve the API key for Kraken.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If KRAKEN_API_KEY is not found.
+
+    """
+    return get_config_value_cached("KRAKEN_API_KEY")
+
+
+@lru_cache
+def get_kraken_api_secret() -> str:
+    """Retrieve the API secret for Kraken.
+
+    Returns:
+        str: API secret string.
+
+    Raises:
+        ValueError: If KRAKEN_API_SECRET is not found.
+
+    """
+    return get_config_value_cached("KRAKEN_API_SECRET")
+
+
+@lru_cache
+def get_messari_api_key() -> str:
+    """Retrieve the API key for Messari.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If MESSARI_API_KEY is not found.
+
+    """
+    return get_config_value_cached("MESSARI_API_KEY")
 
 
 @lru_cache
 def get_morningstar_api_key() -> str:
-    """Return the Morningstar API key from secrets or environment.
+    """Retrieve the API key for Morningstar.
 
     Returns:
-        str: Morningstar API key.
+        str: API key string.
+
+    Raises:
+        ValueError: If MORNINGSTAR_API_KEY is not found.
 
     """
-    return get_secret_or_env("MORNINGSTAR_API_KEY")
+    return get_config_value_cached("MORNINGSTAR_API_KEY")
 
 
 @lru_cache
 def get_morningstar_fill_rate_limit() -> int:
-    """Return the fill rate limit for Morningstar polling.
+    """Retrieve the fill rate limit for Morningstar.
 
     Returns:
         int: Requests per minute.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_secret_or_env("MORNINGSTAR_FILL_RATE_LIMIT", default="60"))
+    return int(get_config_value_cached("MORNINGSTAR_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_newsapi_key() -> str:
+    """Retrieve the API key for NewsAPI.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If NEWSAPI_KEY is not found.
+
+    """
+    return get_config_value_cached("NEWSAPI_KEY")
+
+
+@lru_cache
+def get_nomics_api_key() -> str:
+    """Retrieve the API key for Nomics.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If NOMICS_API_KEY is not found.
+
+    """
+    return get_config_value_cached("NOMICS_API_KEY")
+
+
+@lru_cache
+def get_okx_api_key() -> str:
+    """Retrieve the API key for OKX.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If OKX_API_KEY is not found.
+
+    """
+    return get_config_value_cached("OKX_API_KEY")
+
+
+@lru_cache
+def get_okx_api_secret() -> str:
+    """Retrieve the API secret for OKX.
+
+    Returns:
+        str: API secret string.
+
+    Raises:
+        ValueError: If OKX_API_SECRET is not found.
+
+    """
+    return get_config_value_cached("OKX_API_SECRET")
+
+
+@lru_cache
+def get_okx_passphrase() -> str:
+    """Retrieve the passphrase for OKX API access.
+
+    Returns:
+        str: Passphrase string.
+
+    Raises:
+        ValueError: If OKX_PASSPHRASE is not found.
+
+    """
+    return get_config_value_cached("OKX_PASSPHRASE")
+
+
+@lru_cache
+def get_polygon_api_key() -> str:
+    """Retrieve the API key for Polygon.io.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If POLYGON_API_KEY is not found.
+
+    """
+    return get_config_value_cached("POLYGON_API_KEY")
+
+
+@lru_cache
+def get_polygon_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for Polygon.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("POLYGON_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_quandl_api_key() -> str:
+    """Retrieve the API key for Quandl.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If QUANDL_API_KEY is not found.
+
+    """
+    return get_config_value_cached("QUANDL_API_KEY")
+
+
+@lru_cache
+def get_quandl_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for Quandl.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("QUANDL_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_rapidapi_key() -> str:
+    """Retrieve the API key for RapidAPI.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If RAPIDAPI_KEY is not found.
+
+    """
+    return get_config_value_cached("RAPIDAPI_KEY")
+
+
+@lru_cache
+def get_rapidapi_host() -> str:
+    """Retrieve the RapidAPI host header value.
+
+    Returns:
+        str: Host value used in API requests.
+
+    Defaults to 'yahoo-finance15.p.rapidapi.com' if not set.
+
+    """
+    return get_config_value_cached("RAPIDAPI_HOST", "yahoo-finance15.p.rapidapi.com")
+
+
+@lru_cache
+def get_reddit_client_id() -> str:
+    """Retrieve the Reddit API client ID.
+
+    Returns:
+        str: Reddit application client ID.
+
+    Raises:
+        ValueError: If REDDIT_CLIENT_ID is not found.
+
+    """
+    return get_config_value_cached("REDDIT_CLIENT_ID")
+
+
+@lru_cache
+def get_reddit_client_secret() -> str:
+    """Retrieve the Reddit API client secret.
+
+    Returns:
+        str: Reddit application secret string.
+
+    Raises:
+        ValueError: If REDDIT_CLIENT_SECRET is not found.
+
+    """
+    return get_config_value_cached("REDDIT_CLIENT_SECRET")
 
 
 @lru_cache
 def get_seekingalpha_api_key() -> str:
-    """Return the SeekingAlpha API key from secrets or environment.
+    """Retrieve the API key for SeekingAlpha.
 
     Returns:
-        str: SeekingAlpha API key.
+        str: API key string.
+
+    Raises:
+        ValueError: If SEEKINGALPHA_API_KEY is not found.
 
     """
-    return get_secret_or_env("SEEKINGALPHA_API_KEY")
+    return get_config_value_cached("SEEKINGALPHA_API_KEY")
 
 
 @lru_cache
 def get_seekingalpha_fill_rate_limit() -> int:
-    """Return the fill rate limit for SeekingAlpha polling.
+    """Retrieve the fill rate limit for SeekingAlpha.
 
     Returns:
         int: Requests per minute.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_secret_or_env("SEEKINGALPHA_FILL_RATE_LIMIT", default="60"))
+    return int(get_config_value_cached("SEEKINGALPHA_FILL_RATE_LIMIT", "5"))
 
 
 @lru_cache
 def get_sentimentinvestor_api_key() -> str:
-    """Return the Sentiment Investor API key from secrets or environment.
+    """Retrieve the API key for SentimentInvestor.
 
     Returns:
-        str: Sentiment Investor API key.
+        str: API key string.
+
+    Raises:
+        ValueError: If SENTIMENTINVESTOR_API_KEY is not found.
 
     """
-    return get_secret_or_env("SENTIMENTINVESTOR_API_KEY")
+    return get_config_value_cached("SENTIMENTINVESTOR_API_KEY")
 
 
 @lru_cache
 def get_sentimentinvestor_fill_rate_limit() -> int:
-    """Return the fill rate limit for Sentiment Investor polling.
+    """Retrieve the fill rate limit for SentimentInvestor.
 
     Returns:
         int: Requests per minute.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_secret_or_env("SENTIMENTINVESTOR_FILL_RATE_LIMIT", default="60"))
+    return int(get_config_value_cached("SENTIMENTINVESTOR_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_twelvedata_api_key() -> str:
+    """Retrieve the API key for TwelveData.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If TWELVEDATA_API_KEY is not found.
+
+    """
+    return get_config_value_cached("TWELVEDATA_API_KEY")
+
+
+@lru_cache
+def get_twelvedata_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for TwelveData.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("TWELVEDATA_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_yfinance_fill_rate_limit() -> int:
+    """Retrieve the fill rate limit for Yahoo Finance.
+
+    Returns:
+        int: Requests per minute.
+
+    Defaults to 5 if not set.
+
+    """
+    return int(get_config_value_cached("YFINANCE_FILL_RATE_LIMIT", "5"))
+
+
+@lru_cache
+def get_youtube_api_key() -> str:
+    """Retrieve the YouTube Data API key.
+
+    Returns:
+        str: API key string.
+
+    Raises:
+        ValueError: If YOUTUBE_API_KEY is not found.
+
+    """
+    return get_config_value_cached("YOUTUBE_API_KEY")
+
+
+# --- General Configuration ---
 
 
 @lru_cache
 def get_structured_logging() -> bool:
-    """Return whether structured (JSON) logging is enabled.
+    """Retrieve whether structured (JSON) logging is enabled.
 
     Returns:
-        bool: True if STRUCTURED_LOGGING is enabled.
+        bool: True if STRUCTURED_LOGGING is enabled, else False.
+
+    Defaults to False if not set.
 
     """
     return get_config_bool("STRUCTURED_LOGGING", False)
@@ -739,10 +1099,12 @@ def get_structured_logging() -> bool:
 
 @lru_cache
 def get_redact_sensitive_logs() -> bool:
-    """Return whether sensitive fields should be redacted from logs.
+    """Retrieve whether sensitive fields should be redacted from logs.
 
     Returns:
-        bool: True if redaction is enabled.
+        bool: True if REDACT_SENSITIVE_LOGS is enabled, else False.
+
+    Defaults to True if not set.
 
     """
     return get_config_bool("REDACT_SENSITIVE_LOGS", True)
@@ -750,154 +1112,273 @@ def get_redact_sensitive_logs() -> bool:
 
 @lru_cache
 def get_debug_mode() -> bool:
-    """Return whether the application is in debug mode.
+    """Retrieve whether the application is in debug mode.
 
     Returns:
-        bool: True if debug mode is enabled.
+        bool: True if DEBUG is enabled, else False.
+
+    Defaults to False if not set.
 
     """
     return get_config_bool("DEBUG", False)
 
 
 @lru_cache
-def get_healthcheck_enabled() -> bool:
-    """Return whether healthchecks are enabled for this service.
+def get_dry_run_mode() -> bool:
+    """Retrieve whether dry-run mode is enabled.
+
+    In dry-run mode, the app may skip sending data or executing irreversible actions.
 
     Returns:
-        bool: True if healthchecks should be run.
+        bool: True if DRY_RUN is enabled, else False.
+
+    Defaults to False if not set.
+
+    """
+    return get_config_bool("DRY_RUN", False)
+
+
+@lru_cache
+def get_healthcheck_enabled() -> bool:
+    """Retrieve whether healthchecks are enabled for this service.
+
+    Returns:
+        bool: True if HEALTHCHECK_ENABLED is enabled, else False.
+
+    Defaults to True if not set.
 
     """
     return get_config_bool("HEALTHCHECK_ENABLED", True)
 
 
 @lru_cache
-def get_service_name() -> str:
-    """Return the human-readable name of this service.
+def get_healthcheck_host() -> str:
+    """Retrieve the host address for the healthcheck server.
 
     Returns:
-        str: Service name, defaults to the poller name.
+        str: Host address.
+
+    Defaults to '0.0.0.0' if not set.
 
     """
-    return get_config_value("SERVICE_NAME", get_poller_name())
+    return get_config_value_cached("HEALTHCHECK_HOST", "0.0.0.0")
+
+
+@lru_cache
+def get_healthcheck_port() -> int:
+    """Retrieve the port for the healthcheck server.
+
+    Returns:
+        int: Port number.
+
+    Defaults to 8081 if not set.
+
+    """
+    return int(get_config_value_cached("HEALTHCHECK_PORT", "8081"))
+
+
+@lru_cache
+def get_metrics_enabled() -> bool:
+    """Retrieve whether Prometheus metrics are enabled.
+
+    Returns:
+        bool: True if METRICS_ENABLED is enabled, else False.
+
+    Defaults to True if not set.
+
+    """
+    val = get_config_value_cached("METRICS_ENABLED", "true").lower()
+    return val in ("1", "true", "yes")
+
+
+@lru_cache
+def get_metrics_bind_address() -> str:
+    """Retrieve the bind address for Prometheus metrics endpoint.
+
+    Returns:
+        str: Bind address (e.g., '0.0.0.0').
+
+    Defaults to '0.0.0.0' if not set.
+
+    """
+    return get_config_value_cached("METRICS_BIND_ADDRESS", "0.0.0.0")
+
+
+@lru_cache
+def get_metrics_port() -> int:
+    """Retrieve the port for Prometheus metrics endpoint.
+
+    Returns:
+        int: Port number.
+
+    Defaults to 8000 if not set.
+
+    Raises:
+        ValueError: If METRICS_PORT is not a valid integer.
+
+    """
+    port_str = get_config_value_cached("METRICS_PORT", "8000")
+    try:
+        return int(port_str)
+    except ValueError:
+        raise ValueError(f"Invalid METRICS_PORT value: '{port_str}' must be an integer.")
+
+
+@lru_cache
+def get_service_name() -> str:
+    """Retrieve the human-readable name of this service.
+
+    Returns:
+        str: Service name.
+
+    Defaults to the poller name if not set.
+
+    """
+    return get_config_value_cached("SERVICE_NAME", get_poller_name())
+
+
+# --- Crypto Configuration ---
 
 
 @lru_cache
 def get_crypto_symbols() -> list[str]:
-    """Return a list of cryptocurrency symbols to poll (e.g., BTC, ETH).
+    """Retrieve a list of cryptocurrency symbols to poll (e.g., BTC, ETH).
 
     Returns:
-        List[str]: A list of uppercased symbol strings.
+        List[str]: Uppercased symbol strings.
+
+    Defaults to empty list if not set.
 
     """
-    symbols = get_config_value("CRYPTO_SYMBOLS", "")
+    symbols = get_config_value_cached("CRYPTO_SYMBOLS", "")
     return [s.strip().upper() for s in symbols.split(",") if s.strip()]
 
 
 @lru_cache
 def get_crypto_exchange() -> str:
-    """Return the exchange name used for crypto polling.
+    """Retrieve the exchange name used for crypto polling.
 
     Returns:
         str: Exchange name (e.g., 'binance').
 
+    Defaults to 'binance' if not set.
+
     """
-    return get_config_value("CRYPTO_EXCHANGE", "binance")
+    return get_config_value_cached("CRYPTO_EXCHANGE", "binance")
 
 
 @lru_cache
 def get_crypto_network() -> str:
-    """Return the blockchain network used for data collection.
+    """Retrieve the blockchain network used for data collection.
 
     Returns:
         str: Network name (e.g., 'ethereum').
 
+    Defaults to 'ethereum' if not set.
+
     """
-    return get_config_value("CRYPTO_NETWORK", "ethereum")
+    return get_config_value_cached("CRYPTO_NETWORK", "ethereum")
 
 
 @lru_cache
 def get_crypto_data_source() -> str:
-    """Return the data provider name used for crypto polling.
+    """Retrieve the data provider name used for crypto polling.
 
     Returns:
         str: Provider name (e.g., 'coinmarketcap').
 
+    Defaults to 'coinmarketcap' if not set.
+
     """
-    return get_config_value("CRYPTO_DATA_SOURCE", "coinmarketcap")
+    return get_config_value_cached("CRYPTO_DATA_SOURCE", "coinmarketcap")
 
 
 @lru_cache
 def get_crypto_queue_name() -> str:
-    """Return the queue name to route crypto messages.
+    """Retrieve the queue name to route crypto messages.
 
     Returns:
         str: Queue name.
 
+    Defaults to 'crypto_data_queue' if not set.
+
     """
-    return get_config_value("CRYPTO_QUEUE_NAME", "crypto_data_queue")
+    return get_config_value_cached("CRYPTO_QUEUE_NAME", "crypto_data_queue")
 
 
 @lru_cache
 def get_crypto_polling_interval() -> int:
-    """Return polling interval for crypto services.
+    """Retrieve the polling interval for crypto services.
 
     Returns:
         int: Polling interval in seconds.
 
+    Defaults to the general polling interval if not set.
+
     """
-    return int(get_config_value("CRYPTO_POLLING_INTERVAL", str(get_polling_interval())))
+    return int(get_config_value_cached("CRYPTO_POLLING_INTERVAL", str(get_polling_interval())))
 
 
 @lru_cache
 def get_crypto_retry_delay() -> int:
-    """Return retry delay after a failed crypto API call.
+    """Retrieve the retry delay after a failed crypto API call.
 
     Returns:
         int: Delay in seconds.
 
+    Defaults to 10 if not set.
+
     """
-    return int(get_config_value("CRYPTO_RETRY_DELAY", "10"))
+    return int(get_config_value_cached("CRYPTO_RETRY_DELAY", "10"))
 
 
 @lru_cache
 def get_crypto_rate_limit() -> int:
-    """Return the rate limit in requests per second for crypto APIs.
+    """Retrieve the rate limit in requests per second for crypto APIs.
 
     Returns:
         int: Requests per second.
 
+    Defaults to 5 if not set.
+
     """
-    return int(get_config_value("CRYPTO_RATE_LIMIT", "5"))
+    return int(get_config_value_cached("CRYPTO_RATE_LIMIT", "5"))
 
 
 @lru_cache
 def get_candle_granularity() -> str:
-    """Return candlestick data granularity.
+    """Retrieve the candlestick data granularity.
 
     Returns:
         str: Interval string (e.g., '1m', '5m').
 
+    Defaults to '1m' if not set.
+
     """
-    return get_config_value("CANDLE_GRANULARITY", "1m")
+    return get_config_value_cached("CANDLE_GRANULARITY", "1m")
 
 
 @lru_cache
 def get_lookback_period_minutes() -> int:
-    """Return lookback window for historical data in minutes.
+    """Retrieve the lookback window for historical data in minutes.
 
     Returns:
         int: Number of minutes.
 
+    Defaults to 60 if not set.
+
     """
-    return int(get_config_value("LOOKBACK_PERIOD_MINUTES", "60"))
+    return int(get_config_value_cached("LOOKBACK_PERIOD_MINUTES", "60"))
 
 
 @lru_cache
 def get_websocket_enabled() -> bool:
-    """Return whether WebSocket streaming is enabled.
+    """Retrieve whether WebSocket streaming is enabled.
 
     Returns:
-        bool: True if enabled, else False.
+        bool: True if WEBSOCKET_ENABLED is enabled, else False.
+
+    Defaults to False if not set.
 
     """
     return get_config_bool("WEBSOCKET_ENABLED", False)
@@ -905,564 +1386,280 @@ def get_websocket_enabled() -> bool:
 
 @lru_cache
 def get_websocket_url() -> str:
-    """Return the WebSocket endpoint URL.
+    """Retrieve the WebSocket endpoint URL.
 
     Returns:
         str: URL string.
 
+    Defaults to empty string if not set.
+
     """
-    return get_config_value("WEBSOCKET_URL", "")
+    return get_config_value_cached("WEBSOCKET_URL", "")
 
 
 @lru_cache
 def get_websocket_auth_token() -> str:
-    """Return WebSocket authentication token if required.
+    """Retrieve the WebSocket authentication token.
 
     Returns:
-        str: Auth token or empty string.
+        str: Auth token string.
+
+    Defaults to empty string if not set.
 
     """
-    return get_secret_or_env("WEBSOCKET_AUTH_TOKEN", "")
+    return get_config_value_cached("WEBSOCKET_AUTH_TOKEN", "")
 
 
-@lru_cache
-def get_coingecko_fill_rate_limit() -> int:
-    """Return CoinGecko fill rate limit (no API key).
-
-    Returns:
-        int: Requests per second.
-
-    """
-    return int(get_config_value("COINGECKO_FILL_RATE_LIMIT", "20"))
-
-
-@lru_cache
-def get_cryptocompare_api_key() -> str:
-    """Return CryptoCompare API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("CRYPTOCOMPARE_API_KEY")
-
-
-@lru_cache
-def get_cryptocompare_fill_rate_limit() -> int:
-    """Return CryptoCompare fill rate limit.
-
-    Returns:
-        int: Requests per second.
-
-    """
-    return int(get_secret_or_env("CRYPTOCOMPARE_FILL_RATE_LIMIT", "60"))
-
-
-@lru_cache
-def get_glassnode_api_key() -> str:
-    """Return Glassnode API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("GLASSNODE_API_KEY")
-
-
-@lru_cache
-def get_messari_api_key() -> str:
-    """Return Messari API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("MESSARI_API_KEY")
-
-
-@lru_cache
-def get_nomics_api_key() -> str:
-    """Return Nomics API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("NOMICS_API_KEY")
-
-
-@lru_cache
-def get_kaiko_api_key() -> str:
-    """Return Kaiko API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("KAIKO_API_KEY")
-
-
-@lru_cache
-def get_intotheblock_api_key() -> str:
-    """Return IntoTheBlock API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("INTOTHEBLOCK_API_KEY")
-
-
-@lru_cache
-def get_binance_api_key() -> str:
-    """Return Binance API key for authenticated endpoints.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("BINANCE_API_KEY")
-
-
-@lru_cache
-def get_binance_api_secret() -> str:
-    """Return Binance API secret.
-
-    Returns:
-        str: API secret.
-
-    """
-    return get_secret_or_env("BINANCE_API_SECRET")
-
-
-@lru_cache
-def get_kraken_api_key() -> str:
-    """Return Kraken API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("KRAKEN_API_KEY")
-
-
-@lru_cache
-def get_kraken_api_secret() -> str:
-    """Return Kraken API secret.
-
-    Returns:
-        str: API secret.
-
-    """
-    return get_secret_or_env("KRAKEN_API_SECRET")
-
-
-@lru_cache
-def get_huobi_api_key() -> str:
-    """Return Huobi API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("HUOBI_API_KEY")
-
-
-@lru_cache
-def get_huobi_api_secret() -> str:
-    """Return Huobi API secret.
-
-    Returns:
-        str: API secret.
-
-    """
-    return get_secret_or_env("HUOBI_API_SECRET")
-
-
-@lru_cache
-def get_okx_api_key() -> str:
-    """Return OKX API key.
-
-    Returns:
-        str: API key.
-
-    """
-    return get_secret_or_env("OKX_API_KEY")
-
-
-@lru_cache
-def get_okx_api_secret() -> str:
-    """Return OKX API secret.
-
-    Returns:
-        str: API secret.
-
-    """
-    return get_secret_or_env("OKX_API_SECRET")
-
-
-@lru_cache
-def get_okx_passphrase() -> str:
-    """Return OKX API passphrase.
-
-    Returns:
-        str: API passphrase.
-
-    """
-    return get_secret_or_env("OKX_PASSPHRASE")
+# --- Paper Trading Configuration ---
 
 
 @lru_cache
 def get_paper_trading_enabled() -> bool:
-    """Return whether paper trading mode is enabled.
+    """Retrieve whether paper trading mode is enabled.
 
     Returns:
-        bool: True if PAPER_TRADING_ENABLED is set to "true" (case-insensitive), else False.
+        bool: True if PAPER_TRADING_ENABLED is set to 'true', else False.
+
+    Defaults to False if not set.
 
     """
-    return get_config_value("PAPER_TRADING_ENABLED", "false").lower() == "true"
+    return get_config_value_cached("PAPER_TRADING_ENABLED", "false").lower() == "true"
 
 
 @lru_cache
 def get_paper_trading_account_id() -> str:
-    """Return the configured paper trading account ID, if applicable.
+    """Retrieve the paper trading account ID.
 
     Returns:
-        str: The account ID string, or an empty string if not set.
+        str: Account ID string.
+
+    Defaults to empty string if not set.
 
     """
-    return get_config_value("PAPER_TRADING_ACCOUNT_ID", "")
+    return get_config_value_cached("PAPER_TRADING_ACCOUNT_ID", "")
 
 
 @lru_cache
 def get_paper_trading_queue_name() -> str:
-    """Return the name of the RabbitMQ queue used for paper trades.
+    """Retrieve the RabbitMQ queue name used for paper trades.
 
     Returns:
-        str: Queue name, defaults to "trades.paper" if not set.
+        str: Queue name.
+
+    Defaults to 'trades.paper' if not set.
 
     """
-    return get_config_value("PAPER_TRADING_QUEUE_NAME", "trades.paper")
+    return get_config_value_cached("PAPER_TRADING_QUEUE_NAME", "trades.paper")
 
 
 @lru_cache
 def get_paper_trading_exchange() -> str:
-    """Return the name of the RabbitMQ exchange used for paper trades.
+    """Retrieve the RabbitMQ exchange name used for paper trades.
 
     Returns:
-        str: Exchange name, defaults to "trades_exchange" if not set.
+        str: Exchange name.
+
+    Defaults to 'trades_exchange' if not set.
 
     """
-    return get_config_value("PAPER_TRADING_EXCHANGE", "trades_exchange")
+    return get_config_value_cached("PAPER_TRADING_EXCHANGE", "trades_exchange")
 
 
 @lru_cache
 def get_paper_trading_database_enabled() -> bool:
-    """Return whether paper trades should also be stored in a database.
+    """Retrieve whether paper trades should be stored in a database.
 
     Returns:
-        bool: True if PAPER_TRADING_DATABASE_ENABLED is set to "true", else False.
+        bool: True if PAPER_TRADING_DATABASE_ENABLED is set to 'true', else False.
+
+    Defaults to False if not set.
 
     """
-    return get_config_value("PAPER_TRADING_DATABASE_ENABLED", "false").lower() == "true"
+    return get_config_value_cached("PAPER_TRADING_DATABASE_ENABLED", "false").lower() == "true"
 
 
 @lru_cache
 def get_paper_trade_mode() -> str:
-    """Return the output mode used for paper trading dispatch.
+    """Retrieve the output mode used for paper trading dispatch.
 
     Returns:
-        str: e.g., 'paper', 'rest', 's3'
+        str: Mode (e.g., 'paper', 'rest', 's3').
+
+    Defaults to 'paper' if not set.
 
     """
-    return get_config_value("PAPER_TRADE_MODE", "paper")
+    return get_config_value_cached("PAPER_TRADE_MODE", "paper")
 
 
-# --- Output Handler Config Getters ---
+# --- Output Handler Configuration ---
 
 
 @lru_cache
 def get_rest_endpoint_url() -> str:
-    """Return the REST API endpoint URL for output.
+    """Retrieve the REST API endpoint URL for output.
 
     Returns:
         str: Fully qualified URL to the REST sink.
 
+    Defaults to 'http://localhost:8000/api' if not set.
+
     """
-    return get_config_value("REST_ENDPOINT_URL", "http://localhost:8000/api")
+    return get_config_value_cached("REST_ENDPOINT_URL", "http://localhost:8000/api")
 
 
 @lru_cache
 def get_rest_timeout() -> int:
-    """Return the timeout in seconds for REST API output.
+    """Retrieve the timeout in seconds for REST API output.
 
     Returns:
         int: Timeout duration in seconds.
 
+    Defaults to 10 if not set.
+
     """
-    return int(get_config_value("REST_TIMEOUT", "10"))
+    return int(get_config_value_cached("REST_TIMEOUT", "10"))
 
 
 @lru_cache
 def get_s3_bucket_name() -> str:
-    """Return the name of the S3 bucket used for output.
+    """Retrieve the name of the S3 bucket used for output.
 
     Returns:
         str: Bucket name.
 
+    Defaults to 'default-bucket' if not set.
+
     """
-    return get_config_value("S3_BUCKET_NAME", "default-bucket")
+    return get_config_value_cached("S3_BUCKET_NAME", "default-bucket")
 
 
 @lru_cache
 def get_s3_region() -> str:
-    """Return the AWS region of the S3 bucket.
+    """Retrieve the AWS region of the S3 bucket.
 
     Returns:
         str: AWS region string.
 
+    Defaults to 'us-east-1' if not set.
+
     """
-    return get_config_value("S3_REGION", "us-east-1")
+    return get_config_value_cached("S3_REGION", "us-east-1")
 
 
 @lru_cache
 def get_s3_object_prefix() -> str:
-    """Return the prefix (folder path) for S3 object storage.
+    """Retrieve the prefix (folder path) for S3 object storage.
 
     Returns:
         str: Prefix path within the bucket.
 
-    """
-    return get_config_value("S3_OBJECT_PREFIX", "output/")
-
-
-@lru_cache
-def get_database_connection_url() -> str:
-    """Return the database connection URL (e.g., for PostgreSQL or MySQL).
-
-    Returns:
-        str: SQLAlchemy-compatible DB connection string.
+    Defaults to 'output/' if not set.
 
     """
-    return get_config_value("DATABASE_URL", "sqlite:///output.db")
-
-
-@lru_cache
-def get_rest_output_url() -> str:
-    """Get the REST endpoint URL for output dispatch.
-
-    Returns:
-        str: The URL to send REST output to, or an empty string if not set.
-
-    """
-    return get_config_value("REST_OUTPUT_URL", "")
+    return get_config_value_cached("S3_OBJECT_PREFIX", "output/")
 
 
 @lru_cache
 def get_s3_output_bucket() -> str:
-    """Get the S3 bucket name used for output dispatch.
+    """Retrieve the S3 bucket name used for output dispatch.
 
     Returns:
-        str: The name of the S3 bucket, or an empty string if not set.
+        str: Bucket name.
+
+    Defaults to empty string if not set.
 
     """
-    return get_config_value("S3_OUTPUT_BUCKET", "")
+    return get_config_value_cached("S3_OUTPUT_BUCKET", "")
 
 
 @lru_cache
 def get_s3_output_region() -> str:
-    """Get the AWS region for the S3 output bucket.
+    """Retrieve the AWS region for the S3 output bucket.
 
     Returns:
-        str: The AWS region name, or an empty string if not set.
+        str: AWS region name.
+
+    Defaults to empty string if not set.
 
     """
-    return get_config_value("S3_OUTPUT_REGION", "")
+    return get_config_value_cached("S3_OUTPUT_REGION", "")
 
 
 @lru_cache
 def get_s3_output_prefix() -> str:
-    """Return the S3 key prefix (folder path) for output storage.
+    """Retrieve the S3 key prefix (folder path) for output storage.
 
     Returns:
-        str: The S3 object key prefix, e.g., "processed/".
+        str: S3 object key prefix.
+
+    Defaults to 'output/' if not set.
 
     """
-    return get_config_value("S3_OUTPUT_KEY_PREFIX", "output/")
+    return get_config_value_cached("S3_OUTPUT_KEY_PREFIX", "output/")
+
+
+@lru_cache
+def get_database_connection_url() -> str:
+    """Retrieve the database connection URL for output.
+
+    Returns:
+        str: SQLAlchemy-compatible DB connection string.
+
+    Defaults to 'sqlite:///output.db' if not set.
+
+    """
+    return get_config_value_cached("DATABASE_URL", "sqlite:///output.db")
 
 
 @lru_cache
 def get_database_output_url() -> str:
-    """Get the database connection URL for output dispatch.
+    """Retrieve the SQLAlchemy-compatible connection string for output database.
 
     Returns:
-        str: A SQLAlchemy-compatible connection string, or an empty string if not set.
+        str: Database URL (e.g., 'postgresql://user:pass@host/db').
+
+    Defaults to empty string if not set.
 
     """
-    return get_config_value("DATABASE_OUTPUT_URL", "")
+    return get_config_value_cached("DATABASE_OUTPUT_URL", "")
 
 
 @lru_cache
 def get_database_insert_sql() -> str:
-    """Get the SQL insert statement template for database output.
+    """Retrieve the SQL insert statement template for database output.
 
     Returns:
-        str: The SQL insert query to use, or an empty string if not set.
+        str: SQL insert query.
+
+    Defaults to empty string if not set.
 
     """
-    return get_config_value("DATABASE_INSERT_SQL", "")
+    return get_config_value_cached("DATABASE_INSERT_SQL", "")
 
 
 @lru_cache
-def get_healthcheck_host() -> str:
-    """Return the host to bind the healthcheck server to.
-
-    Returns:
-        str: Host IP (default: "127.0.0.1")
-
-    """
-    return get_config_value("HEALTHCHECK_HOST", "127.0.0.1")
-
-
-@lru_cache
-def get_healthcheck_port() -> int:
-    """Return the port number for the healthcheck server.
-
-    Returns:
-        int: Port (default: 8081)
-
-    """
-    return int(get_config_value("HEALTHCHECK_PORT", "8081"))
-
-
-@lru_cache
-def get_metrics_enabled() -> bool:
-    """Determine whether the Prometheus metrics server should be started.
-
-    This checks the value of METRICS_ENABLED from Vault or the environment.
-    Accepts truthy values: "1", "true", "yes" (case-insensitive).
-
-    Returns:
-        bool: True if metrics are enabled, otherwise False.
-
-    """
-    val = get_config_value("METRICS_ENABLED", "true").lower()
-    return val in ("1", "true", "yes")
-
-
-@lru_cache
-def get_metrics_port() -> int:
-    """Retrieve the TCP port number on which the Prometheus metrics server should listen.
-
-    Returns:
-        int: Port number (default: 8000).
-
-    Raises:
-        ValueError: If METRICS_PORT is not a valid integer.
-
-    """
-    port_str = get_config_value("METRICS_PORT", "8000")
-    try:
-        return int(port_str)
-    except ValueError:
-        raise ValueError(f"❌ Invalid METRICS_PORT value: '{port_str}' must be an integer.")
-
-
-@lru_cache
-def get_metrics_bind_address() -> str:
-    """Get the network address to bind the metrics server.
-
-    Returns:
-        str: Bind address (default: "0.0.0.0").
-
-    """
-    return get_config_value("METRICS_BIND_ADDRESS", "0.0.0.0")
-
-
-@lru_cache
-def get_config_bool(key: str, default: bool = False) -> bool:
-    """Retrieve a boolean configuration value from Vault or environment.
-
-    Interprets common truthy values ("1", "true", "yes", "on") as True.
-    Uses a string fallback if the key is not found.
-
-    Args:
-        key (str): The configuration key to retrieve.
-        default (bool): The fallback value if key is missing or invalid.
-
-    Returns:
-        bool: Boolean value for the requested configuration key.
-
-    """
-    val: str = get_config_value(key, str(default)).lower()
-    return val in ("1", "true", "yes", "on")
-
-
-@lru_cache
-def get_output_modes() -> List[str]:
+def get_output_modes() -> list[str]:
     """Retrieve a list of enabled output modes.
 
-    This reads the OUTPUT_MODES config key, splits it by commas, and returns
-    a lowercase list of modes like "s3", "rest", or "database".
-
     Returns:
-        List[str]: Enabled output modes.
+        List[str]: Enabled output modes (e.g., 's3', 'rest', 'database').
+
+    Defaults to empty list if not set.
 
     """
-    modes: str = get_config_value("OUTPUT_MODES", "")
+    modes = get_config_value_cached("OUTPUT_MODES", "")
     return [m.strip().lower() for m in modes.split(",") if m.strip()]
 
 
 @lru_cache
 def get_rest_output_url() -> str:
-    """Get the REST endpoint URL for output dispatch.
+    """Retrieve the REST endpoint URL for output dispatch.
 
     Returns:
         str: Fully qualified REST API URL.
 
-    """
-    return get_config_value("REST_OUTPUT_URL")
-
-
-@lru_cache
-def get_s3_output_bucket() -> str:
-    """Get the name of the S3 bucket used for output dispatch.
-
-    Returns:
-        str: S3 bucket name.
+    Raises:
+        ValueError: If REST_OUTPUT_URL is not found.
 
     """
-    return get_config_value("S3_OUTPUT_BUCKET")
-
-
-@lru_cache
-def get_s3_output_prefix() -> str:
-    """Get the object key prefix used for S3 output files.
-
-    Returns:
-        str: S3 key prefix (can be empty).
-
-    """
-    return get_config_value("S3_OUTPUT_PREFIX", "")
-
-
-@lru_cache
-def get_database_output_url() -> str:
-    """Get the SQLAlchemy-compatible connection string for output database.
-
-    Returns:
-        str: Database URL (e.g., postgresql://user:pass@host/db).
-
-    """
-    return get_config_value("DATABASE_OUTPUT_URL")
-
-
-@lru_cache
-def get_database_insert_sql() -> str:
-    """Get the raw SQL INSERT statement template for database output.
-
-    Returns:
-        str: SQL insert statement.
-
-    """
-    return get_config_value("DATABASE_INSERT_SQL")
+    return get_config_value_cached("REST_OUTPUT_URL")

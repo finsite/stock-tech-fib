@@ -217,3 +217,12 @@ repos:
         pass_filenames: false
         description: |-
           Ensure that pyproject.toml, src/app/__init__.py, and CHANGELOG.md all have matching version numbers.
+  - repo: local
+    hooks:
+      - id: check-pinned-hashes
+        name: Validate hash-pinned requirements
+        entry: bash -c '! grep -L -- "--hash=" requirements*.txt && echo "✅ All requirements
+          are hash-pinned."'
+        language: system
+        pass_filenames: false
+        always_run: true

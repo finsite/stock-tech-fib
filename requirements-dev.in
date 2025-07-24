@@ -30,3 +30,4 @@ termcolor==2.3.0
 # Security: Fix pip-audit vulnerabilities
 requests>=2.32.4
 urllib3>=2.5.0
+pillow==11.3.0

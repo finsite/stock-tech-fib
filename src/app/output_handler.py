@@ -45,7 +45,11 @@ class OutputDispatcher:
             if config_shared.get_paper_trading_enabled():
                 paper_mode = config_shared.get_paper_trade_mode()
                 logger.debug("📄 Paper trading enabled — dispatching to %s mode", paper_mode)
-                dispatch_method = self._get_dispatch_method(OutputMode(paper_mode))
+                try:
+                    dispatch_method = self._get_dispatch_method(OutputMode[paper_mode])
+                except KeyError:
+                    logger.warning("⚠️ Invalid paper trading output mode: %s", paper_mode)
+                    return
                 if dispatch_method:
                     dispatch_method(data)
                 else:
@@ -53,7 +57,11 @@ class OutputDispatcher:
                 return
 
             for mode in self.output_modes:
-                dispatch_method = self._get_dispatch_method(mode)
+                try:
+                    dispatch_method = self._get_dispatch_method(OutputMode[mode])
+                except KeyError:
+                    logger.warning("⚠️ Invalid output mode: %s", mode)
+                    continue
                 if dispatch_method:
                     dispatch_method(data)
                 else:

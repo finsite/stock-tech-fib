@@ -21,7 +21,7 @@ from app.utils.setup_logger import setup_logger
 logger = setup_logger(__name__)
 
 REDACT_SENSITIVE_LOGS = (
-    config_shared.get_config_value("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
+    config_shared.get_config_value_cached("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
 )
 
 

@@ -23,7 +23,9 @@ from app.utils.setup_logger import setup_logger
 logger = setup_logger(__name__)
 shutdown_event = threading.Event()
 
-REDACT_SENSITIVE_LOGS = config.get_config_value("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
+REDACT_SENSITIVE_LOGS = (
+    config.get_config_value_cached("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
+)
 
 
 def safe_log(msg: str) -> str:
