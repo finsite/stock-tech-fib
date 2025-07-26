@@ -10,9 +10,7 @@ from typing import Any
 import hvac
 from tenacity import retry, stop_after_attempt, wait_fixed
 
-from app.utils.setup_logger import setup_logger
-
-logger = setup_logger(__name__)
+from app.utils.safe_logger import safe_info, safe_warning
 
 VAULT_ADDR: str = os.getenv("VAULT_ADDR", "http://127.0.0.1:8200")
 VAULT_ROLE_ID: str | None = os.getenv("VAULT_ROLE_ID")
@@ -47,12 +45,12 @@ class VaultClient:
                 response: dict[str, Any] = self.client.auth_approle(VAULT_ROLE_ID, VAULT_SECRET_ID)
                 if not response["auth"].get("client_token"):
                     raise RuntimeError("❌ Failed to retrieve Vault token from response.")
-                logger.info("🔐 Vault AppRole authentication successful.")
+                safe_info("🔐 Vault AppRole authentication successful.")
             except Exception as e:
-                logger.warning("⚠️ Vault authentication failed: %s", str(e))
+                safe_warning("⚠️ Vault authentication failed.", data={"error": str(e)})
                 raise
         else:
-            logger.warning("⚠️ VAULT_ROLE_ID or VAULT_SECRET_ID not provided. Vault auth skipped.")
+            safe_warning("⚠️ VAULT_ROLE_ID or VAULT_SECRET_ID not provided. Vault auth skipped.")
 
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     def get(self, key: str, fallback: str | None = None) -> str | None:
@@ -67,7 +65,7 @@ class VaultClient:
 
         """
         if not POLLER_NAME:
-            logger.warning("⚠️ POLLER_NAME not set. Skipping Vault lookup for key: %s", key)
+            safe_warning("⚠️ POLLER_NAME not set. Skipping Vault lookup.", data={"key": key})
             return fallback
 
         secret_path: str = f"secret/data/{POLLER_NAME}/{ENVIRONMENT}"
@@ -78,19 +76,18 @@ class VaultClient:
             )
             value: Any | None = secret["data"]["data"].get(key)
             if value is not None:
-                logger.debug("🔑 Vault value retrieved for key: %s", key)
+                safe_info("🔑 Vault value retrieved.", data={"key": key})
                 return str(value)
-            logger.warning("⚠️ Key '%s' not found in Vault path '%s'.", key, secret_path)
+            safe_warning("⚠️ Vault key not found.", data={"key": key, "path": secret_path})
         except Exception as e:
-            logger.warning("⚠️ Failed to retrieve key '%s' from Vault: %s", key, str(e))
+            safe_warning("⚠️ Vault read failure.", data={"key": key, "error": str(e)})
 
         return fallback
 
 
 @lru_cache
 def get_config_value_cached(key: str, default: str | None = None) -> str:
-    """Retrieve a configuration value from Vault, environment variable, or fallback,
-    with caching.
+    """Retrieve a configuration value from Vault, environment variable, or fallback, with caching.
 
     Args:
         key (str): The config key to look up.

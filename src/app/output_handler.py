@@ -19,6 +19,7 @@ from app.utils.metrics import (
     record_paper_trade_metrics,
     record_sink_metrics,
 )
+from app.utils.redactor import redact_dict
 from app.utils.setup_logger import setup_logger
 from app.utils.types import OutputMode, validate_list_of_dicts
 
@@ -115,7 +116,7 @@ class OutputDispatcher:
 
         """
         for item in data:
-            logger.info("📝 Processed message:\n%s", json.dumps(item, indent=4))
+            logger.info("📝 Processed message:\n%s", json.dumps(redact_dict(item), indent=4))
 
     def _output_to_stdout(self, data: list[dict[str, Any]]) -> None:
         """Print each item in the data list to standard output.
@@ -224,7 +225,7 @@ class OutputDispatcher:
         queue_name = config_shared.get_paper_trading_queue_name()
         exchange = config_shared.get_paper_trading_exchange()
         publish_to_queue([data], queue=queue_name, exchange=exchange)
-        logger.info("🪙 Paper trade sent to queue:\n%s", json.dumps(data, indent=4))
+        logger.info("🪙 Paper trade sent to queue:\n%s", json.dumps(redact_dict(data), indent=4))
         record_paper_trade_metrics("queue", success=True, duration_sec=0)
 
     def _output_paper_trade_to_database(self, data: dict[str, Any]) -> None:
