@@ -6,6 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # ✅ Fix for Super Linter SHA access
       - name: Super Linter
         uses: github/super-linter@v6
         env:

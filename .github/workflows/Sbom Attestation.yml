@@ -1,7 +1,7 @@
+---
 name: 🧪 SBOM Attestation
 on:
   workflow_dispatch:
-
 jobs:
   attest:
     runs-on: ubuntu-latest

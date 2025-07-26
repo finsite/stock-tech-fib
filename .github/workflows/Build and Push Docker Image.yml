@@ -1,5 +1,5 @@
 ---
-name: Build and Push Docker Image
+name: 🛠️ Build and Push Docker Image
 on:
   push:
     branches: [main]
@@ -7,24 +7,25 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write  # ✅ Required for provenance signing
 jobs:
-  build-and-push-docker-image:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v4
-      - name: Set up Docker Buildx
+      - name: 🔧 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Log in to GitHub Container Registry
+      - name: 🔐 Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }}
           --password-stdin
-      - name: Set up Python and install Commitizen
+      - name: 🐍 Set up Python & Install Commitizen
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Install Commitizen
+      - name: 📦 Install Commitizen
         run: pip install commitizen
-      - name: Extract version from Commitizen
+      - name: 🔍 Extract Version from Commitizen
         id: get_version
         run: |
           VERSION=$(cz version --project)
@@ -33,11 +34,32 @@ jobs:
             exit 1
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-      - name: Build and push Docker image
-        run: |-
+          echo "🆕 Version = $VERSION"
+      - name: 🏗️ Build and Push Docker Image
+        run: |
           docker buildx build \
             --push \
             --tag ghcr.io/${{ github.repository }}:latest \
             --tag ghcr.io/${{ github.repository }}:${{ github.sha }} \
             --tag ghcr.io/${{ github.repository }}:${{ env.VERSION }} \
             .
+      - name: 📜 Generate SBOM for Docker Image
+        run: |
+          pip install syft==0.98.0
+          syft ghcr.io/${{ github.repository }}:${{ env.VERSION }} -o cyclonedx-json > sbom.image.json
+      - name: 🧾 Get Image Digest
+        run: |
+          IMAGE_DIGEST=$(syft ghcr.io/${{ github.repository }}:${{ env.VERSION }} -o json | jq -r '.artifacts[0].digest')
+          echo "IMAGE_DIGEST=$IMAGE_DIGEST" >> $GITHUB_ENV
+      - name: 📤 Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-image
+          path: sbom.image.json
+          retention-days: 30
+      - name: 📝 Summary Report
+        run: |-
+          echo "### 🐳 Docker Image Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Version: ${{ env.VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Image Digest: ${{ env.IMAGE_DIGEST }}" >> $GITHUB_STEP_SUMMARY
+          echo "- SBOM file: sbom.image.json" >> $GITHUB_STEP_SUMMARY

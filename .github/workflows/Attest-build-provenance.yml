@@ -1,0 +1,20 @@
+---
+name: 🔐 Attest Build Provenance
+on:
+  push:
+    tags: [v*.*.*]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  provenance:
+    name: Generate SLSA Provenance
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Source Code
+        uses: actions/checkout@v4
+      - name: 🧾 Generate Provenance Attestation
+        uses: slsa-framework/slsa-github-generator/actions/provenance@v1
+        with:
+          builder-id: https://github.com/${{ github.repository }}/.github/workflows/Build%20and%20Push%20Docker%20Image.yml@refs/tags/${{
+            github.ref_name }}

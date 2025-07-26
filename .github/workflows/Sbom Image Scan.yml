@@ -1,9 +1,9 @@
+---
 name: 📦 SBOM Image Scan
 on:
   workflow_dispatch:
   push:
     branches: [main]
-
 jobs:
   image-sbom:
     runs-on: ubuntu-latest
