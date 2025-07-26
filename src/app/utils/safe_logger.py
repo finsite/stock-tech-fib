@@ -5,7 +5,7 @@ This ensures that sensitive fields are redacted and logs follow consistent forma
 
 import logging
 import os
-from typing import Any, Optional
+from typing import Any
 
 from app.utils.redactor import redact_dict
 from app.utils.setup_logger import setup_logger
@@ -18,13 +18,13 @@ SAFE_LOG_STRUCTURED: bool = os.getenv("SAFE_LOG_STRUCTURED", "false").lower() ==
 logger: logging.Logger = setup_logger(__name__, structured=SAFE_LOG_STRUCTURED)
 
 
-def safe_info(message: str, data: Optional[dict[str, Any]] = None) -> None:
-    """
-    Logs an info-level message with optional sanitized payload metadata.
+def safe_info(message: str, data: dict[str, Any] | None = None) -> None:
+    """Logs an info-level message with optional sanitized payload metadata.
 
     Args:
         message (str): Human-readable log message.
         data (Optional[dict]): Dictionary payload to log. Only logs redacted metadata unless SAFE_LOG_FULL is enabled.
+
     """
     if data is None:
         logger.info(message)
@@ -34,13 +34,13 @@ def safe_info(message: str, data: Optional[dict[str, Any]] = None) -> None:
     logger.info("%s | payload_size=%d", message, payload_size)
 
 
-def safe_warning(message: str, data: Optional[dict[str, Any]] = None) -> None:
-    """
-    Logs a warning-level message with optional sanitized payload metadata.
+def safe_warning(message: str, data: dict[str, Any] | None = None) -> None:
+    """Logs a warning-level message with optional sanitized payload metadata.
 
     Args:
         message (str): Human-readable log message.
         data (Optional[dict]): Dictionary payload to log. Only logs redacted metadata unless SAFE_LOG_FULL is enabled.
+
     """
     if data is None:
         logger.warning(message)
@@ -50,13 +50,13 @@ def safe_warning(message: str, data: Optional[dict[str, Any]] = None) -> None:
     logger.warning("%s | payload_size=%d", message, payload_size)
 
 
-def safe_error(message: str, data: Optional[dict[str, Any]] = None) -> None:
-    """
-    Logs an error-level message with optional sanitized payload metadata.
+def safe_error(message: str, data: dict[str, Any] | None = None) -> None:
+    """Logs an error-level message with optional sanitized payload metadata.
 
     Args:
         message (str): Human-readable log message.
         data (Optional[dict]): Dictionary payload to log. Only logs redacted metadata unless SAFE_LOG_FULL is enabled.
+
     """
     if data is None:
         logger.error(message)
@@ -66,13 +66,13 @@ def safe_error(message: str, data: Optional[dict[str, Any]] = None) -> None:
     logger.error("%s | payload_size=%d", message, payload_size)
 
 
-def safe_debug(message: str, data: Optional[dict[str, Any]] = None) -> None:
-    """
-    Logs a debug-level message with optional sanitized payload metadata.
+def safe_debug(message: str, data: dict[str, Any] | None = None) -> None:
+    """Logs a debug-level message with optional sanitized payload metadata.
 
     Args:
         message (str): Human-readable log message.
         data (Optional[dict]): Dictionary payload to log. Only logs redacted metadata unless SAFE_LOG_FULL is enabled.
+
     """
     if data is None:
         logger.debug(message)

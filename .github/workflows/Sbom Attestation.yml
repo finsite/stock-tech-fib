@@ -1,0 +1,13 @@
+name: 🧪 SBOM Attestation
+on:
+  workflow_dispatch:
+
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make sbom-py
+      - run: make sbom-image
+      - run: make audit
+      - run: python .hooks/check-audit-artifacts.py

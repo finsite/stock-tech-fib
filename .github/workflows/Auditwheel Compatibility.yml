@@ -1,0 +1,13 @@
+---
+name: 🧪 Auditwheel Compatibility
+on:
+  workflow_dispatch:
+jobs:
+  auditwheel:
+    runs-on: ubuntu-latest
+    container: quay.io/pypa/manylinux2014_x86_64
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install build
+      - run: python -m build
+      - run: auditwheel show dist/*.whl

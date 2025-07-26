@@ -1,0 +1,36 @@
+---
+name: 🔔 CI Failure Notifications
+on:
+  workflow_run:
+    workflows:
+      - Python Linting
+      - Python Build & Install Check
+      - Build and Push Docker Image
+      - SBOM Generator
+      - License and Vulnerability Audit
+    types: [completed]
+jobs:
+  slack-notify:
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack
+        if: env.SLACK_WEBHOOK_URL != ''
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": ":x: *CI Failed* in `${{ github.repository }}` on branch `${{ github.ref_name }}`. See: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  discord-notify:
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Discord
+        if: env.DISCORD_WEBHOOK_URL != ''
+        run: |
+          curl -H "Content-Type: application/json" -X POST             -d '{"content":"❌ CI failed in `${{ github.repository }}` on branch `${{ github.ref_name }}`. See: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'             $DISCORD_WEBHOOK_URL
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

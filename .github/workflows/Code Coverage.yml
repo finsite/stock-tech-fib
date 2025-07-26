@@ -1,0 +1,17 @@
+---
+name: 📈 Code Coverage
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e .[dev]
+      - run: pytest --cov=src --cov-report=xml
+      - uses: codecov/codecov-action@v4

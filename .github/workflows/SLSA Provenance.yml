@@ -1,0 +1,34 @@
+---
+name: 🔐 SLSA Provenance
+on:
+  push:
+    tags:
+      - v*.*.*  # Semantic version tags only (e.g., v1.0.0)
+permissions:
+  id-token: write  # Required for Sigstore signing
+  contents: read  # Required for repo checkout
+  actions: read  # Required to read artifacts
+jobs:
+  provenance:
+    name: Generate SLSA Provenance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Download SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: artifacts/
+      - name: Download pip-audit report
+        uses: actions/download-artifact@v4
+        with:
+          name: pip-audit-report
+          path: artifacts/
+      - name: Generate SLSA provenance for release artifacts
+        uses: slsa-framework/slsa-github-generator/actions/provenance@v1
+        with:
+          builder-id: https://github.com/${{ github.repository }}/.github/workflows/slsa-provenance.yml
+          subjects: |-
+            artifacts/bom.json
+            artifacts/pip-audit.json

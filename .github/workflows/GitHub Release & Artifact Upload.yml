@@ -1,0 +1,41 @@
+---
+name: 🚀 GitHub Release & Artifact Upload
+on:
+  push:
+    tags:
+      - v*.*.*  # Trigger only for semantic version tags
+permissions:
+  contents: write  # Required to create releases
+  actions: read  # Needed to access artifacts from previous jobs
+jobs:
+  release:
+    name: Create GitHub Release with SBOM and Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Download SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: artifacts/
+      - name: Download pip-audit report
+        uses: actions/download-artifact@v4
+        with:
+          name: pip-audit-report
+          path: artifacts/
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Automated release with attached:
+            - ✅ SBOM (bom.json)
+            - ✅ Vulnerability report (pip-audit.json)
+            - ✅ Provenance (intoto.jsonl in SLSA workflow)
+          files: |
+            artifacts/bom.json
+            artifacts/pip-audit.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

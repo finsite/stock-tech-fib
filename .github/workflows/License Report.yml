@@ -1,0 +1,30 @@
+---
+name: 🧾 License Report
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  license-check:
+    name: License Check with pip-licenses
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pip-licenses
+        run: pip install pip-licenses
+      - name: Generate license report
+        run: |
+          pip-licenses --from=mixed --format=markdown | tee license-report.md
+      - name: Upload license report
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-report
+          path: license-report.md
+          retention-days: 30

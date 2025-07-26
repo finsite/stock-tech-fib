@@ -226,3 +226,20 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+  - repo: local
+    hooks:
+      - id: generate-sbom
+        name: Generate SBOM (CycloneDX)
+        entry: cyclonedx-py requirements -i requirements.txt -o bom.json
+        language: system
+        pass_filenames: false
+      - id: generate-vuln-report
+        name: Generate Vulnerability Report
+        entry: pip-audit -r requirements.txt -r requirements-dev.txt -f json -o pip-audit.json
+        language: system
+        pass_filenames: false
+      - id: check-audit-artifacts
+        name: Check Required Audit Artifacts
+        entry: python .hooks/check-audit-artifacts.py
+        language: system
+        pass_filenames: false

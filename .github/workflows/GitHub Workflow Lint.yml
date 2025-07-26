@@ -1,0 +1,14 @@
+---
+name: 🧪 GitHub Workflow Lint
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Super Linter
+        uses: github/super-linter@v6
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_YAML: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
