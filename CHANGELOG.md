@@ -1,6 +1,12 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
+## v0.8.1 (2025-07-26)
+
+### Fix
+
+- remediate vulnerabilities and sync new shared config utlities
+
 ## v0.8.0 (2025-07-01)
 
 ### Feat
