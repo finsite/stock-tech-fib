@@ -14,4 +14,4 @@ jobs:
           python-version: '3.11'
       - run: pip install -e .[dev]
       - run: pytest --cov=src --cov-report=xml
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
