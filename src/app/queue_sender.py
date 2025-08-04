@@ -16,7 +16,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from app import config_shared
 from app.utils.metrics import queue_publish_counter, queue_publish_latency
-from app.utils.safe_logger import safe_info, safe_error
+from app.utils.safe_logger import safe_error, safe_info
 
 REDACT_SENSITIVE_LOGS: bool = (
     config_shared.get_config_value_cached("REDACT_SENSITIVE_LOGS", "true").lower() == "true"
@@ -25,6 +25,7 @@ REDACT_SENSITIVE_LOGS: bool = (
 
 class SQSMessageSendError(Exception):
     """Raised when SQS returns a non-200 HTTP status."""
+
     pass
 
 
@@ -36,14 +37,15 @@ def safe_log_message(data: dict[str, Any]) -> str:
 
     Returns:
         str: Redacted placeholder or JSON-formatted string.
+
     """
     return "[REDACTED]" if REDACT_SENSITIVE_LOGS else json.dumps(data, ensure_ascii=False)
 
 
 def publish_to_queue(
     payload: list[dict[str, Any]],
-    queue: Optional[str] = None,
-    exchange: Optional[str] = None,
+    queue: str | None = None,
+    exchange: str | None = None,
 ) -> None:
     """Publish a batch of processed messages to the configured queue.
 
@@ -51,6 +53,7 @@ def publish_to_queue(
         payload (list[dict[str, Any]]): List of messages to send.
         queue (Optional[str]): Optional override for queue name or routing key.
         exchange (Optional[str]): Optional override for RabbitMQ exchange.
+
     """
     if not isinstance(payload, list):
         safe_error("Invalid payload type", {"expected": "list", "got": str(type(payload).__name__)})
@@ -64,14 +67,17 @@ def publish_to_queue(
         elif queue_type == "sqs":
             _send_to_sqs(message, queue)
         else:
-            safe_error("Invalid QUEUE_TYPE", {"queue_type": "[REDACTED]" if REDACT_SENSITIVE_LOGS else queue_type})
+            safe_error(
+                "Invalid QUEUE_TYPE",
+                {"queue_type": "[REDACTED]" if REDACT_SENSITIVE_LOGS else queue_type},
+            )
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _send_to_rabbitmq(
     data: dict[str, Any],
-    routing_key: Optional[str] = None,
-    exchange: Optional[str] = None,
+    routing_key: str | None = None,
+    exchange: str | None = None,
 ) -> None:
     """Send a single message to RabbitMQ.
 
@@ -83,6 +89,7 @@ def _send_to_rabbitmq(
     Raises:
         AMQPConnectionError: On RabbitMQ connection failure.
         Exception: On publish failure.
+
     """
     start: float = time.perf_counter()
     try:
@@ -111,12 +118,15 @@ def _send_to_rabbitmq(
         duration: float = time.perf_counter() - start
         queue_publish_counter.labels(queue_type="rabbitmq", status="success").inc()
         queue_publish_latency.labels(queue_type="rabbitmq", status="success").observe(duration)
-        safe_info("Published message to RabbitMQ", {
-            "exchange": resolved_exchange,
-            "routing_key": resolved_routing_key,
-            "duration": duration,
-            "message": data,
-        })
+        safe_info(
+            "Published message to RabbitMQ",
+            {
+                "exchange": resolved_exchange,
+                "routing_key": resolved_routing_key,
+                "duration": duration,
+                "message": data,
+            },
+        )
 
     except AMQPConnectionError as e:
         duration = time.perf_counter() - start
@@ -128,14 +138,16 @@ def _send_to_rabbitmq(
         duration = time.perf_counter() - start
         queue_publish_counter.labels(queue_type="rabbitmq", status="exception").inc()
         queue_publish_latency.labels(queue_type="rabbitmq", status="exception").observe(duration)
-        safe_error("Unhandled error during RabbitMQ publish", {"error": str(e), "duration": duration})
+        safe_error(
+            "Unhandled error during RabbitMQ publish", {"error": str(e), "duration": duration}
+        )
         raise
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _send_to_sqs(
     data: dict[str, Any],
-    queue_name: Optional[str] = None,
+    queue_name: str | None = None,
 ) -> None:
     """Send a single message to AWS SQS.
 
@@ -148,6 +160,7 @@ def _send_to_sqs(
         NoCredentialsError: If AWS credentials are not available.
         SQSMessageSendError: If HTTP response code is not 200.
         Exception: On publish failure.
+
     """
     sqs_url: str = queue_name or config_shared.get_sqs_queue_url()
     region: str = config_shared.get_sqs_region()
@@ -166,20 +179,26 @@ def _send_to_sqs(
         if status_code != 200:
             queue_publish_counter.labels(queue_type="sqs", status="failure").inc()
             queue_publish_latency.labels(queue_type="sqs", status="failure").observe(duration)
-            safe_error("Failed to publish message to SQS", {
-                "http_status": status_code,
-                "duration": duration,
-                "queue_url": sqs_url,
-            })
+            safe_error(
+                "Failed to publish message to SQS",
+                {
+                    "http_status": status_code,
+                    "duration": duration,
+                    "queue_url": sqs_url,
+                },
+            )
             raise SQSMessageSendError(f"SQS returned HTTP status {status_code}")
 
         queue_publish_counter.labels(queue_type="sqs", status="success").inc()
         queue_publish_latency.labels(queue_type="sqs", status="success").observe(duration)
-        safe_info("Published message to SQS", {
-            "queue_url": sqs_url,
-            "duration": duration,
-            "message": data,
-        })
+        safe_info(
+            "Published message to SQS",
+            {
+                "queue_url": sqs_url,
+                "duration": duration,
+                "message": data,
+            },
+        )
 
     except (BotoCoreError, NoCredentialsError) as e:
         duration = time.perf_counter() - start

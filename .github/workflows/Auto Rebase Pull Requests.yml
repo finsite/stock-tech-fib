@@ -1,13 +1,17 @@
 ---
 name: 🔁 Auto Rebase Pull Requests
 on:
-  schedule:
-    - cron: 0 5 * * *
+  pull_request_target:
+    types: [labeled, synchronize]
+permissions:
+  contents: write
+  pull-requests: write
 jobs:
   rebase:
+    if: contains(github.event.pull_request.labels.*.name, 'autorebase')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cirrus-actions/rebase@1.8  
+      - name: Auto Rebase PR
+        uses: cirrus-actions/rebase@1.8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

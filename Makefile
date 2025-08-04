@@ -59,7 +59,14 @@ audit:
 	pip check && pip-audit && deptry src
 
 test:
-	pytest --cov=src --cov-report=term-missing --cov-report=html
+	pytest --cov=src --cov-report=term-missing --cov-report=html \
+		--disable-warnings --maxfail=3 --durations=10
+
+test-unit:
+	PYTHONPATH=src pytest -m unit
+
+test-integration:
+	PYTHONPATH=src pytest -m integration	
 
 format:
 	black . && ruff . --fix && yamlfix .

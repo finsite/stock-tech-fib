@@ -1,7 +1,7 @@
 {
   "extends": ["config:recommended"],
   "dependencyDashboard": true,
-  "recreateClosed": false,
+  "recreateWhen": "auto",
   "labels": ["dependencies"],
   "timezone": "UTC",
   "schedule": ["before 5am on Monday"],

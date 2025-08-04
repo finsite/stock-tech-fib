@@ -43,13 +43,15 @@ jobs:
             --tag ghcr.io/${{ github.repository }}:${{ github.sha }} \
             --tag ghcr.io/${{ github.repository }}:${{ env.VERSION }} \
             .
+      - name: 📥 Install Syft CLI
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
       - name: 📜 Generate SBOM for Docker Image
         run: |
-          pip install syft==0.98.0
           syft ghcr.io/${{ github.repository }}:${{ env.VERSION }} -o cyclonedx-json > sbom.image.json
       - name: 🧾 Get Image Digest
         run: |
-          IMAGE_DIGEST=$(syft ghcr.io/${{ github.repository }}:${{ env.VERSION }} -o json | jq -r '.artifacts[0].digest')
+          IMAGE_DIGEST=$(syft ghcr.io/${{ github.repository }}:${{ env.VERSION }} -o json | jq -r '.descriptor.digest')
           echo "IMAGE_DIGEST=$IMAGE_DIGEST" >> $GITHUB_ENV
       - name: 📤 Upload SBOM
         uses: actions/upload-artifact@v4
