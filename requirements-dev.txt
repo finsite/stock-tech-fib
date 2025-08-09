@@ -6,7 +6,7 @@
 #
 annotated-types==0.7.0
     # via pydantic
-anyio==4.9.0
+anyio==4.10.0
     # via httpx
 authlib==1.6.1
     # via safety
@@ -14,20 +14,20 @@ bandit==1.8.6
     # via -r requirements-dev.in
 black==24.10.0
     # via -r requirements-dev.in
-boto3==1.39.14
+boto3==1.40.6
     # via -r D:\git\stock-tech-fib\requirements.in
-botocore==1.39.14
+botocore==1.40.6
     # via
     #   boto3
     #   s3transfer
-certifi==2025.7.14
+certifi==2025.8.3
     # via
     #   httpcore
     #   httpx
     #   requests
 cffi==1.17.1
     # via cryptography
-charset-normalizer==3.4.2
+charset-normalizer==3.4.3
     # via requests
 click==8.2.1
     # via
@@ -46,19 +46,19 @@ colorama==0.4.6
     #   tqdm
 contourpy==1.3.3
     # via matplotlib
-coverage[toml]==7.10.0
+coverage[toml]==7.10.2
     # via pytest-cov
-cryptography==45.0.5
+cryptography==45.0.6
     # via authlib
 cycler==0.12.1
     # via matplotlib
-deptry==0.23.0
+deptry==0.23.1
     # via -r requirements-dev.in
 dparse==0.6.4
     # via
     #   safety
     #   safety-schemas
-filelock==3.16.1
+filelock==3.18.0
     # via safety
 flake8==7.3.0
     # via -r requirements-dev.in
@@ -97,13 +97,13 @@ markupsafe==3.0.2
     # via jinja2
 marshmallow==4.0.0
     # via safety
-matplotlib==3.10.3
+matplotlib==3.10.5
     # via -r D:\git\stock-tech-fib\requirements.in
 mccabe==0.7.0
     # via flake8
 mdurl==0.1.2
     # via markdown-it-py
-mypy==1.17.0
+mypy==1.17.1
     # via -r requirements-dev.in
 mypy-extensions==1.1.0
     # via
@@ -155,11 +155,11 @@ pycodestyle==2.14.0
     # via flake8
 pycparser==2.22
     # via cffi
-pydantic==2.9.2
+pydantic==2.11.7
     # via
     #   safety
     #   safety-schemas
-pydantic-core==2.23.4
+pydantic-core==2.38.0
     # via pydantic
 pyflakes==3.4.0
     # via flake8
@@ -208,7 +208,7 @@ ruamel-yaml==0.18.14
     #   safety-schemas
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-ruff==0.12.5
+ruff==0.12.8
     # via -r requirements-dev.in
 s3transfer==0.13.1
     # via boto3
@@ -216,7 +216,7 @@ safety==3.6.0
     # via -r requirements-dev.in
 safety-schemas==0.0.14
     # via safety
-scipy==1.16.0
+scipy==1.16.1
     # via -r D:\git\stock-tech-fib\requirements.in
 shellingham==1.5.4
     # via typer
@@ -230,7 +230,7 @@ tenacity==8.5.0
     # via
     #   -r D:\git\stock-tech-fib\requirements.in
     #   safety
-termcolor==2.3.0
+termcolor==2.5.0
     # via -r requirements-dev.in
 tomlkit==0.13.3
     # via safety
