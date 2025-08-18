@@ -8,7 +8,7 @@ jobs:
   image-sbom:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: docker build -t stock-app:latest .
       - uses: anchore/sbom-action@v0
         with:

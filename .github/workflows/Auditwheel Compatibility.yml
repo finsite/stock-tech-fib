@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2014_x86_64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: pip install build
       - run: python -m build
       - run: auditwheel show dist/*.whl

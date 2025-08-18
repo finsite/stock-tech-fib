@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout Source Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: 🧾 Generate Provenance Attestation
         uses: slsa-framework/slsa-github-generator/actions/provenance@v1
         with:
