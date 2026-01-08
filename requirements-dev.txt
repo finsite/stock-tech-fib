@@ -249,7 +249,7 @@ typing-extensions==4.14.1
     #   typer
 tzdata==2025.2
     # via pandas
-urllib3==2.5.0
+urllib3==2.6.3
     # via
     #   -r D:\git\stock-tech-fib\requirements.in
     #   -r requirements-dev.in
