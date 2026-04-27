@@ -109,7 +109,7 @@ mypy-extensions==1.1.0
     # via
     #   black
     #   mypy
-nltk==3.9.1
+nltk==3.9.4
     # via safety
 numpy==1.26.4
     # via
