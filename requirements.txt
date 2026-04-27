@@ -68,7 +68,7 @@ python-dotenv==1.1.1
     # via -r requirements.in
 pytz==2025.2
     # via pandas
-requests==2.32.4
+requests==2.33.0
     # via
     #   -r requirements.in
     #   hvac
