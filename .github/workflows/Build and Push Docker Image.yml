@@ -54,7 +54,7 @@ jobs:
           IMAGE_DIGEST=$(syft ghcr.io/${{ github.repository }}:${{ env.VERSION }} -o json | jq -r '.descriptor.digest')
           echo "IMAGE_DIGEST=$IMAGE_DIGEST" >> $GITHUB_ENV
       - name: 📤 Upload SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sbom-image
           path: sbom.image.json
