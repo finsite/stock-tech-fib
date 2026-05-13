@@ -8,7 +8,7 @@ annotated-types==0.7.0
     # via pydantic
 anyio==4.9.0
     # via httpx
-authlib==1.6.1
+authlib==1.6.12
     # via safety
 bandit==1.8.6
     # via -r requirements-dev.in
