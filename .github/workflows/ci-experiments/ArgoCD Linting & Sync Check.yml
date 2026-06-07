@@ -10,7 +10,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Lint ArgoCD Application YAML
         run: |-
           echo "Linting ArgoCD Application manifest..."

@@ -8,14 +8,14 @@ jobs:
   image-sbom:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: docker build -t stock-app:latest .
       - uses: anchore/sbom-action@v0
         with:
           image: stock-app:latest
           format: spdx-json
           output-file: sbom.spdx.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sbom-image
           path: sbom.spdx.json

@@ -10,7 +10,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set Up Kubernetes (Kind)
         uses: helm/kind-action@v1
       - name: Install ArgoCD

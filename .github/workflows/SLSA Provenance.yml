@@ -14,19 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Download SBOM
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: sbom
           path: artifacts/
       - name: Download pip-audit report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: pip-audit-report
           path: artifacts/
       - name: Generate SLSA provenance for release artifacts
-        uses: slsa-framework/slsa-github-generator/actions/provenance@v1
+        uses: slsa-framework/slsa-github-generator/actions/provenance@v2.1.0
         with:
           builder-id: https://github.com/${{ github.repository }}/.github/workflows/slsa-provenance.yml
           subjects: |-
